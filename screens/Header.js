@@ -9,7 +9,7 @@ function Header() {
             <View style={styles.headerSec1}>
                 <Image
                     style={styles.logo}
-                    source={require('../assets/t4-logo.png')}
+                    source={require('../assets/t4-logo3-1.png')}
                 />
                 <EvilIcons style={styles.locationIcon} name="location" size={35} color="black" />
                 <TextInput placeholder='Enter your city/town'/>

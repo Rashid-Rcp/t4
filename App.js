@@ -1,4 +1,3 @@
-//import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, StatusBar,TouchableWithoutFeedback, Keyboard } from 'react-native';
 
@@ -15,9 +14,8 @@ export default function App() {
       <StatusBar style="auto"/>
         <Header/>
         <KeywordTab/>
-        {/* <NewFeeds/>
-        <Footer/> */}
-        
+        <NewFeeds/>
+        <Footer/>
       </View>
     </TouchableWithoutFeedback>
   );
