@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, StatusBar,TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { StyleSheet, View, StatusBar,TouchableWithoutFeedback, Keyboard } from 'react-native';
 
 import Header from './screens/Header';
 import KeywordTab from './screens/KeywordTab';

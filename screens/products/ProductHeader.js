@@ -15,8 +15,8 @@ function ProductHeader() {
                     <Text style={styles.location}>Location</Text>
                 </View>
             </View>
-            <View>
-                <Ionicons style={styles.chatIcon} name="ios-chatbubble-ellipses-outline" size={30} color="black" />
+            <View >
+                <Ionicons  name="ios-chatbubble-ellipses-outline" size={30} color="#282828" />
             </View>
         </View>
     )
@@ -30,22 +30,25 @@ const styles= StyleSheet.create({
      flexDirection:'row',
      alignItems:'center',
      justifyContent:'space-between',
+     borderBottomColor:'#dfe1e5',
+     borderBottomWidth:.7, 
+     paddingHorizontal:10,
 
  },
  DP:{
     resizeMode: 'contain',
-    width:55,
-    height:55,
+    width:50,
+    height:50,
     borderRadius:100,
-    margin:3,
+    marginVertical:3,
  },
  name:{
      fontWeight :'600',
-     paddingLeft:5,
-     fontSize:17,
+     paddingLeft:10,
+     fontSize:16,
  },
  location:{
-     paddingLeft:5,
+     paddingLeft:10,
      fontWeight:'400',
  },
  left:{

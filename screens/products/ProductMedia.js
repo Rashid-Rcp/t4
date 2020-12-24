@@ -1,12 +1,10 @@
 import React from 'react'
 import { View, Image, StyleSheet } from 'react-native';
 
-function ProductMedia() {
+function ProductMedia({mediaDimension}) {
     return (
         <View style={styles.mediaHolder}>
-             <Image 
-                style={styles.media} 
-                source={{uri: 'https://picsum.photos/500'}}/>
+            <Image source={{uri:'https://picsum.photos/1080/1350'}} style={{width:mediaDimension.width,height:mediaDimension.height, resizeMode:'contain'}} />
         </View>
     )
 }
@@ -14,11 +12,6 @@ function ProductMedia() {
 export default ProductMedia;
 
 const styles = StyleSheet.create({
-    media:{
-        width:300,
-        height:300,
-        resizeMode:"contain",
-    },
     mediaHolder:{
         flex:1,
         alignItems:'center',

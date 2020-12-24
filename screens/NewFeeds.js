@@ -1,66 +1,48 @@
 import React from 'react'
-import { StyleSheet, View,Text, FlatList } from 'react-native'
+import { StyleSheet, View,Text, FlatList,Dimensions } from 'react-native'
 
 import ProductHeader from './products/ProductHeader';
 import ProductMedia from './products/ProductMedia';
+import ProductFooter from './products/ProductFooter';
+import ProductDetails from './products/ProductDetails';
 
 
 function NewFeeds() {
+    const width = Dimensions.get('window').width;
+    const widthPercentage =((1080-width)/1080) *100;
+    const height = (1350/100) * (100-widthPercentage);
+    const mediaDimension = {
+      width:width,
+      height:height,
+    }
+
+    // const mediaWidthHeight = {
+    //   width:'',
+    //   height:''
+    // }
+
 
     const DATA = [
         {
           id: '1',
           title: 'First Item 01',
         },
-        // {
-        //   id: '2',
-        //   title: 'Second Item 2',
-        // },
-        // {
-        //   id: '3',
-        //   title: 'Third Item 3',
-        // },
-        // {
-        //     id: '4',
-        //     title: 'First Item 4',
-        //   },
-        //   {
-        //     id: '5',
-        //     title: 'Second Item 5',
-        //   },
-        //   {
-        //     id: '6',
-        //     title: 'Third Item 6',
-        //   },
-        //   {
-        //     id: '7',
-        //     title: 'First Item 7',
-        //   },
-        //   {
-        //     id: '8',
-        //     title: 'Second Item 8',
-        //   },
-        //   {
-        //     id: '9',
-        //     title: 'Third Item 9' ,
-        //   },
-        //   {
-        //     id: '10',
-        //     title: 'First Item 10',
-        //   },
-        //   {
-        //     id: '11',
-        //     title: 'Second Item 11',
-        //   },
-        //   {
-        //     id: '12',
-        //     title: 'Third Item 12',
-        //   },
+        {
+          id: '2',
+          title: 'Second Item 2',
+        },
+        {
+          id: '3',
+          title: 'Second Item 3',
+        },
+      
       ];
       const renderItem = ({ item }) => (
         <View>
             <ProductHeader/>
-            <ProductMedia/>
+            <ProductMedia mediaDimension={mediaDimension}/>
+            <ProductDetails/>
+            <ProductFooter/>
         </View>
       );
 
@@ -83,7 +65,7 @@ export default NewFeeds
 const styles = StyleSheet.create({
     newFeeds:{
         flex:1,
-       backgroundColor:'#ccc',
+       backgroundColor:'#fff',
     },
     item: {
         backgroundColor: '#f9c2ff',

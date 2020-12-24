@@ -30,11 +30,9 @@ const styles = StyleSheet.create({
         // flex:1,
           alignItems: 'center',
           justifyContent : 'space-between',
-         //justifyContent: 'center',
           flexDirection:"row",
-        //  backgroundColor:'#fff',
-        //  height:100,
-
+          paddingHorizontal:10,
+          paddingTop:5,
    },
    headerSec1:{flexDirection:'row',alignItems:'center'},
    locationIcon:{marginLeft:20, },
