@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
        borderWidth:1,
        marginVertical:5,
        paddingVertical:3,
+      
    },
    keywords:{
        marginHorizontal:3,

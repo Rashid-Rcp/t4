@@ -1,22 +1,25 @@
 import React from 'react'
-import { StyleSheet, Text, View,Image, TextInput } from 'react-native';
+import { StyleSheet, View,Image, TextInput,TouchableOpacity } from 'react-native';
 import { EvilIcons, Ionicons } from '@expo/vector-icons'; 
 
 
-function Header() {
+function Header({navigation}) {
+
     return (
         <View style={styles.header}>
             <View style={styles.headerSec1}>
                 <Image
                     style={styles.logo}
-                    source={require('../assets/t4-logo3-1.png')}
+                    source={require('../../assets/t4-logo3-1.png')}
                 />
                 <EvilIcons style={styles.locationIcon} name="location" size={35} color="black" />
                 <TextInput placeholder='Enter your city/town'/>
             </View>
             <View>
-                <Ionicons style={styles.chatIcon} name="ios-chatbubble-ellipses-outline" size={20} color="black" />
-                <EvilIcons style={styles.userIcon} name="user" size={40} color="black" />
+                <TouchableOpacity onPress={() => navigation.navigate('Account')}>
+                    <Ionicons style={styles.chatIcon} name="ios-chatbubble-ellipses-outline" size={20} color="black" />
+                    <EvilIcons style={styles.userIcon} name="user" size={40} color="black" />
+                </TouchableOpacity>
             </View>
         </View>
     )
@@ -33,6 +36,7 @@ const styles = StyleSheet.create({
           flexDirection:"row",
           paddingHorizontal:10,
           paddingTop:5,
+         
    },
    headerSec1:{flexDirection:'row',alignItems:'center'},
    locationIcon:{marginLeft:20, },

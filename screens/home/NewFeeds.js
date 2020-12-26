@@ -1,10 +1,10 @@
 import React from 'react'
 import { StyleSheet, View,Text, FlatList,Dimensions } from 'react-native'
 
-import ProductHeader from './products/ProductHeader';
-import ProductMedia from './products/ProductMedia';
-import ProductFooter from './products/ProductFooter';
-import ProductDetails from './products/ProductDetails';
+import ProductHeader from '../products/ProductHeader';
+import ProductMedia from '../products/ProductMedia';
+import ProductFooter from '../products/ProductFooter';
+import ProductDetails from '../products/ProductDetails';
 
 
 function NewFeeds() {

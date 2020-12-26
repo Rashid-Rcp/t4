@@ -1,32 +1,23 @@
-import React from 'react';
-import { StyleSheet, View, StatusBar,TouchableWithoutFeedback, Keyboard } from 'react-native';
+import 'react-native-gesture-handler';
 
-import Header from './screens/Header';
-import KeywordTab from './screens/KeywordTab';
-import Footer from './screens/Footer';
-import NewFeeds from './screens/NewFeeds';
+import React from 'react';
+import { } from 'react-native';
+
+import Home from './screens/Home';
+import Account from './screens/Account'
+
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+const Stack = createStackNavigator();
 
 export default function App() {
-
   return (
-    <TouchableWithoutFeedback onPress={()=>{Keyboard.dismiss()}}>
-      <View style={styles.container}>
-      <StatusBar style="auto"/>
-        <Header/>
-        <KeywordTab/>
-        <NewFeeds/>
-        <Footer/>
-      </View>
-    </TouchableWithoutFeedback>
+   <NavigationContainer>
+    <Stack.Navigator initialRouteName={'Account'}>
+      <Stack.Screen options={{headerShown: false}} name="Home" component={Home} />
+      <Stack.Screen name="Account" component={Account} />
+    </Stack.Navigator>
+  </NavigationContainer> 
+      
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-     flex: 1,
-  },
-  keyTab:{
-    flex: 1,
-     flexDirection:"row",
-  }
-});
