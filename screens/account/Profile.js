@@ -28,7 +28,7 @@ function Profile() {
                </View>
            </View>
            <View style={styles.actionBtn}>
-            <MaterialCommunityIcons name="dots-vertical" size={30} color="#282828" />
+                <MaterialCommunityIcons name="dots-vertical" size={30} color="#282828" />
            </View>
        </View>
     )
@@ -38,10 +38,12 @@ export default Profile
 
 const styles = StyleSheet.create({
     container:{
-        flex:1,
+       
         flexDirection:'row',
         justifyContent:'flex-start',
         paddingHorizontal:10,
+       
+      
     },
     DPHolder:{
         position:'relative',

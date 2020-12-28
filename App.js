@@ -5,6 +5,7 @@ import { } from 'react-native';
 
 import Home from './screens/Home';
 import Account from './screens/Account'
+//import Test from './screens/Test'
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -18,6 +19,7 @@ export default function App() {
       <Stack.Screen name="Account" component={Account} />
     </Stack.Navigator>
   </NavigationContainer> 
+ 
       
   );
 }
