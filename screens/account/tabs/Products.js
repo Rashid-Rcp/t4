@@ -25,6 +25,7 @@ function Products() {
            <Content/>
            <Content/>
            <Content/>
+           
         </View>
     )
 }
@@ -38,9 +39,7 @@ const styles=StyleSheet.create({
         flex:1,
         paddingHorizontal:5,
         flexDirection:'row',
-        
         flexWrap:'wrap',
-       
     },
     productImage:{
         width:170,
