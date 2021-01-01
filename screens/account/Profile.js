@@ -1,19 +1,47 @@
-import React,{useState} from 'react'
+import React,{useState, useEffect} from 'react'
 import { View, Text, StyleSheet, Image,TouchableOpacity } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
-
+import * as ImagePicker from 'expo-image-picker';
+import Constants from 'expo-constants';
 
 
 function Profile() {
     const [showEditLinks, setShowEditLinks] = useState(false);
+    const [imageDP, setImageDP] = useState('https://picsum.photos/200');
+
+    useEffect(() => {
+      (async () => {
+        if (Platform.OS !== 'web') {
+          const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+          if (status !== 'granted') {
+            alert('Sorry, we need camera roll permissions to make this work!');
+          }
+        }
+      })();
+    }, []);
+
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [1,1],
+          quality: .5,
+        });
+        console.log(result);
+
+        if (!result.cancelled) {
+          setImageDP(result.uri);
+        }
+      };
+
     return (
        <View style={styles.container}>
            <View>
                <View style={styles.DPHolder}>
                 <Image 
                     style={styles.DP}
-                    source={{uri: 'https://picsum.photos/200'}}/>
-                    <TouchableOpacity style={styles.cameraHolder} onPress={()=>{console.log('okok')}}>
+                    source={{uri:imageDP }}/>
+                    <TouchableOpacity style={styles.cameraHolder} onPress={pickImage}>
                         <MaterialCommunityIcons style={styles.camera} name="camera" size={30} color="#282828" />
                     </TouchableOpacity>
                </View>
