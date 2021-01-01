@@ -1,24 +1,39 @@
-import React from 'react'
-import { View, Text, StyleSheet,TouchableOpacity } from 'react-native'
+import React ,{useContext} from 'react'
+import { View, Text, StyleSheet,TouchableOpacity } from 'react-native';
 
-function Tabs() {
+import {ActiveTabContext} from './tabs/ActiveTabContext'
 
-    const activeTab = 'products';
+function Tabs(props) {
+
+    const scrollRef = props.scrollRef.current;
+
+  //scrollRef.current.scrollTo({x: 0, y: 140, animated: true})
+
+    const [activeTab,setActiveTab] = useContext(ActiveTabContext);
+    const scrollPosition = 160;
+   
     return (
         <View style={styles.holder}>
             <View style={styles.container}>
-                <View style={[styles.tabButton,activeTab==='products'?styles.active:'']}>
-                    <Text>Products</Text>
-                </View>
-                <View style={[styles.tabButton,activeTab==='offers'?styles.active:'']}>
-                    <Text>Offers</Text>
-                </View>
-                <View style={[styles.tabButton,activeTab==='chats'?styles.active:'']}>
-                    <Text>Chats</Text>
-                </View>
+                
+                    <View style={[styles.tabButton,activeTab==='products'?styles.active:'']}>
+                        <TouchableOpacity onPress={()=>{setActiveTab('products');scrollRef.scrollTo({x: 0, y: scrollPosition, animated: true})}}>
+                            <Text>Products</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={[styles.tabButton,activeTab==='offers'?styles.active:'']}>
+                        <TouchableOpacity onPress={()=>{setActiveTab('offers');scrollRef.scrollTo({x: 0, y: scrollPosition, animated: true})}}>
+                            <Text>Offers</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={[styles.tabButton,activeTab==='chats'?styles.active:'']}>
+                        <TouchableOpacity onPress={()=>{setActiveTab('chats');scrollRef.scrollTo({x: 0, y: scrollPosition, animated: true})}}>
+                            <Text>Chats</Text>
+                        </TouchableOpacity>
+                    </View>
+               
             </View>
         </View>
-        
     )
 }
 

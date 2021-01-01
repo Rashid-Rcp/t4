@@ -4,19 +4,19 @@ import { View, Text, StyleSheet,Image,FlatList } from 'react-native'
 
 
 
-function Products() {
+function Offers() {
    
+    const Content = () => (
+        <View style={styles.productHolder}>
+               
+                <Image 
+                        style={styles.productImage}
+                        source={{uri: 'https://picsum.photos/170/250'}}/>
+                        <Text style={styles.productName}>Offer title </Text>
+                        <Text style={styles.productPrice}>Duration</Text>
+        </View>
+      );
     
-const Content = () => (
-    <View style={styles.productHolder}>
-           
-            <Image 
-                    style={styles.productImage}
-                    source={{uri: 'https://picsum.photos/170/250'}}/>
-                    <Text style={styles.productName}>product name </Text>
-                    <Text style={styles.productPrice}>₹ 789</Text>
-    </View>
-  );
 
     return (
         <View style={styles.container}>
@@ -30,7 +30,7 @@ const Content = () => (
     )
 }
 
-export default Products;
+export default Offers;
 
 
 const styles=StyleSheet.create({
