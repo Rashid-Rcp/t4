@@ -137,7 +137,6 @@ function AddNewProduct() {
                             </View> 
                             {
                                variationItem &&  Object.keys(variationItem).map(item => (
-                                  
                                 <View style={styles.variationItems}>
                                     <Text style={styles.variationItemsText}>{item}</Text>
                                     <Text style={styles.variationItemsText}>{variationItem[item]}</Text>
@@ -151,9 +150,7 @@ function AddNewProduct() {
                                         <Text>Clear all</Text>
                                     </TouchableOpacity>
                                 </View>
-                                
                             }
-                            
                             <View style={styles.variationItems}>
                                 <TextInput
                                     style={[styles.textBox,styles.variationTextBox]}
@@ -166,8 +163,6 @@ function AddNewProduct() {
                                     value={variationItemPrice}
                                     />
                             </View>
-                               
-                            
                             <View style={styles.addBtnVariation}>
                                 <TouchableOpacity onPress={addVariation}>
                                     <Ionicons name="add-circle-outline" size={30} color="#282828" />
