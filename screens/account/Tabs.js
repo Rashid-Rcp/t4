@@ -16,18 +16,18 @@ function Tabs(props) {
         <View style={styles.holder}>
             <View style={styles.container}>
                 
-                    <View style={[styles.tabButton,activeTab==='products'?styles.active:'']}>
-                        <TouchableOpacity onPress={()=>{setActiveTab('products');scrollRef.scrollTo({x: 0, y: scrollPosition, animated: true})}}>
+                    <View style={[styles.tabButton,activeTab==='Product'?styles.active:'']}>
+                        <TouchableOpacity onPress={()=>{setActiveTab('Product');scrollRef.scrollTo({x: 0, y: scrollPosition, animated: true})}}>
                             <Text>Products</Text>
                         </TouchableOpacity>
                     </View>
-                    <View style={[styles.tabButton,activeTab==='offers'?styles.active:'']}>
-                        <TouchableOpacity onPress={()=>{setActiveTab('offers');scrollRef.scrollTo({x: 0, y: scrollPosition, animated: true})}}>
+                    <View style={[styles.tabButton,activeTab==='Offer'?styles.active:'']}>
+                        <TouchableOpacity onPress={()=>{setActiveTab('Offer');scrollRef.scrollTo({x: 0, y: scrollPosition, animated: true})}}>
                             <Text>Offers</Text>
                         </TouchableOpacity>
                     </View>
-                    <View style={[styles.tabButton,activeTab==='chats'?styles.active:'']}>
-                        <TouchableOpacity onPress={()=>{setActiveTab('chats');scrollRef.scrollTo({x: 0, y: scrollPosition, animated: true})}}>
+                    <View style={[styles.tabButton,activeTab==='Chats'?styles.active:'']}>
+                        <TouchableOpacity onPress={()=>{setActiveTab('Chats');scrollRef.scrollTo({x: 0, y: scrollPosition, animated: true})}}>
                             <Text>Chats</Text>
                         </TouchableOpacity>
                     </View>

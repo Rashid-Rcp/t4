@@ -12,9 +12,11 @@ import AddNewPost from './account/tabs/AddNewPost'
 import {ActiveTabProvider, ActiveTabContext} from './account/tabs/ActiveTabContext'
  
 
-function Account() {
+function Account({navigation}) {
     
     const scrollRef = useRef();
+
+  
    
     return (
         <ActiveTabProvider>
@@ -25,7 +27,7 @@ function Account() {
                     <TabsContent/>
                 </ScrollView>
                 
-                <AddNewPost/>
+                <AddNewPost navigation={navigation}/>
                 <Footer/>
             </View>
         </ActiveTabProvider>

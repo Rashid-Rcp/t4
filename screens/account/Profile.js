@@ -2,7 +2,7 @@ import React,{useState, useEffect} from 'react'
 import { View, Text, StyleSheet, Image,TouchableOpacity } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 import * as ImagePicker from 'expo-image-picker';
-import Constants from 'expo-constants';
+
 
 
 function Profile() {
@@ -27,7 +27,7 @@ function Profile() {
           aspect: [1,1],
           quality: .5,
         });
-        console.log(result);
+      
 
         if (!result.cancelled) {
           setImageDP(result.uri);

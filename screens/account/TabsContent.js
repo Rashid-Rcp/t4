@@ -12,9 +12,9 @@ function TabsContent() {
     const [activeTab,setActiveTab] = useContext(ActiveTabContext);
     return (
      <>
-        {activeTab == 'products' && <Products/>}
-        {activeTab == 'offers' && <Offers/>}
-        {activeTab == 'chats' && <Chats/>}
+        {activeTab == 'Product' && <Products/>}
+        {activeTab == 'Offer' && <Offers/>}
+        {activeTab == 'Chats' && <Chats/>}
       </>
     )
 }
