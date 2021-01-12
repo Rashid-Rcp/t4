@@ -1,13 +1,19 @@
-import React,{useState, useEffect} from 'react'
+import React,{useState, useEffect,useContext } from 'react'
 import { View, Text, StyleSheet, Image,TouchableOpacity,Platform, UIManager, LayoutAnimation } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 import * as ImagePicker from 'expo-image-picker';
+
+import {UserContext} from '../common/UserContext';
+
 
 if ( Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
   }
 
 function Profile({navigation}) {
+
+    const [user, setUser] = useContext(UserContext);
+
     const [showEditLinks, setShowEditLinks] = useState(false);
     const [showContact, setShowContact] = useState(false);
     const [imageDP, setImageDP] = useState('https://picsum.photos/200');
@@ -41,6 +47,7 @@ function Profile({navigation}) {
         <>
        <View style={styles.container}>
            <View>
+
                <View style={styles.DPHolder}>
                 <Image 
                     style={styles.DP}
@@ -54,15 +61,17 @@ function Profile({navigation}) {
                    setShowContact(!showContact);
                    }}>
                 <Text style={styles.contactLink}>{showContact?'Hide' : 'View'} contact details</Text> 
-                  
                </TouchableOpacity>
             
            </View>
            <View>
                <View style={styles.details}>
-                   <Text style={styles.shopName}>Shop Name</Text>
-                   <Text style={styles.location}>Location</Text>
-                   <Text style={styles.followers}>Followers 100</Text>
+                   <Text style={styles.shopName}>Rashid Rcp</Text>
+                   <Text style={styles.location}>Karathode</Text>
+                   {
+                    user.type !=='customer' && 
+                    <Text style={styles.followers}>Followers 100</Text>
+                   }
                </View>
            </View>
            <View style={[styles.actionBtn,showEditLinks?styles.actionBtnActive:'']}>

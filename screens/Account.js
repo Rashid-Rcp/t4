@@ -15,9 +15,7 @@ import {ActiveTabProvider, ActiveTabContext} from './account/tabs/ActiveTabConte
 function Account({navigation}) {
     
     const scrollRef = useRef();
-
-  
-   
+    
     return (
         <ActiveTabProvider>
             <View style={styles.container}>
