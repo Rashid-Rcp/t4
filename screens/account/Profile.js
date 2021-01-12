@@ -1,12 +1,15 @@
 import React,{useState, useEffect} from 'react'
-import { View, Text, StyleSheet, Image,TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, Image,TouchableOpacity,Platform, UIManager, LayoutAnimation } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 import * as ImagePicker from 'expo-image-picker';
 
+if ( Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+  }
 
-
-function Profile() {
+function Profile({navigation}) {
     const [showEditLinks, setShowEditLinks] = useState(false);
+    const [showContact, setShowContact] = useState(false);
     const [imageDP, setImageDP] = useState('https://picsum.photos/200');
 
     useEffect(() => {
@@ -35,6 +38,7 @@ function Profile() {
       };
 
     return (
+        <>
        <View style={styles.container}>
            <View>
                <View style={styles.DPHolder}>
@@ -45,8 +49,12 @@ function Profile() {
                         <MaterialCommunityIcons style={styles.camera} name="camera" size={30} color="#282828" />
                     </TouchableOpacity>
                </View>
-               <TouchableOpacity>
-                <Text style={styles.contactLink}>View contact details</Text>   
+               <TouchableOpacity onPress={()=>{
+                   LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+                   setShowContact(!showContact);
+                   }}>
+                <Text style={styles.contactLink}>{showContact?'Hide' : 'View'} contact details</Text> 
+                  
                </TouchableOpacity>
             
            </View>
@@ -64,14 +72,31 @@ function Profile() {
                     </TouchableOpacity>
                </View>
                
-               { showEditLinks && 
-                    <View style={styles.editLink}><Text style={{fontSize:16}}>Edit Profile</Text></View>
+               { showEditLinks && <View style={styles.editLink}>
+                        <TouchableOpacity onPress={()=>{setShowEditLinks(!showEditLinks); navigation.navigate('EditProfile')}}>
+                            <Text style={{fontSize:16}}>Edit Profile</Text>
+                        </TouchableOpacity>
+                  </View>
                 }  
-                { showEditLinks && 
-                    <View style={styles.editLink}><Text style={{fontSize:16}}>Edit Contact</Text></View>
+                { showEditLinks && <View style={styles.editLink}>
+                        <TouchableOpacity onPress={()=>{setShowEditLinks(!showEditLinks); navigation.navigate('EditContact')}}>
+                            <Text style={{fontSize:16}}>Edit Contact</Text>
+                        </TouchableOpacity>
+                    </View>
                 }
            </View>
        </View>
+       {
+           showContact && <View style={styles.contactDetails}>
+           <Text style={styles.contactTitle}>
+               Address : <Text style={styles.contactContent}>Arafa Centre, Calicut Main Road, Kizhakkethala, Down Hill, Malappuram, Kerala 676505</Text>
+           </Text>  
+           <Text style={styles.contactTitle}>Phone : <Text style={styles.contactContent}>9895926293</Text></Text>  
+           <Text style={styles.contactTitle}>Email : <Text style={styles.contactContent}>shop@gmail.com</Text></Text>
+        </View>
+       }
+       
+       </>
     )
 }
 
@@ -143,6 +168,21 @@ const styles = StyleSheet.create({
         paddingVertical:5,
         flexWrap:'nowrap',
         flexDirection:'row-reverse',
+    },
+    contactDetails:{
+        paddingHorizontal:10,
+        marginTop:-20,
+        paddingBottom:20,
+    },
+    contactTitle:{
+        fontSize:16,
+        marginBottom:5,
+        lineHeight:25,
+        fontWeight:'700',
+    },
+    contactContent:{
+        fontSize:15,
+        fontWeight:'normal',
     }
    
    

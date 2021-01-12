@@ -97,7 +97,6 @@ const styles=StyleSheet.create({
     },
     message:{
         paddingLeft:10,
-
     },
     unreadMessagesCount:{
         position:'absolute',
@@ -111,8 +110,5 @@ const styles=StyleSheet.create({
         color:'#fff',
         fontSize:14,
     }
-
-
-
 
 });

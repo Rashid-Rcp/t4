@@ -22,7 +22,7 @@ function Account({navigation}) {
         <ActiveTabProvider>
             <View style={styles.container}>
                  <ScrollView ref={scrollRef} stickyHeaderIndices={[1]}  showsVerticalScrollIndicator={false}>
-                    <Profile/>
+                    <Profile navigation={navigation}/>
                     <Tabs scrollRef={scrollRef}/>
                     <TabsContent/>
                 </ScrollView>
