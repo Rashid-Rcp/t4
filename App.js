@@ -16,7 +16,7 @@ const Stack = createStackNavigator();
 export default function App() {
   return (
    <NavigationContainer>
-    <Stack.Navigator initialRouteName={'AddNewOffer'}>
+    <Stack.Navigator initialRouteName={'Account'}>
       <Stack.Screen options={{headerShown: false}} name="Home" component={Home} />
       <Stack.Screen name="Account" component={Account} />
       <Stack.Screen name="AddNewProduct" component={AddNewProduct} options={{ title: 'Add New Product' }} />
