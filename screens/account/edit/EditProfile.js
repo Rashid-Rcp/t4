@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { View, Text, TextInput,TouchableOpacity, ScrollView, Button, StyleSheet } from 'react-native'
+import { View,KeyboardAvoidingView, Text, TextInput,TouchableOpacity, ScrollView, Button, StyleSheet } from 'react-native'
 
 import Footer from '../../common/Footer' 
 
@@ -12,6 +12,7 @@ function EditProfile() {
     }
 
     return (
+       
         <View style={styles.container}>
             <ScrollView>
                 <View style={styles.formHolder}>
@@ -35,10 +36,10 @@ function EditProfile() {
                     />
                     </View>
                 </View>
-                
             </ScrollView>
             <Footer/>
         </View>
+       
     )
 }
 

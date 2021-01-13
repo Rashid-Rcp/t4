@@ -1,20 +1,22 @@
 import React from 'react'
-import { View, Text, StyleSheet,Image,FlatList } from 'react-native'
+import { View, Text, StyleSheet,Image,FlatList,TouchableOpacity } from 'react-native'
 
+import { AntDesign } from '@expo/vector-icons'; 
 
-
-
-function Products() {
-   
+function Products({navigation}) {
     
 const Content = () => (
     <View style={styles.productHolder}>
-           
+        <TouchableOpacity onPress={()=>{navigation.navigate('SingleProduct')}}>
             <Image 
-                    style={styles.productImage}
-                    source={{uri: 'https://picsum.photos/170/250'}}/>
-                    <Text style={styles.productName}>product name </Text>
-                    <Text style={styles.productPrice}>₹ 789</Text>
+            style={styles.productImage}
+            source={{uri: 'https://picsum.photos/170/250'}}/>
+        </TouchableOpacity>   
+        <Text style={styles.productName}>product name </Text>
+        <Text style={styles.productPrice}>₹ 789</Text>
+        <View style={styles.productStatus}>
+            <AntDesign name="checkcircle" size={15} color="#0a2351"/>
+        </View>
     </View>
   );
 
@@ -31,7 +33,6 @@ const Content = () => (
 }
 
 export default Products;
-
 
 const styles=StyleSheet.create({
 
@@ -63,6 +64,11 @@ const styles=StyleSheet.create({
     },
     productPrice:{
         fontSize:17,
+    },
+    productStatus:{
+        position:'absolute',
+        bottom:10,
+        right:10,
     }
 
 

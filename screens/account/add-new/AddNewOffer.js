@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView,TextInput,Button  } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView,TextInput,Button,KeyboardAvoidingView  } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; 
 import * as ImagePicker from 'expo-image-picker';
 
@@ -42,6 +42,8 @@ function AddNewOffer() {
 
     return (
        <View style={styles.container}>
+            <KeyboardAvoidingView style={styles.keyboardView}
+         behavior="padding" enabled   keyboardVerticalOffset={60}>
            <ScrollView>
                <View style={styles.imageHolder}>
                    {
@@ -92,6 +94,7 @@ function AddNewOffer() {
                 
                 </View>
            </ScrollView>
+           </KeyboardAvoidingView>
            <Footer/>
        </View>
     )
@@ -155,5 +158,5 @@ submitBtnHolder:{
     justifyContent:'center',
     marginVertical:30,
 },
-
+keyboardView:{ flex: 1, flexDirection: 'column',justifyContent: 'center',},
 });

@@ -22,7 +22,7 @@ function Account({navigation}) {
                  <ScrollView ref={scrollRef} stickyHeaderIndices={[1]}  showsVerticalScrollIndicator={false}>
                     <Profile navigation={navigation}/>
                     <Tabs scrollRef={scrollRef}/>
-                    <TabsContent/>
+                    <TabsContent navigation={navigation}/>
                 </ScrollView>
                 
                 <AddNewPost navigation={navigation}/>

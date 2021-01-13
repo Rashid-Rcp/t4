@@ -1,5 +1,5 @@
 import React,{useState} from 'react'
-import { View, Text, TextInput,TouchableOpacity, ScrollView, StyleSheet, Button } from 'react-native'
+import { View, Text, TextInput,TouchableOpacity, ScrollView, StyleSheet, Button,KeyboardAvoidingView } from 'react-native'
 
 import Footer from '../../common/Footer' 
 
@@ -16,6 +16,8 @@ function EditContact() {
 
     return (
         <View style={styles.container}>
+            <KeyboardAvoidingView style={styles.keyboardView}
+         behavior="padding" enabled   keyboardVerticalOffset={60}>
             <ScrollView>
                 <View style={styles.formHolder}>
                     <Text>Address</Text>
@@ -47,6 +49,7 @@ function EditContact() {
                     </View>
                 </View>
             </ScrollView>
+            </KeyboardAvoidingView>
            
            <Footer/>
         </View>
@@ -84,6 +87,7 @@ const styles = StyleSheet.create({
         borderRadius:5,
         padding:5,
         textAlignVertical:'top',
-    }
+    },
+    keyboardView:{ flex: 1, flexDirection: 'column',justifyContent: 'center',},
 
 })

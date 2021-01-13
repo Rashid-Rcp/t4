@@ -8,11 +8,11 @@ import Chats from './tabs/Chats'
 
 
 
-function TabsContent() {
+function TabsContent({navigation}) {
     const [activeTab,setActiveTab] = useContext(ActiveTabContext);
     return (
      <>
-        {activeTab == 'Product' && <Products/>}
+        {activeTab == 'Product' && <Products navigation={navigation}/>}
         {activeTab == 'Offer' && <Offers/>}
         {activeTab == 'Chats' && <Chats/>}
       </>

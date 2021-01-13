@@ -9,6 +9,7 @@ import AddNewProduct from './screens/account/add-new/AddNewProduct'
 import AddNewOffer from './screens/account/add-new/AddNewOffer'
 import EditProfile from './screens/account/edit/EditProfile'
 import EditContact from './screens/account/edit/EditContact'
+import SingleProduct from './screens/account/SingleProduct'
 //import Test from './screens/Test'
 
 import {UserProvider, userProvider} from './screens/common/UserContext'
@@ -21,13 +22,14 @@ export default function App() {
   return (
     <UserProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName={'Home'}>
+        <Stack.Navigator initialRouteName={'Account'}>
           <Stack.Screen options={{headerShown: false}} name="Home" component={Home} />
           <Stack.Screen name="Account" component={Account} />
           <Stack.Screen name="EditProfile" component={EditProfile} options={{ title: 'Edit Profile' }}/>
           <Stack.Screen name="EditContact" component={EditContact} options={{ title: 'Edit Contact' }}/>
           <Stack.Screen name="AddNewProduct" component={AddNewProduct} options={{ title: 'Add New Product' }} />
           <Stack.Screen name="AddNewOffer" component={AddNewOffer} options={{ title: 'Add New Offer' }} />
+          <Stack.Screen name="SingleProduct" component={SingleProduct} options={{ title: 'Product Details' }} />
         </Stack.Navigator>
       </NavigationContainer> 
     </UserProvider>
