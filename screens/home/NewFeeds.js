@@ -7,7 +7,7 @@ import ProductFooter from '../products/ProductFooter';
 import ProductDetails from '../products/ProductDetails';
 
 
-function NewFeeds() {
+function NewFeeds({itemType}) {
     const width = Dimensions.get('window').width;
     const widthPercentage =((1080-width)/1080) *100;
     const height = (1350/100) * (100-widthPercentage);
@@ -41,7 +41,7 @@ function NewFeeds() {
         <View>
             <ProductHeader/>
             <ProductMedia mediaDimension={mediaDimension}/>
-            <ProductDetails/>
+            <ProductDetails itemType={itemType}/>
             <ProductFooter/>
         </View>
       );

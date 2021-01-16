@@ -2,18 +2,18 @@ import React from 'react';
 import { StyleSheet, View, StatusBar,TouchableWithoutFeedback, Keyboard } from 'react-native';
 
 import Header from './common/Header';
-import KeywordTab from './home/KeywordTab';
+
 import Footer from './common/Footer';
 import NewFeeds from './home/NewFeeds';
 
-export default function Home({ navigation }) {
+export default function Offers({ navigation }) {
   return (
     <TouchableWithoutFeedback onPress={()=>{Keyboard.dismiss()}}>
       <View style={styles.container}>
         <StatusBar style="auto"/>
         <Header navigation={navigation}/>
-        <KeywordTab/>
-        <NewFeeds itemType={{type:'product'}}/>
+        <View style={styles.divider}></View>
+        <NewFeeds itemType={{type:'offer'}}/>
         <Footer/>
       </View>
     </TouchableWithoutFeedback>
@@ -26,8 +26,10 @@ const styles = StyleSheet.create({
      flex: 1,
      backgroundColor:'#fff',
   },
-  keyTab:{
-    flex: 1,
-     flexDirection:"row",
+  divider:{
+    height:1,
+    borderTopWidth:.5,
+    borderTopColor:'#ccc',
   }
+
 });

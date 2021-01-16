@@ -1,19 +1,23 @@
 import React from 'react'
-import { View, Text, StyleSheet,Image,FlatList } from 'react-native'
+import { View, Text, StyleSheet,Image,TouchableOpacity } from 'react-native'
+
+import { AntDesign } from '@expo/vector-icons'; 
 
 
 
-
-function Offers() {
+function Offers({navigation}) {
    
     const Content = () => (
         <View style={styles.productHolder}>
-               
+            <TouchableOpacity  onPress={()=>{navigation.navigate('SingleOffer')}}>
                 <Image 
-                        style={styles.productImage}
-                        source={{uri: 'https://picsum.photos/170/250'}}/>
-                        <Text style={styles.productName}>Offer title </Text>
-                        <Text style={styles.productPrice}>Duration</Text>
+                    style={styles.productImage}
+                    source={{uri: 'https://picsum.photos/170/250'}}/>
+            </TouchableOpacity>
+            <Text style={styles.productName}>Offer title </Text>
+            <View style={styles.productStatus}>
+                <AntDesign name="checkcircle" size={15} color="#0a2351"/>
+            </View>
         </View>
       );
     
@@ -55,14 +59,15 @@ const styles=StyleSheet.create({
         borderWidth:.5,
         paddingBottom:10,
         width:'48%',
-
-      
     },
     productName:{
         textAlign:'center',
+        paddingTop:10,
     },
-    productPrice:{
-        fontSize:17,
+    productStatus:{
+        position:'absolute',
+        bottom:10,
+        right:10,
     }
 
 

@@ -8,13 +8,18 @@ if ( Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimenta
     UIManager.setLayoutAnimationEnabledExperimental(true);
   }
 
-function ProductDetails() {
+function ProductDetails({itemType}) {
     const [expanded, setExpanded] = useState(false);
+
+    //for testing purpose
+    const [type, setType] = useState(itemType.type); // product or offer
+    const [variation, setVariation] = useState(itemType.type === 'product'? true : false); //true or false
+
     return (
         <View>
             <View style={styles.details}>
                 <Text style={styles.title}>Product title </Text>
-                <Text style={styles.price}>₹1000</Text>
+                {type === 'product' && <Text style={styles.price}>₹1000</Text>}
             </View>
             <View style={styles.expander}>
                 <TouchableOpacity 
@@ -29,13 +34,15 @@ function ProductDetails() {
                  </TouchableOpacity>
                  {expanded && (
                     <View style={styles.expanderDetails}>
-                        <Text style={styles.variationTitle}>Size</Text>
-                        <View style={styles.variations}>
-                            <Text style={styles.variationItem}>S  ₹100</Text>
-                            <Text style={styles.variationItem}>M  ₹100</Text>
-                            <Text style={styles.variationItem}>L  ₹130</Text>
-                            <Text style={styles.variationItem}>XL  ₹130</Text>
-                        </View>
+                        { variation && <><Text style={styles.variationTitle}>Size</Text>
+                            <View style={styles.variations}>
+                                <Text style={styles.variationItem}>S  ₹100</Text>
+                                <Text style={styles.variationItem}>M  ₹100</Text>
+                                <Text style={styles.variationItem}>L  ₹130</Text>
+                                <Text style={styles.variationItem}>XL  ₹130</Text>
+                            </View>
+                            </>
+                        }
                         <Text style={styles.description}>
                             Product description and any other details of the product item and other lorem ispum al hudai 
                         </Text>

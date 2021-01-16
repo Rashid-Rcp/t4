@@ -6,7 +6,7 @@ import ProductDetails from '../products/ProductDetails'
 import ProductFooter from '../products/ProductFooter'
 import Footer from '../common/Footer';
 
-function SingleProduct() {
+function SingleOffer() {
     const width = Dimensions.get('window').width;
     const widthPercentage =((1080-width)/1080) *100;
     const height = (1350/100) * (100-widthPercentage);
@@ -14,11 +14,11 @@ function SingleProduct() {
         width:width,
         height:height,
       }
-      const enable_disable_product = ()=>{
+      const enable_disable_offer = ()=>{
 
       }
 
-      const deleteProduct = ()=>{
+      const deleteOffer = ()=>{
 
       }
 
@@ -27,14 +27,14 @@ function SingleProduct() {
             <ScrollView>
                 <View style={styles.holder}>
                     <ProductMedia mediaDimension={mediaDimension}/>
-                    <ProductDetails itemType={{type:'product'}}/>
+                    <ProductDetails itemType={{type:'offer'}}/>
                     <ProductFooter/>
                     <View style={{flex:1,alignItems:'center'}}>
                         <View style={{width:'70%'}}>
                                 <Button 
                                 title="Disable"
                                 color="#282828"
-                                onPress={enable_disable_product}
+                                onPress={enable_disable_offer}
                             />
                         </View>
                     </View>
@@ -44,7 +44,7 @@ function SingleProduct() {
                             <Button 
                             title="Delete"
                             color="#282828"
-                            onPress={deleteProduct}
+                            onPress={deleteOffer}
                             />
                         </View>
                        
@@ -56,7 +56,7 @@ function SingleProduct() {
     )
 }
 
-export default SingleProduct
+export default SingleOffer
 
 const styles = StyleSheet.create({
     container:{

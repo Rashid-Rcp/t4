@@ -13,7 +13,7 @@ function TabsContent({navigation}) {
     return (
      <>
         {activeTab == 'Product' && <Products navigation={navigation}/>}
-        {activeTab == 'Offer' && <Offers/>}
+        {activeTab == 'Offer' && <Offers navigation={navigation}/>}
         {activeTab == 'Chats' && <Chats/>}
       </>
     )
