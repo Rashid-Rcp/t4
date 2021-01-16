@@ -5,9 +5,10 @@ import * as ImagePicker from 'expo-image-picker';
 
 import Footer from '../../common/Footer';
 
-function AddNewProduct() {
+function AddNewProduct({navigation}) {
     const [selectedImages, setSelectedImages] = useState([]);
     const [productTitle, setProductTitle] = useState('');
+    const [productType, setProductType] = useState('');
     const [productTags, setProductTags] = useState('');
     const [productPrice, setProductPrice] = useState('');
     const [productDescription, setProductDescription] = useState('');
@@ -98,6 +99,15 @@ function AddNewProduct() {
                             <Text style={styles.helperText}> 250 Characters left. </Text>
                     </View>
                     <View style={styles.productDetailsGroup}>
+                        <Text>Type</Text>
+                        <TextInput
+                            style={styles.textBox}
+                            onChangeText={text => setProductType(text)}
+                            value={productType}
+                            />
+                            <Text style={styles.helperText}> 20 Characters left. </Text>
+                    </View>
+                    <View style={styles.productDetailsGroup}>
                         <Text>Tags</Text>
                         <TextInput multiline  numberOfLines={10}
                             style={styles.textArea}
@@ -185,7 +195,7 @@ function AddNewProduct() {
                 </View>
            </ScrollView>
            </KeyboardAvoidingView>
-           <Footer/>
+           <Footer navigation={navigation}/>
        </View>
     )
 }

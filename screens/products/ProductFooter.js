@@ -1,9 +1,12 @@
 import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 
-import { MaterialCommunityIcons, FontAwesome, Ionicons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, FontAwesome, Ionicons , MaterialIcons} from '@expo/vector-icons';
 
-function ProductFooter() {
+function ProductFooter({holdings}) {
+
+    const onHold = holdings || false;
+
     return (
         <View style={styles.footer}>
             <View style={styles.items}>
@@ -15,7 +18,10 @@ function ProductFooter() {
                 <Text style={styles.count}>100</Text>
             </View>
             <View style={styles.items}>
-                <FontAwesome name="hand-grab-o" size={30} color="#282828" />
+                {!onHold && <FontAwesome name="hand-grab-o" size={30} color="#282828" />}
+                {onHold && <MaterialIcons name="highlight-remove" size={30} color="#282828" 
+                    style={{borderRadius:100,}} />}
+                
             </View>
             <View style={styles.items}>
                 <MaterialCommunityIcons name="whatsapp" size={30} color="#282828" />

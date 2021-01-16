@@ -2,18 +2,17 @@ import React from 'react';
 import { StyleSheet, View, StatusBar,TouchableWithoutFeedback, Keyboard } from 'react-native';
 
 import Header from './common/Header';
-
 import Footer from './common/Footer';
-import NewFeeds from './home/NewFeeds';
+import SearchContent from './search/SearchContent';
 
-export default function Offers({ navigation }) {
+export default function Search({ navigation }) {
   return (
     <TouchableWithoutFeedback onPress={()=>{Keyboard.dismiss()}}>
       <View style={styles.container}>
         <StatusBar style="auto"/>
         <Header navigation={navigation}/>
         <View style={styles.divider}></View>
-        <NewFeeds itemType={{type:'offer'}}/>
+        <SearchContent navigation={navigation}/>
         <Footer navigation={navigation}/>
       </View>
     </TouchableWithoutFeedback>

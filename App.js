@@ -4,6 +4,10 @@ import React from 'react';
 import { } from 'react-native';
 
 import Home from './screens/Home';
+import Trends from './screens/Trends';
+import TrendDetails from './screens/trends/TrendDetails';
+import Search from './screens/Search';
+import Holdings from './screens/Holdings';
 import Offers from './screens/Offers';
 import Account from './screens/Account'
 import AddNewProduct from './screens/account/add-new/AddNewProduct'
@@ -24,8 +28,12 @@ export default function App() {
   return (
     <UserProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName={'Account'}>
+        <Stack.Navigator initialRouteName={'Holdings'}>
           <Stack.Screen options={{headerShown: false}} name="Home" component={Home} />
+          <Stack.Screen options={{headerShown: false}} name="Trends" component={Trends} />
+          <Stack.Screen options={{ title: 'Products' }} name="TrendDetails" component={TrendDetails} />
+          <Stack.Screen options={{headerShown: false}} name="Search" component={Search} />
+          <Stack.Screen options={{headerShown: false}} name="Holdings" component={Holdings} />
           <Stack.Screen options={{headerShown: false}} name="Offers" component={Offers} />
           <Stack.Screen name="Account" component={Account} />
           <Stack.Screen name="EditProfile" component={EditProfile} options={{ title: 'Edit Profile' }}/>

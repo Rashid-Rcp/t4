@@ -51,7 +51,7 @@ function SingleOffer() {
                     </View>
                 </View>
             </ScrollView>
-            <Footer/>
+            <Footer navigation={navigation}/>
         </View>
     )
 }

@@ -14,7 +14,7 @@ export default function Home({ navigation }) {
         <Header navigation={navigation}/>
         <KeywordTab/>
         <NewFeeds itemType={{type:'product'}}/>
-        <Footer/>
+        <Footer navigation = {navigation}/>
       </View>
     </TouchableWithoutFeedback>
   );

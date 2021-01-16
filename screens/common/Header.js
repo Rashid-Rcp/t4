@@ -4,7 +4,6 @@ import { EvilIcons, Ionicons } from '@expo/vector-icons';
 
 
 function Header({navigation}) {
-
     return (
         <View style={styles.header}>
             <View style={styles.headerSec1}>

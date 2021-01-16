@@ -4,16 +4,15 @@ import { StyleSheet, View, StatusBar,TouchableWithoutFeedback, Keyboard } from '
 import Header from './common/Header';
 
 import Footer from './common/Footer';
-import NewFeeds from './home/NewFeeds';
-
-export default function Offers({ navigation }) {
+import HoldingsContent from './holdings/HoldingsContent';
+export default function Holdings({ navigation }) {
   return (
     <TouchableWithoutFeedback onPress={()=>{Keyboard.dismiss()}}>
       <View style={styles.container}>
         <StatusBar style="auto"/>
         <Header navigation={navigation}/>
         <View style={styles.divider}></View>
-        <NewFeeds itemType={{type:'offer'}}/>
+         <HoldingsContent/>
         <Footer navigation={navigation}/>
       </View>
     </TouchableWithoutFeedback>

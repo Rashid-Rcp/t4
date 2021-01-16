@@ -26,7 +26,7 @@ function Account({navigation}) {
                 </ScrollView>
                 
                 <AddNewPost navigation={navigation}/>
-                <Footer/>
+                <Footer navigation={navigation}/>
             </View>
         </ActiveTabProvider>
        

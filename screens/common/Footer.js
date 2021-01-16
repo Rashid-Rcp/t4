@@ -1,17 +1,26 @@
 import React from 'react';
-import { StyleSheet, View,} from 'react-native';
+import { StyleSheet, View, TouchableOpacity} from 'react-native';
 import { MaterialCommunityIcons,AntDesign,FontAwesome } from '@expo/vector-icons'; 
 
 
-function Footer() {
-
+function Footer({navigation}) {
     return (
        <View style={styles.footer}>
-          <MaterialCommunityIcons name="store-outline" size={35} color="#282828" />
-          <MaterialCommunityIcons name="lightning-bolt-outline" size={35} color="#282828" />
-          <AntDesign name="search1" size={35} color="#282828" />
-          <FontAwesome name="hand-grab-o" size={35} color="#282828" />
-          <AntDesign name="gift" size={35} color="#282828" />
+           <TouchableOpacity onPress={ () => navigation.navigate('Home') }>
+            <MaterialCommunityIcons name="store-outline" size={35} color="#282828" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={ () => navigation.navigate('Trends') }>
+            <MaterialCommunityIcons name="lightning-bolt-outline" size={35} color="#282828" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={ () => navigation.navigate('Search') }>
+            <AntDesign name="search1" size={35} color="#282828" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={ () => navigation.navigate('Holdings') }>
+            <FontAwesome name="hand-grab-o" size={35} color="#282828" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={ () => navigation.navigate('Offers') }>
+            <AntDesign name="gift" size={35} color="#282828" />
+          </TouchableOpacity>
         </View>
     ) 
 }

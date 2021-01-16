@@ -51,7 +51,7 @@ function EditContact() {
             </ScrollView>
             </KeyboardAvoidingView>
            
-           <Footer/>
+           <Footer navigation={navigation}/>
         </View>
     )
 }

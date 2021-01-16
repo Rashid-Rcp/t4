@@ -37,7 +37,7 @@ function EditProfile() {
                     </View>
                 </View>
             </ScrollView>
-            <Footer/>
+            <Footer navigation={navigation}/>
         </View>
        
     )

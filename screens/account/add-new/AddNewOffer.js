@@ -5,7 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 
 import Footer from '../../common/Footer';
 
-function AddNewOffer() {
+function AddNewOffer({navigation}) {
     const [offerImage,setOfferImage] = useState(false);
     const [offerTitle, setOfferTitle] = useState('');
     const [offerDescription, setOfferDescription] = useState('');
@@ -89,13 +89,12 @@ function AddNewOffer() {
                         title="Add Offer"
                         color="#282828"
                         onPress={submitOffer}
-                    />
+                        />
                     </View>
-                
                 </View>
            </ScrollView>
            </KeyboardAvoidingView>
-           <Footer/>
+           <Footer navigation={navigation}/>
        </View>
     )
 }
