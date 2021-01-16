@@ -28,7 +28,7 @@ export default function App() {
   return (
     <UserProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName={'Holdings'}>
+        <Stack.Navigator initialRouteName={'Home'}>
           <Stack.Screen options={{headerShown: false}} name="Home" component={Home} />
           <Stack.Screen options={{headerShown: false}} name="Trends" component={Trends} />
           <Stack.Screen options={{ title: 'Products' }} name="TrendDetails" component={TrendDetails} />

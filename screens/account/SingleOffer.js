@@ -6,7 +6,7 @@ import ProductDetails from '../products/ProductDetails'
 import ProductFooter from '../products/ProductFooter'
 import Footer from '../common/Footer';
 
-function SingleOffer() {
+function SingleOffer({navigation}) {
     const width = Dimensions.get('window').width;
     const widthPercentage =((1080-width)/1080) *100;
     const height = (1350/100) * (100-widthPercentage);
