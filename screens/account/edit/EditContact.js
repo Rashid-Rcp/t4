@@ -4,7 +4,7 @@ import { View, Text, TextInput,TouchableOpacity, ScrollView, StyleSheet, Button,
 import Footer from '../../common/Footer' 
 
 
-function EditContact() {
+function EditContact({navigation}) {
 
     const [address, setAddress] = useState('');
     const [phone, setPhone] = useState('');

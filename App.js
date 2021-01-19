@@ -16,9 +16,10 @@ import EditProfile from './screens/account/edit/EditProfile'
 import EditContact from './screens/account/edit/EditContact'
 import SingleProduct from './screens/account/SingleProduct'
 import SingleOffer from './screens/account/SingleOffer'
+import Register from './screens/common/Register'
 //import Test from './screens/Test'
 
-import {UserProvider, userProvider} from './screens/common/UserContext'
+import {UserProvider} from './screens/common/UserContext'
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -28,7 +29,7 @@ export default function App() {
   return (
     <UserProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName={'Home'}>
+        <Stack.Navigator initialRouteName={'Register'}>
           <Stack.Screen options={{headerShown: false}} name="Home" component={Home} />
           <Stack.Screen options={{headerShown: false}} name="Trends" component={Trends} />
           <Stack.Screen options={{ title: 'Products' }} name="TrendDetails" component={TrendDetails} />
@@ -36,6 +37,7 @@ export default function App() {
           <Stack.Screen options={{headerShown: false}} name="Holdings" component={Holdings} />
           <Stack.Screen options={{headerShown: false}} name="Offers" component={Offers} />
           <Stack.Screen name="Account" component={Account} />
+          <Stack.Screen name="Register" component={Register} options={{ title: 'Create new account' }}/>
           <Stack.Screen name="EditProfile" component={EditProfile} options={{ title: 'Edit Profile' }}/>
           <Stack.Screen name="EditContact" component={EditContact} options={{ title: 'Edit Contact' }}/>
           <Stack.Screen name="AddNewProduct" component={AddNewProduct} options={{ title: 'Add New Product' }} />

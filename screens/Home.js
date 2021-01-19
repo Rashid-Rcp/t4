@@ -4,6 +4,7 @@ import { StyleSheet, View, StatusBar,TouchableWithoutFeedback, Keyboard } from '
 import Header from './common/Header';
 import KeywordTab from './home/KeywordTab';
 import Footer from './common/Footer';
+import Login from './common/Login'
 import NewFeeds from './home/NewFeeds';
 
 export default function Home({ navigation }) {
@@ -15,6 +16,7 @@ export default function Home({ navigation }) {
         <KeywordTab/>
         <NewFeeds itemType={{type:'product'}}/>
         <Footer navigation = {navigation}/>
+        <Login navigation={navigation}/>
       </View>
     </TouchableWithoutFeedback>
   );

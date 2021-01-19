@@ -3,7 +3,7 @@ import { View,KeyboardAvoidingView, Text, TextInput,TouchableOpacity, ScrollView
 
 import Footer from '../../common/Footer' 
 
-function EditProfile() {
+function EditProfile({navigation}) {
     const [location, setLocation] = useState('');
     const [name, setName] = useState('');
 
