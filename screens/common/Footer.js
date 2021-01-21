@@ -4,6 +4,7 @@ import { MaterialCommunityIcons,AntDesign,FontAwesome } from '@expo/vector-icons
 
 
 function Footer({navigation}) {
+  console.log(global.MyVar);
     return (
        <View style={styles.footer}>
            <TouchableOpacity onPress={ () => navigation.navigate('Home') }>

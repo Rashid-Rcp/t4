@@ -47,7 +47,7 @@ function Login({navigation}) {
                     </TouchableOpacity>
                     <TouchableOpacity onPress={()=>{setVisible(false)}}>
                         <Text style={styles.closeLink}>
-                            CLOSE
+                            BACK
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -95,6 +95,12 @@ const styles = StyleSheet.create({
     },
     closeLink:{
         marginTop:30,
-       fontWeight:'700'
+       fontWeight:'700',
+       borderWidth:.5,
+       borderColor:'#282828',
+       width:80,
+       paddingHorizontal:10,
+       textAlign:'center',
+       paddingVertical:5,
     }
 })

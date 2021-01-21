@@ -9,6 +9,7 @@ if ( Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimenta
 
 function Register() {
 
+    
     const [accountType, setAccountType] = useState('customer');
     const [name, setName] = useState ('');
     const [email, setEmail] = useState('');
