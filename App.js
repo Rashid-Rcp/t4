@@ -28,11 +28,11 @@ import { createStackNavigator } from '@react-navigation/stack';
 const Stack = createStackNavigator();
 
 export default function App() {
-  global.APILink = '';
+  global.APILink = 'http://192.168.43.50:80/t4-laravel/app/public/api';
   return (
     <UserProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName={'Home'}>
+        <Stack.Navigator initialRouteName={'Register'}>
           <Stack.Screen options={{headerShown: false}} name="Home" component={Home} />
           <Stack.Screen options={{headerShown: false}} name="Trends" component={Trends} />
           <Stack.Screen options={{ title: 'Products' }} name="TrendDetails" component={TrendDetails} />

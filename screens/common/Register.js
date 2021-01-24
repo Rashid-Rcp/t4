@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 import { View, Text, TextInput, ScrollView, StyleSheet,Button, Image, TouchableOpacity, Platform, UIManager } from 'react-native'
 import { EvilIcons, Ionicons, Fontisto } from '@expo/vector-icons'; 
 import * as ImagePicker from 'expo-image-picker';
+import axios from 'axios';
 
 if ( Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -9,7 +10,6 @@ if ( Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimenta
 
 function Register() {
 
-    
     const [accountType, setAccountType] = useState('customer');
     const [name, setName] = useState ('');
     const [email, setEmail] = useState('');
@@ -18,6 +18,8 @@ function Register() {
     const [phone, setPhone] = useState('');
     const [imageDP, setImageDP] = useState('');
     const [validation, setValidation] = useState([]);
+
+    const [img,setImg] = useState();
 
     const createNewAccount = ()=>{
         let errors = []
@@ -46,6 +48,21 @@ function Register() {
         }
         setValidation(errors);
 
+        ///////////////
+        let uriParts = imageDP.split('.');
+        let fileType = uriParts[uriParts.length - 1];
+        let formData = new FormData();
+        formData.append('photo', {
+            uri:imageDP,
+            name: `photo.${fileType}`,
+            type: `image/${fileType}`,
+        });
+        axios.post(global.APILink+'/user',formData)
+        .then(res => {
+          console.log(res.data);
+        })
+        .catch(err => console.log(err));
+
     }
 
     useEffect(() => {
@@ -70,8 +87,25 @@ function Register() {
 
         if (!result.cancelled) {
           setImageDP(result.uri);
+          setImg(result);
         }
       };
+
+      useEffect(() => {
+        // axios.post(global.APILink+'/user', { test:'okoko' })
+        // .then(res => {
+        //   console.log(res.data);
+        // })
+        // .catch(err => console.log(err));
+
+    // axios.get(global.APILink+'/user')
+    //   .then(res => {
+    //     //const persons = res.data;
+    //     console.log(res.data);
+    //   })
+    //   .catch(err => console.log(err));
+
+      },[]);
 
     return (
         <View style={styles.container}>
@@ -175,8 +209,7 @@ function Register() {
                         onPress={createNewAccount}
                         />
                     </View>
-                    
-                          
+
                     </View>
                     }
                 </View>
@@ -223,7 +256,7 @@ const styles = StyleSheet.create({
         marginBottom:5,
     },
     textBox:{
-        backgroundColor:"#f8f8f8",
+        backgroundColor:"#f7f7f7",
         borderColor:"#ccc",
         borderRadius:5,
         borderWidth:1,
