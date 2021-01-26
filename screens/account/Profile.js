@@ -1,9 +1,13 @@
 import React,{useState, useEffect,useContext } from 'react'
-import { View, Text, StyleSheet, Image,TouchableOpacity,Platform, UIManager, LayoutAnimation } from 'react-native'
+import { View, Text, StyleSheet, Image,TouchableOpacity,Platform, UIManager, LayoutAnimation,Alert } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 import * as ImagePicker from 'expo-image-picker';
+import axios from 'axios';
+
 
 import {UserContext} from '../common/UserContext';
+import ComponentLoader from '../common/ComponentLoader';
+import {ActiveTabContext} from './tabs/ActiveTabContext';
 
 
 if ( Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
@@ -11,12 +15,40 @@ if ( Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimenta
   }
 
 function Profile({navigation}) {
-
+    const [isLoading, setIsLoading] = useState(true);
+    const [isDPLoading, setIsDPLoading] = useState(true);
     const [user, setUser] = useContext(UserContext);
-
+    const [userDetails, setUserDetails] = useState({
+        "address": "",
+        "email": "",
+        "image": "",
+        "location": "",
+        "name": "",
+        "phone": "",
+        "type": "",
+    });
+    const [activeTab, setActiveTab] = useContext(ActiveTabContext)
     const [showEditLinks, setShowEditLinks] = useState(false);
     const [showContact, setShowContact] = useState(false);
-    const [imageDP, setImageDP] = useState('https://picsum.photos/200');
+    const [DPChanged, setDPChanged] = useState(false);
+    //const [imageDP, setImageDP] = useState('https://picsum.photos/200');
+
+    useEffect(() => {
+       if(user.id !== '0'){
+        axios.get(global.APILink+'/user/'+user.id)
+        .then(res =>{
+            res.data && setUserDetails(res.data);
+            res.data && setIsLoading(false);
+        })
+        .catch(err =>console.log(err))
+       }
+       
+    }, [user])
+
+    useEffect(() => {
+        userDetails.type ==='customer' && setActiveTab('none');
+        userDetails.type === 'retailer' && setActiveTab('Product');
+    }, [userDetails])
 
     useEffect(() => {
       (async () => {
@@ -37,76 +69,121 @@ function Profile({navigation}) {
           quality: .5,
         });
       
-
         if (!result.cancelled) {
-          setImageDP(result.uri);
+         // update user image to db
+            setIsDPLoading(true);
+            let formData = new FormData();
+            let uriParts = result.uri.split('.');
+            let fileType = uriParts[uriParts.length - 1];
+            formData.append('photo', {
+                uri:result.uri,
+                name: `photo.${fileType}`,
+                type: `image/${fileType}`,
+            });
+            formData.append('user_id',user.id);
+            axios.post(global.APILink+'/user/dpupdate',formData)
+            .then(res=>{
+                setIsDPLoading(false)
+                if(res.data.status === 'success'){
+                    setDPChanged(result.uri);
+                }
+                else{ 
+                    Alert.alert(
+                    "Error",
+                    res.data.message,
+                    [
+                      { text: "OK"}
+                    ],
+                    { cancelable: false }
+                  );
+                }
+            })
+            .catch(err=>console.log(err));
+
+          
         }
       };
 
-    return (
-        <>
-       <View style={styles.container}>
-           <View>
-
-               <View style={styles.DPHolder}>
-                <Image 
-                    style={styles.DP}
-                    source={{uri:imageDP }}/>
-                    <TouchableOpacity style={styles.cameraHolder} onPress={pickImage}>
-                        <MaterialCommunityIcons style={styles.camera} name="camera" size={30} color="#282828" />
+      if(isLoading){
+          return (
+              <ComponentLoader height={130}/>
+          )
+      }
+      else{
+        return (
+            <>
+           <View style={styles.container}>
+               <View style={{width:155}}>
+                   <View style={styles.DPHolder}>
+                    <Image 
+                        style={styles.DP}
+                        source={{uri:DPChanged ? DPChanged : global.serverPublic+'/images/'+userDetails.image }}
+                        onLoad={()=>{setIsDPLoading(false)}}/>
+                        {
+                        !isDPLoading && <TouchableOpacity style={styles.cameraHolder} onPress={pickImage}>
+                            <MaterialCommunityIcons style={styles.camera} name="camera" size={30} color="#282828" />
+                        </TouchableOpacity>
+                        }
+                        {
+                            isDPLoading && <ComponentLoader height={1}/>
+                        }
+                   </View>
+                   {userDetails.type === 'retailer' &&
+                    <TouchableOpacity onPress={()=>{
+                        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+                        setShowContact(!showContact);
+                        }}>
+                    <Text style={styles.contactLink}>{showContact?'Hide' : 'View'} contact details</Text> 
                     </TouchableOpacity>
-               </View>
-               <TouchableOpacity onPress={()=>{
-                   LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-                   setShowContact(!showContact);
-                   }}>
-                <Text style={styles.contactLink}>{showContact?'Hide' : 'View'} contact details</Text> 
-               </TouchableOpacity>
-            
-           </View>
-           <View>
-               <View style={styles.details}>
-                   <Text style={styles.shopName}>Rashid Rcp</Text>
-                   <Text style={styles.location}>Karathode</Text>
-                   {
-                    user.type !=='customer' && 
-                    <Text style={styles.followers}>Followers 100</Text>
                    }
                </View>
-           </View>
-           <View style={[styles.actionBtn,showEditLinks?styles.actionBtnActive:'']}>
                <View>
-                    <TouchableOpacity onPress={()=>{setShowEditLinks(!showEditLinks)}}>
-                        <MaterialCommunityIcons  name="dots-vertical" size={30} color="#282828" />
-                    </TouchableOpacity>
+                   <View style={styles.details}>
+                       <Text style={styles.shopName}>{userDetails.name}</Text>
+                       <Text style={styles.location}>{userDetails.location}</Text>
+                       {
+                       userDetails.type === 'retailer' && userDetails.followers > 0 &&
+                       <Text style={styles.followers}>Followers {userDetails.followers}</Text>
+                       }
+                        
+                   </View>
                </View>
-               
-               { showEditLinks && <View style={styles.editLink}>
-                        <TouchableOpacity onPress={()=>{setShowEditLinks(!showEditLinks); navigation.navigate('EditProfile')}}>
-                            <Text style={{fontSize:16}}>Edit Profile</Text>
+               <View style={[styles.actionBtn,showEditLinks?styles.actionBtnActive:'']}>
+                   <View>
+                        <TouchableOpacity onPress={()=>{setShowEditLinks(!showEditLinks)}}>
+                            <MaterialCommunityIcons  name="dots-vertical" size={30} color="#282828" />
                         </TouchableOpacity>
-                  </View>
-                }  
-                { showEditLinks && <View style={styles.editLink}>
-                        <TouchableOpacity onPress={()=>{setShowEditLinks(!showEditLinks); navigation.navigate('EditContact')}}>
-                            <Text style={{fontSize:16}}>Edit Contact</Text>
-                        </TouchableOpacity>
-                    </View>
-                }
+                   </View>
+                   
+                   { showEditLinks && <View style={styles.editLink}>
+                            <TouchableOpacity onPress={()=>{setShowEditLinks(!showEditLinks); navigation.navigate('EditProfile')}}>
+                                <Text style={{fontSize:16}}>Edit Profile</Text>
+                            </TouchableOpacity>
+                      </View>
+                    }  
+                    { showEditLinks && <View style={styles.editLink}>
+                            <TouchableOpacity onPress={()=>{setShowEditLinks(!showEditLinks); navigation.navigate('EditContact')}}>
+                                <Text style={{fontSize:16}}>Edit Contact</Text>
+                            </TouchableOpacity>
+                        </View>
+                    }
+               </View>
            </View>
-       </View>
-       {
-           showContact && <View style={styles.contactDetails}>
-           <Text style={styles.contactTitle}>
-               Address : <Text style={styles.contactContent}>Arafa Centre, Calicut Main Road, Kizhakkethala, Down Hill, Malappuram, Kerala 676505</Text>
-           </Text>  
-           <Text style={styles.contactTitle}>Phone : <Text style={styles.contactContent}>9895926293</Text></Text>  
-           <Text style={styles.contactTitle}>Email : <Text style={styles.contactContent}>shop@gmail.com</Text></Text>
-        </View>
-       }
-       
-       </>
-    )
+           {
+              ( showContact || userDetails.type === 'customer') && <View style={styles.contactDetails}>
+               <Text style={styles.contactTitle}>
+                   Address : <Text style={styles.contactContent}>{userDetails.address}</Text>
+               </Text>  
+               <Text style={styles.contactTitle}>Phone : <Text style={styles.contactContent}>{userDetails.phone}</Text></Text>  
+               <Text style={styles.contactTitle}>Email : <Text style={styles.contactContent}>{userDetails.email}</Text></Text>
+            </View>
+           }
+           
+           </>
+        )
+      }
+
+    
 }
 
 export default Profile
@@ -161,6 +238,7 @@ const styles = StyleSheet.create({
     location:{
         marginTop:5,
         fontSize:17,
+        textTransform:'capitalize',
     },
     followers:{
         marginTop:20,

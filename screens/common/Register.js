@@ -1,14 +1,20 @@
-import React, {useState, useEffect} from 'react'
-import { View, Text, TextInput, ScrollView, StyleSheet,Button, Image, TouchableOpacity, Platform, UIManager } from 'react-native'
+import React, {useState, useEffect, useContext} from 'react'
+import { View, Text, TextInput,Modal, ActivityIndicator, ScrollView,KeyboardAvoidingView, StyleSheet,Button, Image, TouchableOpacity, Platform, UIManager } from 'react-native'
 import { EvilIcons, Ionicons, Fontisto } from '@expo/vector-icons'; 
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
+import * as SecureStore from 'expo-secure-store';
+
+import Loader from './Loader';
+import {UserContext} from './UserContext';
 
 if ( Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
   }
 
-function Register() {
+function Register({navigation}) {
+
+    const[user,setUser] = useContext(UserContext);
 
     const [accountType, setAccountType] = useState('customer');
     const [name, setName] = useState ('');
@@ -17,25 +23,25 @@ function Register() {
     const [address, setAddress] = useState('');
     const [phone, setPhone] = useState('');
     const [imageDP, setImageDP] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [validation, setValidation] = useState([]);
+    const[isLoading, setIsLoading] = useState(false);
+    const[registrationError, setRegistrationError] = useState('');
 
-    const [img,setImg] = useState();
+    const [img, setImg] = useState();
 
-    const createNewAccount = ()=>{
+    const createNewAccount = ()=> {
         let errors = []
         if(accountType === 'retailer') {
           imageDP === '' &&  errors.push('Store picture required');
-          name === '' &&  errors.push('Name required');
-          location === '' && errors.push('City/Town required');
-          phone === '' &&  errors.push('WhatsApp required');
           address === '' && errors.push('Address required');
         }
-        if(accountType === 'customer'){
-            name === '' &&  errors.push('Name required');
-            location === '' && errors.push('City/Town required');
-            phone === '' && email === '' && errors.push('Email or phone required');
-        }
 
+        name === '' &&  errors.push('Name required');
+        location === '' && errors.push('City/Town required');
+        phone === '' && email === '' && errors.push('Email or phone required');
+       
         (name !== '' && name.length >30) && errors.push('Name is exceeded 30 characters');
         (location !== '' && location.length >30) && errors.push('City/Town is exceeded 30 characters');
         phone !== '' && (isNaN(phone) || phone.length !== 10)  && errors.push ('Invalid Phone Number');
@@ -46,23 +52,66 @@ function Register() {
                 errors.push('Invalid Email address');
             }
         }
+
+        password === '' && errors.push('Password required');
+        if( password !== '' ){
+            if( password.length < 6 ){
+              errors.push('Password required minimum 6 characters')
+            }
+            else if( password !== confirmPassword ){
+                errors.push('Password mismatch');
+            }
+        }
+
         setValidation(errors);
 
-        ///////////////
-        let uriParts = imageDP.split('.');
-        let fileType = uriParts[uriParts.length - 1];
-        let formData = new FormData();
-        formData.append('photo', {
-            uri:imageDP,
-            name: `photo.${fileType}`,
-            type: `image/${fileType}`,
-        });
-        axios.post(global.APILink+'/user',formData)
-        .then(res => {
-          console.log(res.data);
-        })
-        .catch(err => console.log(err));
+        errors.length === 0 && saveUserDetails();
+        
+    }
 
+    const saveUserDetails = ()=> {
+        setRegistrationError('');
+        setIsLoading(true);
+        let formData = new FormData();
+        if(imageDP !== ''){
+            let uriParts = imageDP.split('.');
+            let fileType = uriParts[uriParts.length - 1];
+            formData.append('photo', {
+                uri:imageDP,
+                name: `photo.${fileType}`,
+                type: `image/${fileType}`,
+            });
+        }
+        formData.append('accountType',accountType);
+        formData.append('name',name);
+        formData.append('email',email);
+        formData.append('location',location);
+        formData.append('phone','91'+phone);
+        formData.append('address',address);
+        axios.post(global.APILink+'/user',formData)
+        .then( res => {
+            setIsLoading(false);
+          if ( res.data.status === 'success' ) {
+            let user = storeUserLocally(res.data.user_id);
+            user && navigation.navigate('Account');
+          }
+          else {
+            setRegistrationError(res.data.message);
+          }
+        })
+        .catch( err => console.log(err));
+    }
+
+    const storeUserLocally = async(user_id)=>{
+        console.log(user_id);
+        try {
+           await SecureStore.setItemAsync('t4_user_id',user_id.toString() );
+           setUser({'id':user_id,}); //update userContext
+            return true;
+          } catch (e) {
+            console.log(e);
+            return false;
+          }
     }
 
     useEffect(() => {
@@ -84,34 +133,24 @@ function Register() {
           quality: .5,
         });
       
-
         if (!result.cancelled) {
           setImageDP(result.uri);
           setImg(result);
         }
       };
 
-      useEffect(() => {
-        // axios.post(global.APILink+'/user', { test:'okoko' })
-        // .then(res => {
-        //   console.log(res.data);
-        // })
-        // .catch(err => console.log(err));
-
-    // axios.get(global.APILink+'/user')
-    //   .then(res => {
-    //     //const persons = res.data;
-    //     console.log(res.data);
-    //   })
-    //   .catch(err => console.log(err));
-
-      },[]);
-
+    
     return (
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={{flex:1,}} >
+               
         <View style={styles.container}>
-            <ScrollView>
+           <ScrollView> 
+           <Loader isLoading={isLoading} />
                 <View style={styles.formHolder}>
                     <Text style={styles.title}> Create new account </Text>
+                    
                     {
                     accountType === '' &&  <>
                     <View style={styles.accountTypeHolder}>
@@ -192,6 +231,16 @@ function Register() {
                         numberOfLines ={5}
                         onChangeText ={text =>setAddress(text)}
                         value={address} />
+
+                        <Text>Password </Text>
+                        <TextInput style={styles.textBox}  secureTextEntry
+                        onChangeText ={text =>setPassword(text)}
+                        value={password} />
+                        <Text>Confirm Password </Text>
+                        <TextInput style={styles.textBox}  secureTextEntry
+                        onChangeText ={text =>setConfirmPassword(text)}
+                        value={confirmPassword} />
+
                     </View>
 
                     <View style={styles.validationHolder}>
@@ -201,7 +250,11 @@ function Register() {
                             ) )
                         }
                     </View>
-
+                    {
+                        registrationError!== '' && <View style={styles.registrationErrorHolder}>
+                        <Text style={styles.registrationError}>{registrationError}</Text>
+                        </View>
+                    }
                     <View style={{flex:1,marginBottom:60,}}>
                         <Button
                         title="REGISTER"
@@ -215,6 +268,7 @@ function Register() {
                 </View>
             </ScrollView>
         </View>
+        </KeyboardAvoidingView>
     )
 }
 
@@ -280,5 +334,16 @@ const styles = StyleSheet.create({
     },
     validation:{
         color:'red',
+    },
+    registrationErrorHolder:{
+        paddingHorizontal:15,
+        paddingVertical:20,
+        backgroundColor:'#B22222',
+        marginBottom:10,
+        marginTop:-20,
+    },
+    registrationError:{
+        color:'#fff',
+        fontSize:18,
     }
 })

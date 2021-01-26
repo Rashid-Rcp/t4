@@ -29,10 +29,11 @@ const Stack = createStackNavigator();
 
 export default function App() {
   global.APILink = 'http://192.168.43.50:80/t4-laravel/app/public/api';
+  global.serverPublic = 'http://192.168.43.50:80/t4-laravel/app/public';
   return (
     <UserProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName={'Register'}>
+        <Stack.Navigator initialRouteName={'Account'}>
           <Stack.Screen options={{headerShown: false}} name="Home" component={Home} />
           <Stack.Screen options={{headerShown: false}} name="Trends" component={Trends} />
           <Stack.Screen options={{ title: 'Products' }} name="TrendDetails" component={TrendDetails} />

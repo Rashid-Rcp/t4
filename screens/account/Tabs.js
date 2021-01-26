@@ -15,42 +15,35 @@ function Tabs(props) {
 
     const [user, setUser] = useContext(UserContext);
    
-    useEffect(()=>{
-        if(user.type === 'customer'){
-            setActiveTab('Chats');
-        }
-    },[user])
-
-    return (
-        <View style={styles.holder}>
-            <View style={styles.container}>
-                {
-                    user.type !== 'customer' && <>
-                    <View style={[styles.tabButton,activeTab==='Product'?styles.active:'']}>
+    // useEffect(()=>{
+    //     if(user.type === 'customer'){
+    //         setActiveTab('Chats');
+    //     }
+    // },[user])
+    if(activeTab !== 'none'){
+    
+        return (
+            <View style={styles.holder}>
+                <View style={styles.container}>
+                    
+                    <View style={[styles.productButton,activeTab==='Product'?styles.active:'']}>
                         <TouchableOpacity onPress={()=>{setActiveTab('Product');scrollRef.scrollTo({x: 0, y: scrollPosition, animated: true})}}>
                             <Text>Products</Text>
                         </TouchableOpacity>
                     </View>
-                    <View style={[styles.tabButton,activeTab==='Offer'?styles.active:'']}>
+                    <View style={[styles.offerButton,activeTab==='Offer'?styles.active:'']}>
                         <TouchableOpacity onPress={()=>{setActiveTab('Offer');scrollRef.scrollTo({x: 0, y: scrollPosition, animated: true})}}>
                             <Text>Offers</Text>
                         </TouchableOpacity>
                     </View>
-                    </>
-                }
                     
-                    <View style={[styles.tabButton,activeTab==='Chats'?styles.active:'',user.type==='customer'?styles.chatOnly:'']}>
-                        <TouchableOpacity onPress={()=>{setActiveTab('Chats');scrollRef.scrollTo({x: 0, y: scrollPosition, animated: true})}}>
-                            <Text style={user.type==='customer'?styles.boldText:''}>Chats</Text>
-                        </TouchableOpacity>
-                        <View style={styles.unreadMessages}>
-                            <Text style={{color:'#fff',fontSize:12,}}>10</Text>
-                        </View>
-                    </View>
-               
+                </View>
             </View>
-        </View>
-    )
+        )
+    }
+    else {
+        return (<></>)
+    }
 }
 
 export default Tabs;
@@ -70,14 +63,26 @@ const styles=StyleSheet.create({
         backgroundColor:'#fff',
        
     },
-    tabButton:{
+    productButton:{
         paddingVertical:10,
         borderWidth:1,
         borderColor:'#dfe1e5',
         flex:1,
         alignItems:'center',
-        borderTopLeftRadius:25,
+        borderTopLeftRadius:20,
         borderTopRightRadius:5,
+        marginHorizontal:3,
+        backgroundColor:'#e6e6e6',
+        marginBottom:-1,
+    },
+    offerButton:{
+        paddingVertical:10,
+        borderWidth:1,
+        borderColor:'#dfe1e5',
+        flex:1,
+        alignItems:'center',
+        borderTopRightRadius:20,
+        borderTopLeftRadius:5,
         marginHorizontal:3,
         backgroundColor:'#e6e6e6',
         marginBottom:-1,

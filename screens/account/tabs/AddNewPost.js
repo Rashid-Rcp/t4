@@ -7,7 +7,7 @@ import {ActiveTabContext} from './ActiveTabContext';
 function AddNewPost({navigation}) {
     const [activeTab,setActiveTab] = useContext(ActiveTabContext);
     return (
-            activeTab !=='Chats' &&
+            activeTab !=='none' &&
             <View style={{position: 'absolute', bottom: 50,left:0,right:0, alignItems: 'center'}}>
             <TouchableOpacity onPress={() => navigation.navigate('AddNew'+activeTab)}>
                 <Ionicons name="add-circle" size={50} color="#282828" />
