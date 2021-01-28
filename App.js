@@ -2,6 +2,7 @@ import 'react-native-gesture-handler';
 
 import React from 'react';
 import { } from 'react-native';
+import FlashMessage from "react-native-flash-message";
 
 import Home from './screens/Home';
 import Trends from './screens/Trends';
@@ -34,6 +35,7 @@ export default function App() {
     <UserProvider>
       <NavigationContainer>
         <Stack.Navigator initialRouteName={'Account'}>
+          {/* <Stack.Screen options={{headerShown: false}} name="Test" component={Test} /> */}
           <Stack.Screen options={{headerShown: false}} name="Home" component={Home} />
           <Stack.Screen options={{headerShown: false}} name="Trends" component={Trends} />
           <Stack.Screen options={{ title: 'Products' }} name="TrendDetails" component={TrendDetails} />
@@ -49,6 +51,7 @@ export default function App() {
           <Stack.Screen name="SingleProduct" component={SingleProduct} options={{ title: 'Product Details' }} />
           <Stack.Screen name="SingleOffer" component={SingleOffer} options={{ title: 'Offer Details' }} />
         </Stack.Navigator>
+        <FlashMessage position="top" />
       </NavigationContainer> 
     </UserProvider>
       

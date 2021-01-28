@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView,TextInput,Button,KeyboardAvoidingView  } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; 
+import { Ionicons, Entypo } from '@expo/vector-icons'; 
 import * as ImagePicker from 'expo-image-picker';
+import axios from 'axios';
+import { showMessage, hideMessage } from "react-native-flash-message";
 
 import Footer from '../../common/Footer';
+import {UserContext} from '../../common/UserContext'
 
 function AddNewProduct({navigation}) {
+    const [user, setUser] = useContext(UserContext);
     const [selectedImages, setSelectedImages] = useState([]);
     const [productTitle, setProductTitle] = useState('');
     const [productType, setProductType] = useState('');
@@ -16,6 +20,9 @@ function AddNewProduct({navigation}) {
     const [variationItem, setVariationItem] = useState({});
     const [variationItemTitle,setVariationItemTitle] = useState('');
     const [variationItemPrice,setVariationItemPrice] = useState('');
+    const [validation, setValidation] = useState([]);
+    const [addVariationValidation, setAddVariationValidation] = useState([]);
+    const [isProductSubmitting, setIsProductSubmitting] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -35,7 +42,6 @@ function AddNewProduct({navigation}) {
           aspect: [4,5],
           quality: .5,
         });
-      
 
         if (!result.cancelled) {
             setSelectedImages(selectedImages => [...selectedImages, result.uri]);
@@ -44,7 +50,13 @@ function AddNewProduct({navigation}) {
       };
       
       const addVariation = ()=>{
-        if(variationItemTitle && variationItemPrice){
+          let error = [];
+          variationItemTitle === '' && error.push('Variation title required');
+          variationItemPrice === '' && error.push('Variation price required');
+          variationItemTitle !== '' && variationItemTitle.length >20 && error.push('Variation title exceeded 20 characters');
+          variationItemPrice !== '' && (isNaN(variationItemPrice) || variationItemPrice.length > 10) && error.push('Variation price is invalid');
+          setAddVariationValidation(error);
+          if(error.length===0){
             let newItem = {[variationItemTitle]:variationItemPrice}
             setVariationItem({...variationItem,...newItem});
             setVariationItemTitle('');
@@ -53,8 +65,96 @@ function AddNewProduct({navigation}) {
       }
 
       const submitProduct =()=>{
-
+       
+        let valid = doValidation();
+        if(valid){
+            setIsProductSubmitting(true);
+            let formData = new FormData();
+            selectedImages.forEach(file=>{
+                let uriParts = file.split('.');
+                let fileType = uriParts[uriParts.length - 1];
+                formData.append('productImages[]', {
+                    uri:file,
+                    name: `photo.${fileType}`,
+                    type: `image/${fileType}`,
+                });
+            });
+            formData.append('title',productTitle);
+            formData.append('type',productType);
+            formData.append('tags',productTags);
+            formData.append('price',Number(productPrice));
+            formData.append('description',productDescription);
+            if(variationTitle !== ''){
+                let variation = new Object();
+                variation[variationTitle] = variationItem;
+                formData.append('variation',JSON.stringify(variation));
+            }
+            else{
+                formData.append('variation','{}');
+            }
+            formData.append('user_id',user.id);
+            axios.post(global.APILink+'/products',formData)
+            .then(res=>{
+               setIsProductSubmitting(false);
+                if(res.data.status === 'success'){
+                    showFlashMessage('success','products addded successfully!');
+                    resetForm();
+                }
+                else{
+                    showFlashMessage('danger','An error occurred please try again later!');
+                }
+                
+            })
+            .catch(err=>console.log(err));
+        }
       }
+
+      const doValidation = ()=>{
+          let error = [];
+          selectedImages.length === 0 && error.push('Product images required');
+          productTitle === '' && error.push('Product title required');
+          productTags === '' && error.push('Product tags required');
+          productPrice === '' && error.push('Product Price required');
+          productDescription === '' && error.push('Product description required');
+          if(variationTitle !== '' && (Object.keys(variationItem).length === 0 && variationItem.constructor === Object)){
+            error.push('Product variation required');
+          }
+          if(variationTitle === '' && (Object.keys(variationItem).length !== 0 )){
+            error.push('Product variation type required');
+          }
+          productTitle !== '' && productTitle.length >50 && error.push('Product title exceeded 50 characters');
+          productType !== '' && productType.length >20 && error.push('Product type exceeded 20 characters');
+          productDescription !== '' && productDescription.length >200 && error.push('Product description exceeded 200 characters');
+          productPrice!== '' && (isNaN(productPrice) || productPrice.length >10) && error.push('Product price is invalid');
+          variationTitle !== '' && variationTitle.length >20 && error.push('Variation type is invalid');
+
+        setValidation(error);
+          if(error.length === 0){
+            return true;
+          }
+          else{
+            return false;
+          }
+         
+      }
+    const showFlashMessage = (type, message) => {
+        showMessage({
+            title: "Add new product",
+            message: message,
+            type: type
+        })
+    }
+
+    const resetForm = ()=>{
+       setSelectedImages([]);
+       setProductTitle('');
+       setProductType('');
+       setProductTags('');
+       setProductPrice('');
+       setProductDescription('');
+       setVariationTitle('');
+       setVariationItem({});
+    }
 
     return (
        <View style={styles.container}>
@@ -71,7 +171,10 @@ function AddNewProduct({navigation}) {
                     )
                     })
                 }
-                  
+                {
+                selectedImages.length === 0 && <View style={{flexDirection:'column',padding:10}}><Entypo name="images" size={50} color="black" />
+                <Text>Images</Text></View>
+                }
                 { selectedImages.length < 4 && 
                     <View style={styles.addBtn}>
                         <TouchableOpacity onPress={pickImage}>
@@ -96,7 +199,7 @@ function AddNewProduct({navigation}) {
                             onChangeText={text => setProductTitle(text)}
                             value={productTitle}
                             />
-                            <Text style={styles.helperText}> 250 Characters left. </Text>
+                            <Text style={styles.helperText}> 50 Characters allowed. </Text>
                     </View>
                     <View style={styles.productDetailsGroup}>
                         <Text>Type</Text>
@@ -105,7 +208,7 @@ function AddNewProduct({navigation}) {
                             onChangeText={text => setProductType(text)}
                             value={productType}
                             />
-                            <Text style={styles.helperText}> 20 Characters left. </Text>
+                            <Text style={styles.helperText}> 20 Characters allowed. </Text>
                     </View>
                     <View style={styles.productDetailsGroup}>
                         <Text>Tags</Text>
@@ -131,7 +234,7 @@ function AddNewProduct({navigation}) {
                             onChangeText={text => setProductDescription(text)}
                             value={productDescription}
                             />
-                        <Text style={styles.helperText}> 400 Characters left. </Text>
+                        <Text style={styles.helperText}> 200 Characters allowed. </Text>
                     </View>
 
                     <View style={styles.productDetailsGroup}>
@@ -148,8 +251,8 @@ function AddNewProduct({navigation}) {
                                  <Text style={styles.variationHeadingText}>Price</Text>
                             </View> 
                             {
-                               variationItem &&  Object.keys(variationItem).map(item => (
-                                <View style={styles.variationItems}>
+                               variationItem &&  Object.keys(variationItem).map((item, index) => (
+                                <View key={index} style={styles.variationItems}>
                                     <Text style={styles.variationItemsText}>{item}</Text>
                                     <Text style={styles.variationItemsText}>{variationItem[item]}</Text>
                                 </View>
@@ -175,6 +278,11 @@ function AddNewProduct({navigation}) {
                                     value={variationItemPrice}
                                     />
                             </View>
+                            {
+                                addVariationValidation.map((error,index)=>
+                                <Text key={index} style={styles.validation}>{error}</Text>
+                                )
+                            }
                             <View style={styles.addBtnVariation}>
                                 <TouchableOpacity onPress={addVariation}>
                                     <Ionicons name="add-circle-outline" size={30} color="#282828" />
@@ -183,11 +291,18 @@ function AddNewProduct({navigation}) {
                         </View>
                        
                     </View>
+                        {
+                           validation.map((error,index) => 
+                            <Text style={styles.validation} key={index}>{error}</Text>
+                           )
+                        }
+
                     <View style={styles.submitBtnHolder}>
                         <View style={{flex:1,}}>
                             <Button style={styles.submitBtn}
-                            title="Add Product"
+                            title={isProductSubmitting?'Submitting...':"Add Product"}
                             color="#282828"
+                            disabled ={isProductSubmitting?true:false}
                             onPress={submitProduct}
                         />
                         </View>
@@ -302,6 +417,10 @@ const styles =StyleSheet.create({
         paddingVertical:5,
     },
     keyboardView:{ flex: 1, flexDirection: 'column',justifyContent: 'center',},
+    validation:{
+        color:'red',
+        paddingBottom:5,
+    }
     
 
 });

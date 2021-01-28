@@ -1,35 +1,59 @@
-import React from 'react'
+import React,{useState,useEffect, useContext} from 'react'
 import { View, Text, StyleSheet,Image,FlatList,TouchableOpacity } from 'react-native'
 
 import { AntDesign } from '@expo/vector-icons'; 
+import axios from 'axios';
+
+import ProductsImages from './ProductsImages';
+import {UserContext} from '../../common/UserContext';
+import ComponentLoader from '../../common/ComponentLoader';
 
 function Products({navigation}) {
+    const [user, setUser] = useContext(UserContext);
+    const [isLoading, setIsLoading] = useState(true);
+    const [products, setProducts] = useState([]);
+    const [nextPage, setNextPage] = useState(null);
+    useEffect(()=>{
+        if(user.id !== '0'){
+            axios.get(global.APILink+'/products/user/'+user.id)
+            .then(res=>{
+            // console.log(res.data);
+                res.data.data && setProducts(res.data.data);
+                res.data.next_page_url && setNextPage(res.data.next_page_url);
+                res.data && setIsLoading(false);
+            })
+            .catch(err=>console.log(err));
+        }
+    },[])
     
-const Content = () => (
-    <View style={styles.productHolder}>
-        <TouchableOpacity onPress={()=>{navigation.navigate('SingleProduct')}}>
-            <Image 
-            style={styles.productImage}
-            source={{uri: 'https://picsum.photos/170/250'}}/>
-        </TouchableOpacity>   
-        <Text style={styles.productName}>product name </Text>
-        <Text style={styles.productPrice}>₹ 789</Text>
-        <View style={styles.productStatus}>
-            <AntDesign name="checkcircle" size={15} color="#0a2351"/>
-        </View>
-    </View>
-  );
+    
 
-    return (
-        <View style={styles.container}>
-           <Content/>
-           <Content/>
-           <Content/>
-           <Content/>
-           <Content/>
-           <Content/>
-        </View>
-    )
+    if(isLoading){
+        return (
+            <ComponentLoader height={150} />
+        )
+    }
+    else {
+        return (
+            <View style={styles.container}>
+            {
+                products.map((item,index)=>{
+                  return  (
+                    <View key={index} style={styles.productHolder}>
+                        <ProductsImages navigation={navigation} productID={item.id} images ={item.images} />
+                        <Text style={styles.productName}>{item.title}</Text>
+                        <Text style={styles.productPrice}>₹ {item.price}</Text>
+                        <View style={styles.productStatus}>
+                            <AntDesign name="checkcircle" size={15} color={item.status==='active'?"#0a2351":'#ccc'}/>
+                        </View>
+                    </View>
+                    )
+                })
+             }
+            </View>
+        )
+    }
+    
 }
 
 export default Products;
@@ -42,12 +66,8 @@ const styles=StyleSheet.create({
         flexDirection:'row',
         flexWrap:'wrap',
     },
-    productImage:{
-        width:170,
-        height:250,
-        resizeMode:'contain',
-    },
     productHolder:{
+      
        alignItems:'center',
        marginTop:10,
        marginBottom:20,

@@ -125,7 +125,7 @@ function Profile({navigation}) {
                         </TouchableOpacity>
                         }
                         {
-                            isDPLoading && <ComponentLoader height={1}/>
+                            isDPLoading && <ComponentLoader height={5}/>
                         }
                    </View>
                    {userDetails.type === 'retailer' &&
