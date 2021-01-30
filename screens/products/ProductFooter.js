@@ -1,21 +1,60 @@
-import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import React,{useContext, useState} from 'react'
+import { View, Text, StyleSheet,TouchableWithoutFeedback } from 'react-native'
 
 import { MaterialCommunityIcons, FontAwesome, Ionicons , MaterialIcons} from '@expo/vector-icons';
 
-function ProductFooter({holdings}) {
+import axios from 'axios';
 
+import {UserContext} from '../common/UserContext';
+
+function ProductFooter({holdings, productDetails}) {
+
+    const [user, setUser] = useContext(UserContext);
     const onHold = holdings || false;
+    const [isLiked, setIsLiked] = useState(productDetails.isLiked);
+    const [likes, setLikes] = useState(productDetails.likes);
+
+    const handleProductLike =()=>{
+        setIsLiked(1);
+        setLikes(likes+1);
+        axios.post(global.APILink+'/products/like',{productId:productDetails.id, userId:user.id, action:'like'})
+        .then(res=>{
+            res.data.status !== 'success' && setIsLiked(0);
+            res.data.status !== 'success' && setLikes(likes-1);
+        })
+        .catch(err=>console.log(err));
+    }
+
+    const handleProductDislike = ()=>{
+        setIsLiked(0);
+        setLikes(likes-1);
+        axios.post(global.APILink+'/products/like',{productId:productDetails.id, userId:user.id, action:'dislike'})
+        .then(res=>{
+            res.data.status !== 'success' && setIsLiked(1);
+            res.data.status !== 'success' && setLikes(likes+1);
+        })
+        .catch(err=>console.log(err));
+    }
 
     return (
         <View style={styles.footer}>
             <View style={styles.items}>
-                <MaterialCommunityIcons name="heart-outline" size={30} color="#282828" />
-                <Text style={styles.count}>110</Text>
+                {
+                    isLiked !== 0 && <TouchableWithoutFeedback onPress={handleProductDislike}>
+                    <MaterialCommunityIcons name="heart" size={30} color="#ff0038" />
+                    </TouchableWithoutFeedback>
+                }
+                {
+                    isLiked === 0 && <TouchableWithoutFeedback onPress={handleProductLike}>
+                    <MaterialCommunityIcons name="heart-outline" size={30} color="#282828" />
+                    </TouchableWithoutFeedback>
+                    
+                }
+                <Text style={styles.count}>{likes>0?likes:''}</Text>
             </View>
             <View style={styles.items}>
                 <FontAwesome name="comment-o" size={30} color="#282828" />
-                <Text style={styles.count}>100</Text>
+                <Text style={styles.count}>{productDetails.comments>0?productDetails.comments:''}</Text>
             </View>
             <View style={styles.items}>
                 {!onHold && <FontAwesome name="hand-grab-o" size={30} color="#282828" />}

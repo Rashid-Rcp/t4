@@ -1,21 +1,73 @@
-import React from 'react'
+import React,{useRef, useState} from 'react'
 import { View, Image, StyleSheet } from 'react-native';
+import Carousel from 'react-native-snap-carousel';
+import { Entypo } from '@expo/vector-icons'; 
 
-function ProductMedia({mediaDimension}) {
+function ProductMedia({images, mediaDimension}) {
+
+    const [index, setIndex] = useState(0)
+    const isCarousel = useRef(null)
+    const productImages = JSON.parse(images);
+    const CarouselCardItem = ({ item, index }) => {
+      
+        return (
+          <View style={styles.imageHolder} key={index}>
+                <Image
+                source={{ uri: global.serverPublic+'/products/'+item }}
+                style={{width:mediaDimension.width,height:mediaDimension.height, resizeMode:'contain'}}
+                />
+          </View>
+        )
+      }
+
     return (
-        <View style={styles.mediaHolder}>
-            <Image source={{uri:'https://picsum.photos/1080/1350'}} 
-            style={{width:mediaDimension.width,height:mediaDimension.height, resizeMode:'contain'}} />
+        <>
+        <View style={styles.container}>
+                 <Carousel
+                     layout="default"
+                     layoutCardOffset={9}
+                     ref={isCarousel}
+                     data={productImages}
+                     renderItem={CarouselCardItem}
+                     sliderWidth={mediaDimension.width}
+                     itemWidth={mediaDimension.width}
+                     onSnapToItem={(index) =>setIndex(index)} 
+                     useScrollView={false}
+                 />
+           
         </View>
+        <View style={styles.dots}>
+            
+            {
+              productImages.length >1 &&  productImages.map((item,imgIndex)=>{
+                    return (
+                     <Entypo key={imgIndex} name="dot-single" size={imgIndex==index?25:20} color="#0a2351" /> 
+                    )
+                })
+            }
+        
+        </View>
+        </>
     )
 }
 
 export default ProductMedia;
 
 const styles = StyleSheet.create({
-    mediaHolder:{
+    container:{
         flex:1,
+    },
+    imageHolder:{
+        flex:1,
+        flexDirection:'column',
+         justifyContent:'center',
+         alignItems:'center'
+     },
+     dots:{
+        flexDirection:'row',
         alignItems:'center',
-
+        justifyContent:'center',
+        height:10,
+        marginTop:5,
     }
 });

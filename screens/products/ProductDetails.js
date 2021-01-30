@@ -8,43 +8,52 @@ if ( Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimenta
     UIManager.setLayoutAnimationEnabledExperimental(true);
   }
 
-function ProductDetails({itemType}) {
+function ProductDetails({productDetails, itemType}) {
     const [expanded, setExpanded] = useState(false);
 
     //for testing purpose
     const [type, setType] = useState(itemType.type); // product or offer
     const [variation, setVariation] = useState(itemType.type === 'product'? true : false); //true or false
+    const [variationData, setVariationData] = useState({});
 
     return (
         <View>
             <View style={styles.details}>
-                <Text style={styles.title}>Product title </Text>
-                {type === 'product' && <Text style={styles.price}>₹1000</Text>}
+                <Text style={styles.title}>{productDetails.title}</Text>
+                {type === 'product' && <Text style={styles.price}>₹{productDetails.price}</Text>}
             </View>
             <View style={styles.expander}>
                 <TouchableOpacity 
                     onPress={() => {
                     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-                    setExpanded(!expanded);
+                    setVariationData(JSON.parse(productDetails.variation));  setExpanded(!expanded);
                     }}
                 >   
                 <View style={styles.expanderIcon}>
                     <MaterialCommunityIcons  name={expanded?"chevron-up":"chevron-down"} size={35} color="#282828" />
                 </View>
                  </TouchableOpacity>
+                 
                  {expanded && (
                     <View style={styles.expanderDetails}>
-                        { variation && <><Text style={styles.variationTitle}>Size</Text>
+                        { variation && Object.keys(variationData).map((title,index)=>{
+                           return( <View key={index}>
+                           <Text style={styles.variationTitle}>{title}</Text>
                             <View style={styles.variations}>
-                                <Text style={styles.variationItem}>S  ₹100</Text>
-                                <Text style={styles.variationItem}>M  ₹100</Text>
-                                <Text style={styles.variationItem}>L  ₹130</Text>
-                                <Text style={styles.variationItem}>XL  ₹130</Text>
+                                {
+                                    Object.keys(variationData[title]).map((item,index)=>{
+                                        return(
+                                            <Text key={index} style={styles.variationItem}>{item} ₹{variationData[title][item]}</Text> 
+                                        )
+                                    })
+                                }
                             </View>
-                            </>
+                            </View>
+                            )
+                             })
                         }
                         <Text style={styles.description}>
-                            Product description and any other details of the product item and other lorem ispum al hudai 
+                            {productDetails.description}
                         </Text>
                     </View>
                     )}

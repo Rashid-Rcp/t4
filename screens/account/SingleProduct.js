@@ -1,8 +1,9 @@
-import React,{useEffect, useState} from 'react'
+import React,{useEffect, useState,useContext} from 'react'
 import { View,Text,Image, Button, ScrollView, StyleSheet, Dimensions } from 'react-native'
 
 import axios from 'axios';
 
+import {UserContext} from '../common/UserContext';
 import ProductMedia from '../products/ProductMedia'
 import ProductDetails from '../products/ProductDetails'
 import ProductFooter from '../products/ProductFooter'
@@ -11,8 +12,9 @@ import ComponentLoader from '../common/ComponentLoader';
 
 function SingleProduct({route, navigation}) {
 
+    const [user,setUser]=useContext(UserContext);
     const {productId} =  route.params;
-    const [productDetails, setProductDetails] = useState();
+    const [productDetails, setProductDetails] = useState({});
     const [isLoading, setIsLoading] = useState(true);
 
     const width = Dimensions.get('window').width;
@@ -31,17 +33,18 @@ function SingleProduct({route, navigation}) {
       }
 
       useEffect(()=>{
-        axios.get(global.APILink+'/products/'+productId)
+        axios.get(global.APILink+'/products/'+productId+'/'+user.id)
         .then(res=>{
-            console.log(res.data);
+            res.data && setProductDetails(res.data);
+            //console.log(res.data);
             res.data && setIsLoading(false);
         })
         .catch(err=>console.log(err));
-      },[]);
+      },[user]);
 
       if(isLoading){
           return (
-              <ComponentLoader height={200} />
+              <ComponentLoader height={100} />
           )
       }
       else {
@@ -49,9 +52,9 @@ function SingleProduct({route, navigation}) {
             <View style={styles.container}>
                 <ScrollView>
                     <View style={styles.holder}>
-                        <ProductMedia mediaDimension={mediaDimension}/>
-                        <ProductDetails itemType={{type:'product'}}/>
-                        <ProductFooter/>
+                        <ProductMedia images={productDetails.images} mediaDimension={mediaDimension}/>
+                        <ProductDetails productDetails={productDetails} itemType={{type:'product'}}/>
+                        <ProductFooter productDetails={productDetails} />
                         <View style={{flex:1,alignItems:'center'}}>
                             <View style={{width:'70%'}}>
                                     <Button 
