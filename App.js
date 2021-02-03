@@ -18,6 +18,7 @@ import EditContact from './screens/account/edit/EditContact'
 import SingleProduct from './screens/account/SingleProduct'
 import SingleOffer from './screens/account/SingleOffer'
 import Register from './screens/common/Register'
+import Comments from './screens/common/Comments'
 //import Test from './screens/Test'
 
 import {UserProvider} from './screens/common/UserContext'
@@ -42,6 +43,7 @@ export default function App() {
           <Stack.Screen options={{headerShown: false}} name="Search" component={Search} />
           <Stack.Screen options={{headerShown: false}} name="Holdings" component={Holdings} />
           <Stack.Screen options={{headerShown: false}} name="Offers" component={Offers} />
+          <Stack.Screen name="Comments" component={Comments} />
           <Stack.Screen name="Account" component={Account} />
           <Stack.Screen name="Register" component={Register} options={{ title: 'Create new account' }}/>
           <Stack.Screen name="EditProfile" component={EditProfile} options={{ title: 'Edit Profile' }}/>

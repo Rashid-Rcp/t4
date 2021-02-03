@@ -54,7 +54,7 @@ function SingleProduct({route, navigation}) {
                     <View style={styles.holder}>
                         <ProductMedia images={productDetails.images} mediaDimension={mediaDimension}/>
                         <ProductDetails productDetails={productDetails} itemType={{type:'product'}}/>
-                        <ProductFooter productDetails={productDetails} />
+                        <ProductFooter productDetails={productDetails} navigation={navigation} />
                         <View style={{flex:1,alignItems:'center'}}>
                             <View style={{width:'70%'}}>
                                     <Button 

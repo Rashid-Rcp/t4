@@ -1,13 +1,14 @@
 import React,{useContext, useState} from 'react'
-import { View, Text, StyleSheet,TouchableWithoutFeedback } from 'react-native'
+import { View, Text, StyleSheet,TouchableWithoutFeedback, } from 'react-native'
 
 import { MaterialCommunityIcons, FontAwesome, Ionicons , MaterialIcons} from '@expo/vector-icons';
 
 import axios from 'axios';
 
 import {UserContext} from '../common/UserContext';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
-function ProductFooter({holdings, productDetails}) {
+function ProductFooter({holdings, productDetails, navigation}) {
 
     const [user, setUser] = useContext(UserContext);
     const onHold = holdings || false;
@@ -53,8 +54,11 @@ function ProductFooter({holdings, productDetails}) {
                 <Text style={styles.count}>{likes>0?likes:''}</Text>
             </View>
             <View style={styles.items}>
-                <FontAwesome name="comment-o" size={30} color="#282828" />
-                <Text style={styles.count}>{productDetails.comments>0?productDetails.comments:''}</Text>
+                <TouchableWithoutFeedback onPress={()=>navigation.navigate('Comments',{productId:productDetails.id,productType:'product'})}>
+                    <FontAwesome name="comment-o" size={30} color="#282828" />
+                </TouchableWithoutFeedback>
+                    <Text style={styles.count}>{productDetails.comments>0?productDetails.comments:''}</Text>
+               
             </View>
             <View style={styles.items}>
                 {!onHold && <FontAwesome name="hand-grab-o" size={30} color="#282828" />}
