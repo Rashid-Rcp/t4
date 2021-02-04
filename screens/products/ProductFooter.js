@@ -1,27 +1,30 @@
-import React,{useContext, useState} from 'react'
+import React,{useContext, useState, useEffect} from 'react'
 import { View, Text, StyleSheet,TouchableWithoutFeedback, } from 'react-native'
-
 import { MaterialCommunityIcons, FontAwesome, Ionicons , MaterialIcons} from '@expo/vector-icons';
-
 import axios from 'axios';
 
 import {UserContext} from '../common/UserContext';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 function ProductFooter({holdings, productDetails, navigation}) {
 
     const [user, setUser] = useContext(UserContext);
     const onHold = holdings || false;
-    const [isLiked, setIsLiked] = useState(productDetails.isLiked);
-    const [likes, setLikes] = useState(productDetails.likes);
+    const [isLiked, setIsLiked] = useState(productDetails.isLiked==null?0:productDetails.isLiked);
+    const [likes, setLikes] = useState(productDetails.likes === null?0:productDetails.likes);
+    const [holdingsAddedAlert, setHoldingsAddedAlert] = useState('');
+
+    useEffect(() => {
+        setIsLiked(productDetails.isLiked===null?0:productDetails.isLiked);
+        setLikes(productDetails.likes==null?0:productDetails.likes);
+    }, [productDetails])
 
     const handleProductLike =()=>{
         setIsLiked(1);
         setLikes(likes+1);
         axios.post(global.APILink+'/products/like',{productId:productDetails.id, userId:user.id, action:'like'})
         .then(res=>{
-            res.data.status !== 'success' && setIsLiked(0);
-            res.data.status !== 'success' && setLikes(likes-1);
+            res.data.status !== 'success' && setIsLiked(0);;
+            res.data.status !== 'success' &&  setLikes(likes-1);
         })
         .catch(err=>console.log(err));
     }
@@ -37,16 +40,30 @@ function ProductFooter({holdings, productDetails, navigation}) {
         .catch(err=>console.log(err));
     }
 
+    const handleAddToHoldings=()=>{
+        setHoldingsAddedAlert('Added to holdings');
+        setTimeout(() => {
+            setHoldingsAddedAlert('');
+          }, 2000);
+          axios.post(global.APILink+'/product_holdings',{userId:user.id, productId:productDetails.id})
+          .then(res=>{
+              res.data.status !=='success' && setHoldingsAddedAlert('An error occurred');
+              res.data.status !== 'success' && setTimeout(() => {setHoldingsAddedAlert('')}, 2000);
+          })
+          .catch(err=>console.log(err))
+    }
+
     return (
         <View style={styles.footer}>
             <View style={styles.items}>
+                
                 {
-                    isLiked !== 0 && <TouchableWithoutFeedback onPress={handleProductDislike}>
+                   isLiked !== 0  && <TouchableWithoutFeedback onPress={handleProductDislike}>
                     <MaterialCommunityIcons name="heart" size={30} color="#ff0038" />
                     </TouchableWithoutFeedback>
                 }
                 {
-                    isLiked === 0 && <TouchableWithoutFeedback onPress={handleProductLike}>
+                   isLiked === 0  && <TouchableWithoutFeedback onPress={handleProductLike}>
                     <MaterialCommunityIcons name="heart-outline" size={30} color="#282828" />
                     </TouchableWithoutFeedback>
                     
@@ -61,10 +78,16 @@ function ProductFooter({holdings, productDetails, navigation}) {
                
             </View>
             <View style={styles.items}>
-                {!onHold && <FontAwesome name="hand-grab-o" size={30} color="#282828" />}
+                {!onHold && <TouchableWithoutFeedback onPress={handleAddToHoldings}> 
+                    <FontAwesome name="hand-grab-o" size={30} color="#282828" />
+                    </TouchableWithoutFeedback>
+                }
+                {
+                    holdingsAddedAlert !== '' &&<Text style={styles.holdingsAlert}>{holdingsAddedAlert}</Text>
+                }
+
                 {onHold && <MaterialIcons name="highlight-remove" size={30} color="#282828" 
                     style={{borderRadius:100,}} />}
-                
             </View>
             <View style={styles.items}>
                 <MaterialCommunityIcons name="whatsapp" size={30} color="#282828" />
@@ -98,6 +121,17 @@ const styles = StyleSheet.create({
     },
     count:{
         paddingLeft:3,
+    },
+    holdingsAlert:{
+        position:'absolute',
+        top:-40,
+        backgroundColor:'#fff',
+        padding:5,
+        borderRadius:5,
+        left:-30,
+        borderWidth:.5,
+        borderColor:"#282828",
+        zIndex:10,
     }
 
 });

@@ -9,16 +9,16 @@ import NewFeeds from './home/NewFeeds';
 
 export default function Home({ navigation }) {
   return (
-    <TouchableWithoutFeedback onPress={()=>{Keyboard.dismiss()}}>
+    // <TouchableWithoutFeedback onPress={()=>{Keyboard.dismiss()}}>
       <View style={styles.container}>
         <StatusBar style="auto"/>
         <Header navigation={navigation}/>
         <KeywordTab/>
         <NewFeeds itemType={{type:'product'}}/>
         <Footer navigation = {navigation}/>
-        <Login navigation={navigation}/>
+        {/* <Login navigation={navigation}/> */}
       </View>
-    </TouchableWithoutFeedback>
+    // </TouchableWithoutFeedback>
   );
 }
 

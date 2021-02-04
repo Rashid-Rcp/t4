@@ -8,13 +8,14 @@ import ProductsImages from './ProductsImages';
 import {UserContext} from '../../common/UserContext';
 import ComponentLoader from '../../common/ComponentLoader';
 
-function Products({navigation}) {
+function Products({navigation, refreshing}) {
     const [user, setUser] = useContext(UserContext);
     const [isLoading, setIsLoading] = useState(true);
     const [products, setProducts] = useState([]);
     const [nextPage, setNextPage] = useState(null);
     useEffect(()=>{
         if(user.id !== '0'){
+            setIsLoading(true);
             axios.get(global.APILink+'/products/user/'+user.id)
             .then(res=>{
             // console.log(res.data);
@@ -24,9 +25,7 @@ function Products({navigation}) {
             })
             .catch(err=>console.log(err));
         }
-    },[])
-    
-    
+    },[refreshing])
 
     if(isLoading){
         return (

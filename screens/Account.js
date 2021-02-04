@@ -1,5 +1,5 @@
-import React,{useState,useContext, useRef, useEffect} from 'react';
-import { View, Text, StyleSheet,TouchableOpacity,ScrollView } from 'react-native';
+import React,{useState,useContext, useRef, useEffect, useCallback} from 'react';
+import { View, Text, StyleSheet,TouchableOpacity,ScrollView, RefreshControl } from 'react-native';
 
 import Profile from './account/Profile';
 import Tabs from './account/Tabs';
@@ -15,14 +15,26 @@ import {ActiveTabProvider, ActiveTabContext} from './account/tabs/ActiveTabConte
 function Account({navigation}) {
     
     const scrollRef = useRef();
+    const [refreshing, setRefreshing] = useState(false);
+
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+      }, [refreshing]);
+    
+    const endRefresh =()=>{
+        setRefreshing(false);
+    }
     
     return (
         <ActiveTabProvider>
             <View style={styles.container}>
-                 <ScrollView ref={scrollRef} stickyHeaderIndices={[1]}  showsVerticalScrollIndicator={false}>
-                    <Profile navigation={navigation}/>
+                <ScrollView ref={scrollRef} stickyHeaderIndices={[1]}  showsVerticalScrollIndicator={false}
+                 refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                  }>
+                    <Profile navigation={navigation} refreshing={refreshing} endRefresh={endRefresh} />
                     <Tabs scrollRef={scrollRef}/>
-                    <TabsContent navigation={navigation}/>
+                    <TabsContent navigation={navigation} refreshing={refreshing}/>
                 </ScrollView>
                 
                 <AddNewPost navigation={navigation}/>

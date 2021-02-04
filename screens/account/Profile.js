@@ -14,7 +14,7 @@ if ( Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimenta
     UIManager.setLayoutAnimationEnabledExperimental(true);
   }
 
-function Profile({navigation}) {
+function Profile({navigation, refreshing, endRefresh}) {
     const [isLoading, setIsLoading] = useState(true);
     const [isDPLoading, setIsDPLoading] = useState(true);
     const [user, setUser] = useContext(UserContext);
@@ -27,6 +27,7 @@ function Profile({navigation}) {
         "phone": "",
         "type": "",
     });
+    
     const [activeTab, setActiveTab] = useContext(ActiveTabContext)
     const [showEditLinks, setShowEditLinks] = useState(false);
     const [showContact, setShowContact] = useState(false);
@@ -39,11 +40,12 @@ function Profile({navigation}) {
         .then(res =>{
             res.data && setUserDetails(res.data);
             res.data && setIsLoading(false);
+            endRefresh();
         })
         .catch(err =>console.log(err))
        }
        
-    }, [user])
+    }, [user,refreshing])
 
     useEffect(() => {
         userDetails.type ==='customer' && setActiveTab('none');

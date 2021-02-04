@@ -3,16 +3,16 @@ import { View, Text,Image,StyleSheet } from 'react-native'
 
 import { Ionicons } from '@expo/vector-icons'; 
 
-function ProductHeader() {
+function ProductHeader({shopDetails}) {
     return (
         <View style={styles.container}>
             <View style={styles.left}>
                 <Image 
                 style={styles.DP}
-                source={{uri: 'https://picsum.photos/200'}}/>
+                source={{uri: global.serverPublic+'/images/'+shopDetails.shopImage}}/>
                 <View>
-                    <Text style={styles.name}>Shop Name</Text>
-                    <Text style={styles.location}>Location</Text>
+                    <Text style={styles.name}>{shopDetails.shopName}</Text>
+                    <Text style={styles.location}>{shopDetails.shopLocation}</Text>
                 </View>
             </View>
             <View >

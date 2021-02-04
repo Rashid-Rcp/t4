@@ -1,5 +1,5 @@
-import React,{useEffect, useState,useContext} from 'react'
-import { View,Text,Image, Button, ScrollView, StyleSheet, Dimensions } from 'react-native'
+import React,{useEffect, useState,useContext, useCallback} from 'react'
+import { View,Text,Image, Button, ScrollView, StyleSheet, Dimensions, RefreshControl } from 'react-native'
 
 import axios from 'axios';
 
@@ -16,6 +16,7 @@ function SingleProduct({route, navigation}) {
     const {productId} =  route.params;
     const [productDetails, setProductDetails] = useState({});
     const [isLoading, setIsLoading] = useState(true);
+    const [refreshing, setRefreshing] = useState(false);
 
     const width = Dimensions.get('window').width;
     const widthPercentage =((1080-width)/1080) *100;
@@ -31,16 +32,26 @@ function SingleProduct({route, navigation}) {
       const deleteProduct = ()=>{
 
       }
-
-      useEffect(()=>{
+      const getData = ()=>{
         axios.get(global.APILink+'/products/'+productId+'/'+user.id)
         .then(res=>{
+            //console.log(res.data);
             res.data && setProductDetails(res.data);
             //console.log(res.data);
             res.data && setIsLoading(false);
+            res.data && setRefreshing(false);
         })
         .catch(err=>console.log(err));
-      },[user]);
+      }
+
+      useEffect(()=>{
+        getData();
+      },[]);
+
+      const onRefresh = useCallback(()=>{
+        setRefreshing(true);
+        getData();
+      },[refreshing])
 
       if(isLoading){
           return (
@@ -50,7 +61,10 @@ function SingleProduct({route, navigation}) {
       else {
         return (
             <View style={styles.container}>
-                <ScrollView>
+                <ScrollView 
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                  }>
                     <View style={styles.holder}>
                         <ProductMedia images={productDetails.images} mediaDimension={mediaDimension}/>
                         <ProductDetails productDetails={productDetails} itemType={{type:'product'}}/>

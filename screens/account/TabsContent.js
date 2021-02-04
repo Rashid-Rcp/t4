@@ -8,13 +8,13 @@ import Offers from './tabs/Offers'
 
 
 
-function TabsContent({navigation}) {
+function TabsContent({navigation, refreshing}) {
     const [activeTab,setActiveTab] = useContext(ActiveTabContext);
     if(activeTab !== 'none'){
       return (
         <>
-           {activeTab == 'Product' && <Products navigation={navigation}/>}
-           {activeTab == 'Offer' && <Offers navigation={navigation}/>}
+           {activeTab == 'Product' && <Products navigation={navigation} refreshing={refreshing}/>}
+           {activeTab == 'Offer' && <Offers navigation={navigation} refreshing={refreshing} />}
            {/* {activeTab == 'Chats' && <Chats/>} */}
          </>
        )
