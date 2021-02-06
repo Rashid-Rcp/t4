@@ -7,9 +7,12 @@ import ProductMedia from '../products/ProductMedia';
 import ProductFooter from '../products/ProductFooter';
 import ProductDetails from '../products/ProductDetails';
 import {UserContext} from '../common/UserContext';
+import {KeywordContext} from './KeywordContext';
 
-function NewFeeds({itemType}) {
+function NewFeeds({itemType, refreshKeywordsHandler, activeKey}) {
     const [user, setUser] = useContext(UserContext);
+  
+    const [keywords, setKeywords] = useContext(KeywordContext);
     
     const width = Dimensions.get('window').width;
     const widthPercentage =((1080-width)/1080) *100;
@@ -19,30 +22,59 @@ function NewFeeds({itemType}) {
       height:height,
     }
     const [products, setProducts] = useState([]);
-    const location = 'malappuram';
+    
 
+    useEffect(() => {
+    
+      if(products.length>0){
+        let productTypes = keywords;
+        products.map((item)=>{
+          let type=item.type;
+          if(productTypes.length<10 && productTypes.indexOf(type) === -1){
+            productTypes.push(type);
+          }
+        });
+        //console.log('new feeds');
+        setKeywords(productTypes);
+        refreshKeywordsHandler(1)
+        //console.log(keywords);
+
+      }
+    }, [products])
     // const mediaWidthHeight = {
     //   width:'',
     //   height:''
     // }
+    //console.log(global.APILink+'/products_by_location/'+location+'/'+user.id);
     
     useEffect(()=>{
-      axios.get(global.APILink+'/products_by_location/'+location+'/'+user.id)
-      .then(res=>{
-       res.data && setProducts(res.data)
-      })
-      .catch(err=>console.log(err))
-    },[])
+     
+      if(user.id !=='0'){
+        axios.get(global.APILink+'/products_by_location/'+user.location+'/'+user.id)
+        .then(res=>{
+         console.log(res.data);
+         res.data && setProducts(res.data)
+        })
+        .catch(err=>console.log(err))
+      }
+      
+    },[user])
 
   
-      const renderItem = ({ item }) => (
-        <View style={{flex:1}}>
-            <ProductHeader shopDetails={item}/>
-            <ProductMedia images={item.images} mediaDimension={mediaDimension}/>
-            <ProductDetails productDetails={item} itemType={itemType}/>
-            <ProductFooter productDetails={item}/>
-        </View>
-      );
+      const renderItem = ({ item }) => {
+        if( activeKey==='All' || activeKey===item.type){
+          return(
+            <View style={{flex:1}}>
+                <ProductHeader shopDetails={item}/>
+                <ProductMedia images={item.images} mediaDimension={mediaDimension}/>
+                <ProductDetails productDetails={item} itemType={itemType}/>
+                <ProductFooter productDetails={item}/>
+            </View>
+          )
+        }
+
+      
+      };
 
     return (
          <View style={styles.newFeeds}>

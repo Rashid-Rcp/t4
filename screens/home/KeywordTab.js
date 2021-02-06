@@ -1,25 +1,40 @@
-import React from 'react'
+import React, { useState,useEffect, useContext } from 'react';
 import { StyleSheet, Text, View, ScrollView} from 'react-native';
+import axios from 'axios';
 
-function KeywordTab() {
-    const keywordHandler = (event)=>{
-        console.log(event._dispatchInstances.memoizedProps.children)
-    }
+import { KeywordContext } from './KeywordContext';
+import {UserContext} from '../common/UserContext';
+
+function KeywordTab({activeKeyHandler}) {
+
+    const [activeKey, setActiveKey] = useState('All');
+    const [user, setUser] = useContext(UserContext);
+    const[keywords, setKeywords] = useContext(KeywordContext);
+
+    useEffect(() => {
+       if(user.id !== '0'){
+           axios.get(global.APILink+'/recent_product_types/'+user.id)
+           .then(res=>{
+               let newKeywords = [...keywords,...JSON.parse(res.data)];
+               setKeywords(Array.from(new Set(newKeywords)));
+           })
+           .catch(err=>console.log(err));
+       }
+    }, [user])
+
+    //fetch recent product type from users
+    // if its less than 10 add from product types 
+
     return (
         <View style={styles.tab}>
             <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                <Text style={styles.keywords} onPress={(event) => keywordHandler(event)} >All</Text>
-                <Text style={styles.keywords} onPress={(event) => keywordHandler(event)} >Shirts</Text>
-                <Text style={styles.keywords} onPress={(event) => keywordHandler(event)} >T-shirts</Text>
-                <Text style={styles.keywords} onPress={(event) => keywordHandler(event)} >All</Text>
-                <Text style={styles.keywords} onPress={(event) => keywordHandler(event)} >Shirts</Text>
-                <Text style={styles.keywords} onPress={(event) => keywordHandler(event)} >T-shirts</Text>
-                <Text style={styles.keywords} onPress={(event) => keywordHandler(event)} >All</Text>
-                <Text style={styles.keywords} onPress={(event) => keywordHandler(event)} >Shirts</Text>
-                <Text style={styles.keywords} onPress={(event) => keywordHandler(event)} >T-shirts</Text>
-                <Text style={styles.keywords} onPress={(event) => keywordHandler(event)} >All</Text>
-                <Text style={styles.keywords} onPress={(event) => keywordHandler(event)} >Shirts</Text>
-                <Text style={styles.keywords} onPress={(event) => keywordHandler(event)} >T-shirts</Text>
+                {
+                keywords.map((item, index)=>{
+                    return(
+                        <Text key={index} style={[styles.keywords,activeKey===item?styles.active:'']} onPress={() => {setActiveKey(item);activeKeyHandler(item)}} >{item}</Text>
+                    )
+                })
+                }
             </ScrollView>
         </View>
     )
@@ -34,7 +49,6 @@ const styles = StyleSheet.create({
        borderWidth:1,
        marginVertical:5,
        paddingVertical:3,
-      
    },
    keywords:{
        marginHorizontal:3,
@@ -45,7 +59,12 @@ const styles = StyleSheet.create({
        borderColor:'#dfe1e5',
        borderWidth:1,
        height:30,
-       borderRadius:100
+       borderRadius:100,
+       color:'#383838'
+   },
+   active:{
+    backgroundColor:'#0a2351',
+    color:'#fff',
    }
    
   });

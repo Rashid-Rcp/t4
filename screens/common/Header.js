@@ -1,9 +1,18 @@
-import React from 'react'
+import React,{useState,useContext,useEffect} from 'react'
 import { StyleSheet, View,Image, TextInput,TouchableOpacity } from 'react-native';
 import { EvilIcons, Ionicons } from '@expo/vector-icons'; 
 
+import { UserContext } from './UserContext';
 
 function Header({navigation}) {
+    const[user, setUser] = useContext(UserContext);
+    const[location, setLocation] = useState(user.location!=='no_location'?user.location:'');
+    const locationHandler = ()=>{
+        console.log(location);
+        let userData = {...user};
+        userData.location = location;
+        setUser(userData);
+    }
     return (
         <View style={styles.header}>
             <View style={styles.headerSec1}>
@@ -12,7 +21,7 @@ function Header({navigation}) {
                     source={require('../../assets/t4-logo3-1.png')}
                 />
                 <EvilIcons style={styles.locationIcon} name="location" size={35} color="black" />
-                <TextInput placeholder='Enter your city/town'/>
+                <TextInput value={location} placeholder='Enter your city/town' onBlur={locationHandler} onChangeText={text=>setLocation(text)} />
             </View>
             <View>
                 <TouchableOpacity onPress={() => navigation.navigate('Account')}>

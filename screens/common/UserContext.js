@@ -7,6 +7,7 @@ export const UserProvider = (props)=>{
 
     const [user, setUser] = useState({
         'id':'0',
+        'location':'no_location',
     });
     
     useEffect(() => {
@@ -14,9 +15,9 @@ export const UserProvider = (props)=>{
             try {
                 const user_id = await SecureStore.getItemAsync('t4_user_id');
                 if (user_id) {
-                  setUser({
-                      'id':user_id
-                  });
+                    let userData = {...user};
+                    userData.id=user_id;
+                    setUser(userData);
                 }
               } catch (e) {
                 console.log(e);

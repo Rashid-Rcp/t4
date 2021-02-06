@@ -7,21 +7,23 @@ import {UserContext} from '../common/UserContext';
 
 function ProductFooter({holdings, productDetails, navigation}) {
 
+ 
+
     const [user, setUser] = useContext(UserContext);
     const onHold = holdings || false;
-    const [isLiked, setIsLiked] = useState(productDetails.isLiked==null?0:productDetails.isLiked);
+    const [isLiked, setIsLiked] = useState(productDetails.isLiked === null?0:productDetails.isLiked);
     const [likes, setLikes] = useState(productDetails.likes === null?0:productDetails.likes);
     const [holdingsAddedAlert, setHoldingsAddedAlert] = useState('');
-
+   
     useEffect(() => {
-        setIsLiked(productDetails.isLiked===null?0:productDetails.isLiked);
-        setLikes(productDetails.likes==null?0:productDetails.likes);
+        setIsLiked(productDetails.isLiked === null?0:productDetails.isLiked);
+        setLikes(productDetails.likes === null?0:productDetails.likes);
     }, [productDetails])
 
     const handleProductLike =()=>{
         setIsLiked(1);
         setLikes(likes+1);
-        axios.post(global.APILink+'/products/like',{productId:productDetails.id, userId:user.id, action:'like'})
+        axios.post(global.APILink+'/products/like',{productId:productDetails.id, productType:productDetails.type, userId:user.id, action:'like'})
         .then(res=>{
             res.data.status !== 'success' && setIsLiked(0);;
             res.data.status !== 'success' &&  setLikes(likes-1);
@@ -32,7 +34,7 @@ function ProductFooter({holdings, productDetails, navigation}) {
     const handleProductDislike = ()=>{
         setIsLiked(0);
         setLikes(likes-1);
-        axios.post(global.APILink+'/products/like',{productId:productDetails.id, userId:user.id, action:'dislike'})
+        axios.post(global.APILink+'/products/like',{productId:productDetails.id, productType:productDetails.type, userId:user.id, action:'dislike'})
         .then(res=>{
             res.data.status !== 'success' && setIsLiked(1);
             res.data.status !== 'success' && setLikes(likes+1);
