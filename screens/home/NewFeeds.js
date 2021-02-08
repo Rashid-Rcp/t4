@@ -30,39 +30,31 @@ function NewFeeds({itemType, refreshKeywordsHandler, activeKey}) {
         let productTypes = keywords;
         products.map((item)=>{
           let type=item.type;
-          if(productTypes.length<10 && productTypes.indexOf(type) === -1){
+          if(productTypes.length<20 && productTypes.indexOf(type) === -1){
             productTypes.push(type);
           }
         });
-        //console.log('new feeds');
+       
         setKeywords(productTypes);
         refreshKeywordsHandler(1)
-        //console.log(keywords);
-
       }
     }, [products])
-    // const mediaWidthHeight = {
-    //   width:'',
-    //   height:''
-    // }
-    //console.log(global.APILink+'/products_by_location/'+location+'/'+user.id);
+    
     
     useEffect(()=>{
-     
       if(user.id !=='0'){
-        axios.get(global.APILink+'/products_by_location/'+user.location+'/'+user.id)
+        axios.get(global.APILink+'/products_by_location/'+user.location+'/'+user.id+'/'+activeKey)
         .then(res=>{
-         console.log(res.data);
-         res.data && setProducts(res.data)
+         res.data && setProducts(res.data.data)
         })
         .catch(err=>console.log(err))
       }
       
-    },[user])
+    },[user, activeKey])
 
   
       const renderItem = ({ item }) => {
-        if( activeKey==='All' || activeKey===item.type){
+       
           return(
             <View style={{flex:1}}>
                 <ProductHeader shopDetails={item}/>
@@ -71,9 +63,7 @@ function NewFeeds({itemType, refreshKeywordsHandler, activeKey}) {
                 <ProductFooter productDetails={item}/>
             </View>
           )
-        }
-
-      
+        
       };
 
     return (

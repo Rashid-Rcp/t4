@@ -9,14 +9,15 @@ function KeywordTab({activeKeyHandler}) {
 
     const [activeKey, setActiveKey] = useState('All');
     const [user, setUser] = useContext(UserContext);
-    const[keywords, setKeywords] = useContext(KeywordContext);
+    const[keywords, setKeywords] = useState([]);
 
     useEffect(() => {
        if(user.id !== '0'){
            axios.get(global.APILink+'/recent_product_types/'+user.id)
            .then(res=>{
-               let newKeywords = [...keywords,...JSON.parse(res.data)];
-               setKeywords(Array.from(new Set(newKeywords)));
+               let newKeywords = res.data;
+               newKeywords.unshift('All');
+               setKeywords(res.data);
            })
            .catch(err=>console.log(err));
        }

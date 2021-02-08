@@ -47,7 +47,7 @@ function ProductFooter({holdings, productDetails, navigation}) {
         setTimeout(() => {
             setHoldingsAddedAlert('');
           }, 2000);
-          axios.post(global.APILink+'/product_holdings',{userId:user.id, productId:productDetails.id})
+          axios.post(global.APILink+'/product_holdings',{userId:user.id, productId:productDetails.id, productType:productDetails.type})
           .then(res=>{
               res.data.status !=='success' && setHoldingsAddedAlert('An error occurred');
               res.data.status !== 'success' && setTimeout(() => {setHoldingsAddedAlert('')}, 2000);
