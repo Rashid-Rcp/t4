@@ -14,16 +14,21 @@ export const UserProvider = (props)=>{
         const get_user = async()=>{
             try {
                 const user_id = await SecureStore.getItemAsync('t4_user_id');
+                const user_location = await SecureStore.getItemAsync('t4_user_location');
+                let userData = {...user};
                 if (user_id) {
-                    let userData = {...user};
                     userData.id=user_id;
-                    setUser(userData);
                 }
+                if(user_location) {
+                    userData.location=user_location;
+                }
+                setUser(userData);
               } catch (e) {
                 console.log(e);
               }
         }
         get_user();
+    
         
     }, [])
 

@@ -1,18 +1,37 @@
 import React,{useState,useContext,useEffect} from 'react'
 import { StyleSheet, View,Image, TextInput,TouchableOpacity } from 'react-native';
 import { EvilIcons, Ionicons } from '@expo/vector-icons'; 
+import * as SecureStore from 'expo-secure-store';
 
 import { UserContext } from './UserContext';
 
 function Header({navigation}) {
+
     const[user, setUser] = useContext(UserContext);
     const[location, setLocation] = useState(user.location!=='no_location'?user.location:'');
+    
     const locationHandler = ()=>{
-        console.log(location);
-        let userData = {...user};
-        userData.location = location;
-        setUser(userData);
+        if(location !==''){
+            let userData = {...user};
+            userData.location = location;
+            setUser(userData);
+            storeLocationLocally(location);
+        }
     }
+    const storeLocationLocally = async(location)=>{
+        try {
+           await SecureStore.setItemAsync('t4_user_location',location);
+            return true;
+          } catch (e) {
+            console.log(e);
+            return false;
+          }
+    }
+
+    useEffect(() => {
+        setLocation(user.location!=='no_location'?user.location:'');
+    }, [user])
+
     return (
         <View style={styles.header}>
             <View style={styles.headerSec1}>
@@ -25,7 +44,6 @@ function Header({navigation}) {
             </View>
             <View>
                 <TouchableOpacity onPress={() => navigation.navigate('Account')}>
-                    <Ionicons style={styles.chatIcon} name="ios-chatbubble-ellipses-outline" size={20} color="black" />
                     <EvilIcons style={styles.userIcon} name="user" size={40} color="black" />
                 </TouchableOpacity>
             </View>

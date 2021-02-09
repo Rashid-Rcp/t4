@@ -2,14 +2,12 @@ import React, { useState,useEffect, useContext } from 'react';
 import { StyleSheet, Text, View, ScrollView} from 'react-native';
 import axios from 'axios';
 
-import { KeywordContext } from './KeywordContext';
 import {UserContext} from '../common/UserContext';
 
 function KeywordTab({activeKeyHandler}) {
-
     const [activeKey, setActiveKey] = useState('All');
     const [user, setUser] = useContext(UserContext);
-    const[keywords, setKeywords] = useState([]);
+    const [keywords, setKeywords] = useState([]);
 
     useEffect(() => {
        if(user.id !== '0'){
@@ -23,22 +21,21 @@ function KeywordTab({activeKeyHandler}) {
        }
     }, [user])
 
-    //fetch recent product type from users
-    // if its less than 10 add from product types 
-
-    return (
-        <View style={styles.tab}>
-            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                {
-                keywords.map((item, index)=>{
-                    return(
-                        <Text key={index} style={[styles.keywords,activeKey===item?styles.active:'']} onPress={() => {setActiveKey(item);activeKeyHandler(item)}} >{item}</Text>
-                    )
-                })
-                }
-            </ScrollView>
-        </View>
-    )
+    
+        return (
+            <View style={styles.tab}>
+                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                    {
+                    keywords.map((item, index)=>{
+                        return(
+                            <Text key={index} style={[styles.keywords,activeKey===item?styles.active:'']} onPress={() => {setActiveKey(item);activeKeyHandler(item)}} >{item}</Text>
+                        )
+                    })
+                    }
+                </ScrollView>
+            </View>
+        )
+    
 }
 
 export default KeywordTab;

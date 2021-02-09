@@ -106,7 +106,10 @@ function Register({navigation}) {
         console.log(user_id);
         try {
            await SecureStore.setItemAsync('t4_user_id',user_id.toString() );
-           setUser({'id':user_id,}); //update userContext
+          // setUser({'id':user_id,}); //update userContext
+            let userData = {...user};
+            userData.id = user_id;
+            setUser(userData);
             return true;
           } catch (e) {
             console.log(e);
