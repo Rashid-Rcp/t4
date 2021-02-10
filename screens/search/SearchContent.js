@@ -1,11 +1,13 @@
-import React,{ useState } from 'react'
+import React,{ useState, useContext } from 'react'
 import { View,Text,TouchableOpacity,StyleSheet,TextInput,ScrollView } from 'react-native'
 
+import {UserContext} from '../common/UserContext';
 import ShopResult from './ShopResult';
 import ProductResult from './ProductResult';
 
 function SearchContent({navigation}) {
 
+    const [user, setUser] = useContext(UserContext);
     const [search, setSearch] = useState('');
     return (
         <View style={styles.container}>
@@ -15,11 +17,18 @@ function SearchContent({navigation}) {
                 onChangeText={text => setSearch(text)}
                 value={search}
             />
-            <ScrollView>
-                <ShopResult navigation={navigation}/>
+            {
+            user.location !== 'no_location' && <ScrollView  showsVerticalScrollIndicator={false}>
+                <ShopResult navigation={navigation} search={search} location={user.location}/>
                 <View style={styles.divider}></View>
-                <ProductResult navigation={navigation}/>
+                <ProductResult navigation={navigation} search={search} location={user.location}/>
             </ScrollView>
+            }
+            {
+            user.location === 'no_location' && <Text style={styles.noLocation}>
+                Please provide your location.
+            </Text>
+            }
             
         </View>
     )
@@ -45,5 +54,11 @@ const styles =StyleSheet.create({
         height:1,
         backgroundColor:'#ccc',
         marginTop:10,
+    },
+    noLocation:{
+        fontSize:17,
+        textAlign:'center',
+        marginVertical:30,
+        color:"#333333"
     }
 });

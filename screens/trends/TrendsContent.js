@@ -56,7 +56,7 @@ function TrendsContent({navigation}) {
     const renderItem = ({ item }) => {
     return(
       <View style={styles.imageHolder}>
-          <TouchableOpacity onPress={()=>navigation.navigate('TrendDetails')}>
+          <TouchableOpacity onPress={()=>navigation.navigate('TrendDetails',{shopId:item.user_id,productId:item.id})}>
               <Image source={{uri:global.serverPublic+'/products/'+JSON.parse(item.images)[0]}} 
               style={{width:width,height:height, resizeMode:'contain',borderWidth:2,borderColor:'#fff',}} />
           </TouchableOpacity>
