@@ -6,7 +6,7 @@ import axios from 'axios';
 import { showMessage, hideMessage } from "react-native-flash-message";
 
 import Footer from '../../common/Footer';
-import {UserContext} from '../../common/UserContext'
+import {UserContext} from '../../common/UserContext';
 
 function AddNewProduct({navigation}) {
     const [user, setUser] = useContext(UserContext);

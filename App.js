@@ -35,7 +35,7 @@ export default function App() {
   return (
     <UserProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName={'Search'}>
+        <Stack.Navigator initialRouteName={'Home'}>
           {/* <Stack.Screen options={{headerShown: false}} name="Test" component={Test} /> */}
           <Stack.Screen options={{headerShown: false}} name="Home" component={Home} />
           <Stack.Screen options={{headerShown: false}} name="Trends" component={Trends} />

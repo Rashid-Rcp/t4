@@ -1,15 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useContext } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView,TextInput,Button,KeyboardAvoidingView  } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; 
+import { Ionicons, Entypo } from '@expo/vector-icons'; 
 import * as ImagePicker from 'expo-image-picker';
+import axios from 'axios';
+import { showMessage, hideMessage } from "react-native-flash-message";
 
+import {UserContext} from '../../common/UserContext'
 import Footer from '../../common/Footer';
 
 function AddNewOffer({navigation}) {
-    const [offerImage,setOfferImage] = useState(false);
+    const [user, setUser] = useContext(UserContext);
+    const [offerImage,setOfferImage] = useState('');
     const [offerTitle, setOfferTitle] = useState('');
     const [offerDescription, setOfferDescription] = useState('');
     const [offerTags, setOfferTags] = useState('');
+    const [validation, setValidation] = useState([]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
 
     useEffect(() => {
@@ -36,9 +42,67 @@ function AddNewOffer({navigation}) {
 
       };
 
-      const submitOffer =()=>{
+      const showFlashMessage = (type, message) => {
+        showMessage({
+            title: "Add new offer",
+            message: message,
+            type: type
+        })
+    }
 
+      const submitOffer =()=>{
+        let valid = doValidation();
+        if(valid){
+            setIsSubmitting(true);
+            let formData = new FormData();
+            let uriParts = offerImage.split('.');
+            let fileType = uriParts[uriParts.length - 1];
+            formData.append('offersImages[]', {
+                uri:offerImage,
+                name: `photo.${fileType}`,
+                type: `image/${fileType}`,
+            });
+            formData.append('title',offerTitle);
+            formData.append('tags',offerTags);
+            formData.append('description',offerDescription);
+            formData.append('user_id',user.id);
+            axios.post(global.APILink+'/offers',formData)
+            .then(res=>{
+                console.log(res.data);
+                setIsSubmitting(false);
+                if(res.data.status === 'success' ){
+                    showFlashMessage('success','Offer addded successfully!');
+                    setOfferImage('');
+                    setOfferTitle('');
+                    setOfferTags('');
+                    setOfferDescription('')
+                }
+                else{
+                    showFlashMessage('danger','An error occurred, please try again later');
+                }
+            })
+            .catch(err=>console.log(err))
+        }
       }
+
+      const doValidation = ()=>{
+        let error = [];
+        offerImage.length === 0 && error.push('Offer image required');
+        offerTitle === '' && error.push('Offer title required');
+        offerTags === '' && error.push('Offer tags required');
+        offerDescription === '' && error.push('Offer description required');
+        offerTitle !== '' && offerTitle.length >50 && error.push('Offer title exceeded 50 characters');
+        offerDescription !== '' && offerDescription.length >200 && error.push('Offer description exceeded 200 characters');
+
+      setValidation(error);
+        if(error.length === 0){
+          return true;
+        }
+        else{
+          return false;
+        }
+       
+    }
 
     return (
        <View style={styles.container}>
@@ -47,9 +111,14 @@ function AddNewOffer({navigation}) {
            <ScrollView>
                <View style={styles.imageHolder}>
                    {
-                       offerImage && <View style={{width:90,marginTop:10,}}>
+                       offerImage !== '' && <View style={{width:90,marginTop:10,}}>
                             <Image style={styles.selectedImage} source={{uri:offerImage }}/>
                         </View>
+                   }
+                   {
+                     offerImage === '' && <View style={{width:50,marginTop:10,}}>
+                        <Entypo name="image" size={50} color="#333333" />
+                     </View>   
                    }
                     <View style={styles.addBtn}>
                         <TouchableOpacity onPress={pickImage}>
@@ -64,7 +133,7 @@ function AddNewOffer({navigation}) {
                         onChangeText={text => setOfferTitle(text)}
                         value={offerTitle}
                     />
-                    <Text style={styles.helperText}> 50 Characters left. </Text>
+                    <Text style={styles.helperText}> 50 Characters available. </Text>
 
                     <Text style={styles.heading}>Tags</Text>
                         <TextInput multiline  numberOfLines={10}
@@ -80,15 +149,21 @@ function AddNewOffer({navigation}) {
                             onChangeText={text => setOfferDescription(text)}
                             value={offerDescription}
                             />
-                        <Text style={styles.helperText}> 400 Characters left. </Text>
+                        <Text style={styles.helperText}> 200 Characters available. </Text>
 
                </View>
+               {
+                   validation.map((item,index)=>(
+                       <Text key={index} style={styles.validation}>{item}</Text>
+                   ))
+               }
                <View style={styles.submitBtnHolder}>
                     <View style={{flex:1,}}>
                         <Button style={styles.submitBtn}
-                        title="Add Offer"
+                        title={isSubmitting?"Submitting...":"Add Offer"}
                         color="#282828"
                         onPress={submitOffer}
+                        disabled={isSubmitting?true:false}
                         />
                     </View>
                 </View>
@@ -158,4 +233,8 @@ submitBtnHolder:{
     marginVertical:30,
 },
 keyboardView:{ flex: 1, flexDirection: 'column',justifyContent: 'center',},
+validation:{
+    color:'red',
+    marginVertical:5,
+}
 });

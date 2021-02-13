@@ -49,6 +49,11 @@ function Products({navigation, refreshing}) {
                     )
                 })
              }
+             {
+                 products.length === 0 && <Text style={styles.noData}>
+                     No data found.
+                 </Text>
+             }
             </View>
         )
     }
@@ -88,6 +93,11 @@ const styles=StyleSheet.create({
         position:'absolute',
         bottom:10,
         right:10,
+    },
+    noData:{
+        textAlign:'center',
+        marginTop:30,
+        width:'100%',
     }
 
 

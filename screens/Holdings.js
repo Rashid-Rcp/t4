@@ -12,7 +12,7 @@ export default function Holdings({ navigation }) {
         <StatusBar style="auto"/>
         <Header navigation={navigation}/>
         <View style={styles.divider}></View>
-         <HoldingsContent/>
+         <HoldingsContent navigation={navigation}/>
         <Footer navigation={navigation}/>
       </View>
     </TouchableWithoutFeedback>

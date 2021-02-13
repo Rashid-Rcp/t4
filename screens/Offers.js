@@ -4,7 +4,7 @@ import { StyleSheet, View, StatusBar,TouchableWithoutFeedback, Keyboard } from '
 import Header from './common/Header';
 
 import Footer from './common/Footer';
-import NewFeeds from './home/NewFeeds';
+import OffersContent from './offers/OffersContent';
 
 export default function Offers({ navigation }) {
   return (
@@ -13,7 +13,7 @@ export default function Offers({ navigation }) {
         <StatusBar style="auto"/>
         <Header navigation={navigation}/>
         <View style={styles.divider}></View>
-        <NewFeeds itemType={{type:'offer'}}/>
+        <OffersContent navigation={navigation}/>
         <Footer navigation={navigation}/>
       </View>
     </TouchableWithoutFeedback>

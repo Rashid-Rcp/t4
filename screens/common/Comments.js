@@ -1,5 +1,5 @@
 import React,{useState,useContext, useEffect} from 'react'
-import { View,TextInput,StyleSheet,Image,Text,ScrollView, TouchableOpacity,KeyboardAvoidingView } from 'react-native'
+import { View,TextInput,StyleSheet,Image,Text,FlatList, TouchableOpacity,KeyboardAvoidingView, RefreshControl,StatusBar,ActivityIndicator } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 import axios from 'axios';
 
@@ -8,6 +8,9 @@ import ComponentLoader from '../common/ComponentLoader';
 
 function Comments({route}) {
     const [isLoading, setIsLoading] = useState(true);
+    const [refreshing, setRefreshing] = useState(true);
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
+    const [loadMoreUrl, setLoadingMoreUrl] = useState(null);
     const [user, setUser] = useContext(UserContext);
     const [newComment, setNewComment] = useState('');
     const [productComments, setProductComments] = useState([]);
@@ -19,23 +22,58 @@ function Comments({route}) {
             axios.post(global.APILink+'/'+productType+'_comments',{productId:productId, userId:user.id,comment:newComment})
             .then(res=>{
                 res.data.status === 'success' && setProductComments(res.data.comments);
+                res.data.status === 'success' && setLoadingMoreUrl(null);
             })
             .catch(err=>console.log(err))
         }
     }
 
     useEffect(()=>{
-        getAllComments();
-    },[])
+        refreshing && getAllComments();
+    },[refreshing])
 
     const getAllComments = ()=>{
         axios.get(global.APILink+'/'+productType+'_comments/'+productId)
         .then(res=>{
-            res.data && setProductComments(res.data);
-            res.data && setIsLoading(false);
+            res.data && setProductComments(res.data.data);
+            res.data && setLoadingMoreUrl(res.data.next_page_url);
+            (res.data && isLoading) &&  setIsLoading(false);
+            res.data && setRefreshing(false);
         })
         .catch(err=>console.log(err));
     }
+
+    const onRefresh = ()=>{
+        setRefreshing(true);
+    }
+    const loadMoreData = ()=>{
+        if(loadMoreUrl !== null){
+            setIsLoadingMore(true);
+            axios.get(loadMoreUrl)
+            .then(res=>{
+                res.data && setProductComments([...productComments,...res.data.data]);
+                res.data && setLoadingMoreUrl(res.data.next_page_url);
+                res.data && setIsLoadingMore(false);
+            })
+            .catch(err=>console.log(err));
+        }
+        
+    }
+
+    const renderItem = ({ item }) => {
+        return(
+            <View style={styles.commentContainer}>
+                <View style={styles.DPHolder}>
+                    <Image style={styles.DP} source={{uri:global.serverPublic+'/images/'+item.image}} />
+                </View>
+                <View style={styles.commentHolder}>
+                    <Text style={styles.userName}>{item.name}</Text>
+                    <Text style={styles.comment}> {item.comment} </Text>
+                </View>
+            </View>
+        )
+    };
+
  if(isLoading){
      return (
          <ComponentLoader heigh={100}/>
@@ -45,23 +83,23 @@ function Comments({route}) {
     return (
         <KeyboardAvoidingView style={{flex:1}}>
        <View style={styles.container}>
-           <ScrollView>
+       <StatusBar style="auto"/>
+       <FlatList
+                data={productComments}
+                renderItem={renderItem}
+                keyExtractor={item => item.id.toString()}
+                showsVerticalScrollIndicator={false}
+                onEndReached={loadMoreData}
+                onEndReachedThreshold={0.5}
+                refreshControl={
+                  <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                }
+            />
            {
-            productComments.map((item, index)=>{
-                return (
-                <View key={index} style={styles.commentContainer}>
-                    <View style={styles.DPHolder}>
-                        <Image style={styles.DP} source={{uri:global.serverPublic+'/images/'+item.image}} />
-                    </View>
-                    <View style={styles.commentHolder}>
-                        <Text style={styles.userName}>{item.name}</Text>
-                        <Text style={styles.comment}> {item.comment} </Text>
-                    </View>
-                </View>
-                )
-            })
+              isLoadingMore && <View style={{height:50}}>
+                <ActivityIndicator size="small" color="#0a2351"  />
+              </View>
             }
-           </ScrollView>
            <View style={styles.formHolder}>
                 <View style={{flex:1}}>
                     <TextInput   

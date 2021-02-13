@@ -56,9 +56,6 @@ function ProductResult({navigation,search, location}) {
             )
         })
         }
-        
-        
-        
         </View>
         {
         (loadingMoreUrl !== null && !isLoadingMore) && <View style={styles.showMore}>

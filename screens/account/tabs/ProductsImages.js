@@ -4,7 +4,7 @@ import Carousel from 'react-native-snap-carousel';
 
 import { Entypo } from '@expo/vector-icons'; 
 
-function ProductsImages({images, productID, navigation}) {
+function ProductsImages({images, productID, navigation , type='products'}) {
 
     const width = (Dimensions.get('window').width)/2;
     const widthPercentage =((1080-width)/1080) *100;
@@ -17,9 +17,11 @@ function ProductsImages({images, productID, navigation}) {
       
         return (
           <View style={styles.imageHolder} key={index}>
-            <TouchableWithoutFeedback onPress={()=>navigation.navigate('SingleProduct',{productId:productID})} style={{justifyContent:'center',alignItems:'center'}}>
+            <TouchableWithoutFeedback onPress={()=>{type==='products'?navigation.navigate('SingleProduct',{productId:productID}):
+            navigation.navigate('SingleOffer',{offerId:productID})}} 
+            style={{justifyContent:'center',alignItems:'center'}}>
                 <Image
-                source={{ uri: global.serverPublic+'/products/'+item }}
+                source={{ uri: global.serverPublic+'/'+type+'/'+item }}
                 style={{width:width,height:height, resizeMode:'contain'}}
                 />
            </TouchableWithoutFeedback>

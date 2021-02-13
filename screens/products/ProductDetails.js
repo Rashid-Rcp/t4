@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useState, useEffect} from 'react';
 import { View, Text, StyleSheet,TouchableOpacity, Platform, UIManager,LayoutAnimation, } from 'react-native';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -13,24 +13,30 @@ function ProductDetails({productDetails, itemType}) {
 
     //for testing purpose
     const [type, setType] = useState(itemType.type); // product or offer
-    const [variation, setVariation] = useState(itemType.type === 'product'? true : false); //true or false
+    const [variation, setVariation] = useState(itemType.type === 'products'? true : false); //true or false
     const [variationData, setVariationData] = useState({});
+
+    useEffect(() => {
+        setType(itemType.type);
+        setVariation(itemType.type === 'products'? true : false);
+    }, [itemType])
 
     return (
         <View>
             <View style={styles.details}>
                 <Text style={styles.title}>{productDetails.title}</Text>
-                {type === 'product' && <Text style={styles.price}>₹{productDetails.price}</Text>}
+                {type === 'products' && <Text style={styles.price}>₹{productDetails.price}</Text>}
             </View>
             <View style={styles.expander}>
                 <TouchableOpacity 
                     onPress={() => {
                     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-                    setVariationData(JSON.parse(productDetails.variation));  setExpanded(!expanded);
+                    type === 'products' && setVariationData(JSON.parse(productDetails.variation));  
+                    setExpanded(!expanded);
                     }}
                 >   
                 <View style={styles.expanderIcon}>
-                    <MaterialCommunityIcons  name={expanded?"chevron-up":"chevron-down"} size={35} color="#282828" />
+                    <MaterialCommunityIcons  name={expanded?"chevron-up":"chevron-down"} size={35} color="#585858" />
                 </View>
                  </TouchableOpacity>
                  
@@ -71,7 +77,6 @@ const styles= StyleSheet.create({
         flexDirection:'row',
         justifyContent:'space-between',
         paddingVertical:5,
-      
     },
     title:{
         flex:1,
@@ -91,7 +96,7 @@ const styles= StyleSheet.create({
     },
     expander:{
         flex:1,
-        marginTop:-20,
+        marginTop:-15,
     },
     expanderIcon:{
         flex:1,

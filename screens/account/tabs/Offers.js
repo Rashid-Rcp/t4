@@ -1,41 +1,65 @@
-import React from 'react'
-import { View, Text, StyleSheet,Image,TouchableOpacity } from 'react-native'
+import React,{useState,useEffect, useContext} from 'react'
+import { View, Text, StyleSheet,Image,FlatList,TouchableOpacity } from 'react-native'
 
 import { AntDesign } from '@expo/vector-icons'; 
+import axios from 'axios';
 
+import ProductsImages from './ProductsImages';
+import {UserContext} from '../../common/UserContext';
+import ComponentLoader from '../../common/ComponentLoader';
 
+function Products({navigation, refreshing}) {
+    const [user, setUser] = useContext(UserContext);
+    const [isLoading, setIsLoading] = useState(true);
+    const [offers, setOffers] = useState([]);
+    const [nextPage, setNextPage] = useState(null);
+    useEffect(()=>{
+        if(user.id !== '0'){
+            setIsLoading(true);
+            axios.get(global.APILink+'/offers/user/'+user.id)
+            .then(res=>{
+            // console.log(res.data);
+                res.data.data && setOffers(res.data.data);
+                res.data.next_page_url && setNextPage(res.data.next_page_url);
+                res.data && setIsLoading(false);
+            })
+            .catch(err=>console.log(err));
+        }
+    },[refreshing])
 
-function Offers({navigation}) {
-   
-    const Content = () => (
-        <View style={styles.productHolder}>
-            <TouchableOpacity  onPress={()=>{navigation.navigate('SingleOffer')}}>
-                <Image 
-                    style={styles.productImage}
-                    source={{uri: 'https://picsum.photos/170/250'}}/>
-            </TouchableOpacity>
-            <Text style={styles.productName}>Offer title </Text>
-            <View style={styles.productStatus}>
-                <AntDesign name="checkcircle" size={15} color="#0a2351"/>
+    if(isLoading){
+        return (
+            <ComponentLoader height={150} />
+        )
+    }
+    else {
+        return (
+            <View style={styles.container}>
+            {
+                offers.map((item,index)=>{
+                  return  (
+                    <View key={index} style={styles.productHolder}>
+                        <ProductsImages navigation={navigation} productID={item.id} images ={item.images} type='offers' />
+                        <Text style={styles.productName}>{item.title}</Text>
+                        <View style={styles.productStatus}>
+                            <AntDesign name="checkcircle" size={15} color={item.status==='active'?"#0a2351":'#ccc'}/>
+                        </View>
+                    </View>
+                    )
+                })
+             }
+             {
+                 offers.length === 0 && <Text style={styles.noData}>
+                     No data found.
+                 </Text>
+             }
             </View>
-        </View>
-      );
+        )
+    }
     
-
-    return (
-        <View style={styles.container}>
-           <Content/>
-           <Content/>
-           <Content/>
-           <Content/>
-           <Content/>
-           <Content/>
-        </View>
-    )
 }
 
-export default Offers;
-
+export default Products;
 
 const styles=StyleSheet.create({
 
@@ -45,12 +69,8 @@ const styles=StyleSheet.create({
         flexDirection:'row',
         flexWrap:'wrap',
     },
-    productImage:{
-        width:170,
-        height:250,
-        resizeMode:'contain',
-    },
     productHolder:{
+      
        alignItems:'center',
        marginTop:10,
        marginBottom:20,
@@ -59,15 +79,24 @@ const styles=StyleSheet.create({
         borderWidth:.5,
         paddingBottom:10,
         width:'48%',
+
+      
     },
     productName:{
         textAlign:'center',
-        paddingTop:10,
+    },
+    productPrice:{
+        fontSize:17,
     },
     productStatus:{
         position:'absolute',
         bottom:10,
         right:10,
+    },
+    noData:{
+        textAlign:'center',
+        marginTop:30,
+        width:'100%',
     }
 
 

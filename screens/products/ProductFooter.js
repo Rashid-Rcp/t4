@@ -5,12 +5,10 @@ import axios from 'axios';
 
 import {UserContext} from '../common/UserContext';
 
-function ProductFooter({holdings, productDetails, navigation}) {
-
- 
+function ProductFooter({productDetails, navigation, type='products', isHolding=false, removeItemFromHoldings=false}) {
 
     const [user, setUser] = useContext(UserContext);
-    const onHold = holdings || false;
+    const onHold = isHolding || false;
     const [isLiked, setIsLiked] = useState(productDetails.isLiked === null?0:productDetails.isLiked);
     const [likes, setLikes] = useState(productDetails.likes === null?0:productDetails.likes);
     const [holdingsAddedAlert, setHoldingsAddedAlert] = useState('');
@@ -23,7 +21,7 @@ function ProductFooter({holdings, productDetails, navigation}) {
     const handleProductLike =()=>{
         setIsLiked(1);
         setLikes(likes+1);
-        axios.post(global.APILink+'/products/like',{productId:productDetails.id, productType:productDetails.type, userId:user.id, action:'like'})
+        axios.post(global.APILink+'/'+type+'/like',{productId:productDetails.id, productType:productDetails.type, userId:user.id, action:'like'})
         .then(res=>{
             res.data.status !== 'success' && setIsLiked(0);;
             res.data.status !== 'success' &&  setLikes(likes-1);
@@ -34,7 +32,7 @@ function ProductFooter({holdings, productDetails, navigation}) {
     const handleProductDislike = ()=>{
         setIsLiked(0);
         setLikes(likes-1);
-        axios.post(global.APILink+'/products/like',{productId:productDetails.id, productType:productDetails.type, userId:user.id, action:'dislike'})
+        axios.post(global.APILink+'/'+type+'/like',{productId:productDetails.id, productType:productDetails.type, userId:user.id, action:'dislike'})
         .then(res=>{
             res.data.status !== 'success' && setIsLiked(1);
             res.data.status !== 'success' && setLikes(likes+1);
@@ -47,12 +45,21 @@ function ProductFooter({holdings, productDetails, navigation}) {
         setTimeout(() => {
             setHoldingsAddedAlert('');
           }, 2000);
-          axios.post(global.APILink+'/product_holdings',{userId:user.id, productId:productDetails.id, productType:productDetails.type})
+          axios.post(global.APILink+'/'+type+'_holdings',{userId:user.id, productId:productDetails.id, productType:productDetails.type})
           .then(res=>{
               res.data.status !=='success' && setHoldingsAddedAlert('An error occurred');
               res.data.status !== 'success' && setTimeout(() => {setHoldingsAddedAlert('')}, 2000);
           })
           .catch(err=>console.log(err))
+    }
+
+    const handleRemoveFromHoldings = (id, holdingType)=>{
+        axios.delete(global.APILink+'/holdings_remove/'+holdingType+'/'+id+'/'+user.id)
+        .then(res=>{
+            //console.log(res.data)
+        })
+        .catch(err=>console.log(err));
+        removeItemFromHoldings(id, holdingType);
     }
 
     return (
@@ -73,7 +80,7 @@ function ProductFooter({holdings, productDetails, navigation}) {
                 <Text style={styles.count}>{likes>0?likes:''}</Text>
             </View>
             <View style={styles.items}>
-                <TouchableWithoutFeedback onPress={()=>navigation.navigate('Comments',{productId:productDetails.id,productType:'product'})}>
+                <TouchableWithoutFeedback onPress={()=>navigation.navigate('Comments',{productId:productDetails.id,productType: type})}>
                     <FontAwesome name="comment-o" size={30} color="#282828" />
                 </TouchableWithoutFeedback>
                     <Text style={styles.count}>{productDetails.comments>0?productDetails.comments:''}</Text>
@@ -85,11 +92,16 @@ function ProductFooter({holdings, productDetails, navigation}) {
                     </TouchableWithoutFeedback>
                 }
                 {
-                    holdingsAddedAlert !== '' &&<Text style={styles.holdingsAlert}>{holdingsAddedAlert}</Text>
+                    holdingsAddedAlert !== '' &&  
+                    <Text style={styles.holdingsAlert}>{holdingsAddedAlert}</Text>
                 }
 
-                {onHold && <MaterialIcons name="highlight-remove" size={30} color="#282828" 
-                    style={{borderRadius:100,}} />}
+                {onHold && <TouchableWithoutFeedback onPress={()=>handleRemoveFromHoldings(productDetails.id,productDetails.holding_type)}>
+                    <MaterialIcons name="highlight-remove" size={30} color="#282828" 
+                    style={{borderRadius:100,}} />
+                    </TouchableWithoutFeedback>
+                    
+                    }
             </View>
             <View style={styles.items}>
                 <MaterialCommunityIcons name="whatsapp" size={30} color="#282828" />

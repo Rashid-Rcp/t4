@@ -3,7 +3,7 @@ import { View, Image, StyleSheet } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import { Entypo } from '@expo/vector-icons'; 
 
-function ProductMedia({images, mediaDimension}) {
+function ProductMedia({images, mediaDimension, type='products'}) {
 
     const [index, setIndex] = useState(0)
     const isCarousel = useRef(null)
@@ -13,7 +13,7 @@ function ProductMedia({images, mediaDimension}) {
         return (
           <View style={styles.imageHolder} key={index}>
                 <Image
-                source={{ uri: global.serverPublic+'/products/'+item }}
+                source={{ uri: global.serverPublic+'/'+type+'/'+item }}
                 style={{width:mediaDimension.width,height:mediaDimension.height, resizeMode:'contain'}}
                 />
           </View>
