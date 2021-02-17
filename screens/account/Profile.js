@@ -8,6 +8,9 @@ import axios from 'axios';
 import {UserContext} from '../common/UserContext';
 import ComponentLoader from '../common/ComponentLoader';
 import {ActiveTabContext} from './tabs/ActiveTabContext';
+import Login from '../common/Login';
+import abbreviateNumber from '../common/abbreviateNumber';
+
 
 if ( Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -124,11 +127,15 @@ function Profile({navigation, refreshing, endRefresh}) {
           let userData = {...user};
           userData.id='0';
           setUser(userData);
-          //navigation.navigate('Account');
+          navigation.navigate('Home');
           
       }
-
-      if(isLoading){
+      if(user.id === '0'){
+          return (
+            <Login navigation={navigation} />
+          )
+      }
+      else if(isLoading){
           return ( <View></View>
               //<ComponentLoader height={130}/>
           )
@@ -173,7 +180,7 @@ function Profile({navigation, refreshing, endRefresh}) {
                        <Text style={styles.shopName}>{userDetails.name}</Text>
                        <Text style={styles.location}>{userDetails.location}</Text>
                        {
-                       userDetails.type === 'retailer' && userDetails.followers > 0 &&  <Text style={styles.followers}>Followers {userDetails.followers}</Text>
+                       userDetails.type === 'retailer' && userDetails.followers > 0 &&  <Text style={styles.followers}>Followers {abbreviateNumber(userDetails.followers)}</Text>
                        }
                    </View>
                </View>

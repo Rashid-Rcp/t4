@@ -125,6 +125,11 @@ function Comments({route}) {
         style={{flex:1,flexDirection:'column'}}>
        <StatusBar style="auto"/>
        <View style={styles.container}>
+        {
+            productComments.length === 0 && <Text style={{textAlign:'center',marginTop:50,}}>
+                No comments
+            </Text>
+        }
         <FlatList
                 data={productComments}
                 renderItem={renderItem}
@@ -204,8 +209,6 @@ const styles = StyleSheet.create({
         marginTop:20,
         flexDirection:'row',
         marginBottom:10,
-        backgroundColor:'red'
-       
     },
     postButton:{
        marginLeft:10,

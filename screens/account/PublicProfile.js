@@ -6,6 +6,9 @@ import axios from 'axios';
 import {UserContext} from '../common/UserContext';
 import ComponentLoader from '../common/ComponentLoader';
 import {ActiveTabContext} from './tabs/ActiveTabContext';
+import Login from '../common/Login';
+import abbreviateNumber from '../common/abbreviateNumber';
+
 
 if ( Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -30,6 +33,12 @@ function PublicProfile({navigation, refreshing, endRefresh, accountId}) {
     const [activeTab, setActiveTab] = useContext(ActiveTabContext)
     const [showContact, setShowContact] = useState(false);
     const [itemFound, setItemFound] = useState(true);
+    const [isLogin, setIsLogin] = useState(false);
+    const [showLogin, setShowLogin] = useState(false);
+
+    useEffect(()=>{
+        user.id !== '0' && setIsLogin(true);
+    },[user])
     
     useEffect(() => {
         let mounted = true;
@@ -57,31 +66,42 @@ function PublicProfile({navigation, refreshing, endRefresh, accountId}) {
     }, [user,refreshing]) 
 
     const handleUnFollow = ()=>{
-        setFollowers(followers-1);
-        setIsFollowing(false);
-        axios.post(global.APILink+'/follow',{follower:user.id,following:accountId,action:'unFollow'})
-        .then(res=>{
-            res.data.status !== 'success' && setFollowers(followers);
-            res.data.status !== 'success' && setIsFollowing(true);
-        })
-        .catch(err=>console.log(err))
+        if(isLogin){
+            setFollowers(followers-1);
+            setIsFollowing(false);
+            axios.post(global.APILink+'/follow',{follower:user.id,following:accountId,action:'unFollow'})
+            .then(res=>{
+                res.data.status !== 'success' && setFollowers(followers);
+                res.data.status !== 'success' && setIsFollowing(true);
+            })
+            .catch(err=>console.log(err))
+        }
+        else{
+            setShowLogin(true);
+        }
+        
     }
 
     const handleFollow = ()=>{
-        setFollowers(followers+1);
-        setIsFollowing(true)
-        axios.post(global.APILink+'/follow',{follower:user.id,following:accountId,action:'follow'})
-        .then(res=>{
-            res.data.status !== 'success' && setFollowers(followers);
-            res.data.status !== 'success' && setIsFollowing(false);
-        })
-        .catch(err=>console.log(err))
+        if(isLogin){
+            setFollowers(followers+1);
+            setIsFollowing(true)
+            axios.post(global.APILink+'/follow',{follower:user.id,following:accountId,action:'follow'})
+            .then(res=>{
+                res.data.status !== 'success' && setFollowers(followers);
+                res.data.status !== 'success' && setIsFollowing(false);
+            })
+            .catch(err=>console.log(err))
+        }
+        else{
+            setShowLogin(true);
+        }
+        
     }
 
     useEffect(() => {
         userDetails.type ==='customer' && setActiveTab('none');
         userDetails.type === 'retailer' && activeTab === 'none' && setActiveTab('Product')
-        
     }, [userDetails]) 
 
       if(isLoading){
@@ -124,7 +144,7 @@ function PublicProfile({navigation, refreshing, endRefresh, accountId}) {
                        <Text style={styles.location}>{userDetails.location}</Text>
                        {
                        userDetails.type === 'retailer' && userDetails.followers > 0 && <View style={styles.follow}> 
-                           <Text style={styles.followers}>Followers {followers}</Text>
+                           <Text style={styles.followers}>Followers {abbreviateNumber(followers)}</Text>
                             {
                              isFollowing &&  <TouchableWithoutFeedback onPress={handleUnFollow}>
                                 <MaterialCommunityIcons  style={styles.followButton} name="heart" size={30} color="#ff0038"  />
@@ -150,6 +170,9 @@ function PublicProfile({navigation, refreshing, endRefresh, accountId}) {
                <Text style={styles.contactTitle}>Phone : <Text style={styles.contactContent}>{userDetails.phone}</Text></Text>  
                <Text style={styles.contactTitle}>Email : <Text style={styles.contactContent}>{userDetails.email}</Text></Text>
             </View>
+           }
+           {
+            showLogin && <Login navigation={navigation} setShowLogin={setShowLogin} />
            }
            </>
         )

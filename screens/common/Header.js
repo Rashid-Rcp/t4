@@ -37,7 +37,6 @@ function Header({navigation}) {
         else{
             setShowLogin(true);
         }
-       
     }
 
     useEffect(() => {

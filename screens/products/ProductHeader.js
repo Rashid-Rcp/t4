@@ -1,20 +1,22 @@
 import React from 'react'
-import { View, Text,Image,StyleSheet } from 'react-native'
+import { View, Text,Image,StyleSheet, TouchableWithoutFeedback } from 'react-native'
 
 import { Ionicons } from '@expo/vector-icons'; 
 
-function ProductHeader({shopDetails}) {
+function ProductHeader({shopDetails, navigation}) {
     return (
         <View style={styles.container}>
-            <View style={styles.left}>
-                <Image 
-                style={styles.DP}
-                source={{uri: global.serverPublic+'/images/'+shopDetails.shopImage}}/>
-                <View>
-                    <Text style={styles.name}>{shopDetails.shopName}</Text>
-                    <Text style={styles.location}>{shopDetails.shopLocation}</Text>
+            <TouchableWithoutFeedback onPress={()=>{ navigation.navigate('Account',{accountId:shopDetails.shopId})}}>
+                <View style={styles.left}>
+                    <Image 
+                        style={styles.DP}
+                        source={{uri: global.serverPublic+'/images/'+shopDetails.shopImage}}/>
+                    <View>
+                            <Text style={styles.name}>{shopDetails.shopName}</Text>
+                            <Text style={styles.location}>{shopDetails.shopLocation}</Text>
+                    </View>
                 </View>
-            </View>
+            </TouchableWithoutFeedback>
             <View >
                 <Ionicons  name="ios-chatbubble-ellipses-outline" size={30} color="#282828" />
             </View>

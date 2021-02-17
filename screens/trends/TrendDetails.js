@@ -40,6 +40,10 @@ function TrendDetails({navigation,route}) {
         }
     },[refreshing])
 
+    useEffect(()=>{
+        user.id !== '0' && setRefreshing(true);
+    },[user])
+
     const onRefresh = ()=>{
         setRefreshing(true);
     }
@@ -58,7 +62,7 @@ function TrendDetails({navigation,route}) {
     const renderItem = ({ item }) => {
         return(
           <View style={{flex:1}}>
-              <ProductHeader shopDetails={item}/>
+              <ProductHeader shopDetails={item} navigation={navigation}/>
               <ProductMedia images={item.images} mediaDimension={mediaDimension}/>
               <ProductDetails productDetails={item} itemType={{type:'product'}}/>
               <ProductFooter productDetails={item}/>

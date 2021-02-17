@@ -84,7 +84,6 @@ function SingleProduct({route, navigation}) {
       const getData = ()=>{
         axios.get(global.APILink+'/products/'+productId+'/'+user.id)
         .then(res=>{
-            console.log(res.data.status);
             if(res.data.status === 'not_found'){
                 setItemFound(false);
                 setIsLoading(false);

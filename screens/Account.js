@@ -29,8 +29,11 @@ function Account({navigation,route}) {
     },[route])
 
     useEffect(()=>{
-        if(accountId.toString() === user.id){
+        if(user.id !== '0' && accountId.toString() === user.id ){
             setSelfAccount(true);
+        }
+        else{
+            setSelfAccount(false);
         }
     },[accountId,user])
 
@@ -53,41 +56,35 @@ function Account({navigation,route}) {
     const resetScrollEnd = ()=>{
         setScrollEnd(false);
     }
-    if(user.id === '0'){
-        return (
-        <Login navigation={navigation} />
-        )
-    }
-    else{
-        return (
-            <ActiveTabProvider>
-                <View style={styles.container}>
-                    <ScrollView ref={scrollRef} stickyHeaderIndices={[1]}  showsVerticalScrollIndicator={false}
-                     refreshControl={
-                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-                      }
-                      onScroll={({ nativeEvent }) => { isCloseToBottom(nativeEvent)} }
-                      >
-                        {
-                            selfAccount && <Profile navigation={navigation} refreshing={refreshing} endRefresh={endRefresh} accountId={accountId}/>
-                        }
-                        {
-                            !selfAccount && <PublicProfile navigation={navigation} refreshing={refreshing} endRefresh={endRefresh} accountId={accountId}/>
-                        }
-                        
-                        <Tabs scrollRef={scrollRef} setFetchItem={setFetchItem}/>
-                        <TabsContent navigation={navigation} fetchItem={fetchItem} setFetchItem={setFetchItem} scrollEnd={scrollEnd} 
-                            selfAccount={selfAccount} resetScrollEnd={resetScrollEnd} accountId={accountId}/>
-                    </ScrollView>
-                    {
-                        selfAccount && <AddNewPost navigation={navigation}/>
+    
+    return (
+        <ActiveTabProvider>
+            <View style={styles.container}>
+                <ScrollView ref={scrollRef} stickyHeaderIndices={[1]}  showsVerticalScrollIndicator={false}
+                    refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                     }
-                    <Footer navigation={navigation}/>
-                </View>
-            </ActiveTabProvider>
-           
-        )
-    }
+                    onScroll={({ nativeEvent }) => { isCloseToBottom(nativeEvent)} }
+                    >
+                    {
+                        selfAccount && <Profile navigation={navigation} refreshing={refreshing} endRefresh={endRefresh} accountId={accountId}/>
+                    }
+                    {
+                        !selfAccount && <PublicProfile navigation={navigation} refreshing={refreshing} endRefresh={endRefresh} accountId={accountId}/>
+                    }
+                    
+                    <Tabs scrollRef={scrollRef} setFetchItem={setFetchItem}/>
+                    <TabsContent navigation={navigation} fetchItem={fetchItem} setFetchItem={setFetchItem} scrollEnd={scrollEnd} 
+                        selfAccount={selfAccount} resetScrollEnd={resetScrollEnd} accountId={accountId}/>
+                </ScrollView>
+                {
+                    selfAccount && <AddNewPost navigation={navigation}/>
+                }
+                <Footer navigation={navigation}/>
+            </View>
+        </ActiveTabProvider>
+        
+    )
 }
 
 export default Account

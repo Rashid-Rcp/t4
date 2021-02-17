@@ -71,7 +71,7 @@ function HoldingsContent({navigation}) {
     const renderItem = ({ item }) => {
         return(
           <View style={{flex:1}}>
-              <ProductHeader shopDetails={item}/>
+              <ProductHeader shopDetails={item} navigation={navigation}/>
               <ProductMedia images={item.images} mediaDimension={mediaDimension} type={item.holding_type}/>
               <ProductDetails productDetails={item} itemType={{'type':item.holding_type}}/>
               <ProductFooter productDetails={item} type={item.holding_type} navigation={navigation} isHolding={true} removeItemFromHoldings={removeItemFromHoldings}/>

@@ -4,6 +4,8 @@ import { MaterialCommunityIcons, FontAwesome, Ionicons , MaterialIcons} from '@e
 import axios from 'axios';
 
 import {UserContext} from '../common/UserContext';
+import Login from '../common/Login';
+import abbreviateNumber from '../common/abbreviateNumber';
 
 function ProductFooter({productDetails, navigation, type='products', isHolding=false, removeItemFromHoldings=false}) {
 
@@ -12,6 +14,12 @@ function ProductFooter({productDetails, navigation, type='products', isHolding=f
     const [isLiked, setIsLiked] = useState(productDetails.isLiked === null?0:productDetails.isLiked);
     const [likes, setLikes] = useState(productDetails.likes === null?0:productDetails.likes);
     const [holdingsAddedAlert, setHoldingsAddedAlert] = useState('');
+    const [showLogin, setShowLogin] = useState(false);
+    const [isLogin, setIsLogin] = useState(false);
+
+    useEffect(()=>{
+        user.id !== '0' && setIsLogin(true);
+    },[user])
    
     useEffect(() => {
         setIsLiked(productDetails.isLiked === null?0:productDetails.isLiked);
@@ -19,47 +27,68 @@ function ProductFooter({productDetails, navigation, type='products', isHolding=f
     }, [productDetails])
 
     const handleProductLike =()=>{
-        setIsLiked(1);
-        setLikes(likes+1);
-        axios.post(global.APILink+'/'+type+'/like',{productId:productDetails.id, productType:productDetails.type, userId:user.id, action:'like'})
-        .then(res=>{
-            res.data.status !== 'success' && setIsLiked(0);
-            res.data.status !== 'success' &&  setLikes(likes);
-        })
-        .catch(err=>console.log(err));
+        if(isLogin){
+            setIsLiked(1);
+            setLikes(likes+1);
+            axios.post(global.APILink+'/'+type+'/like',{productId:productDetails.id, productType:productDetails.type, userId:user.id, action:'like'})
+            .then(res=>{
+                res.data.status !== 'success' && setIsLiked(0);
+                res.data.status !== 'success' &&  setLikes(likes);
+            })
+            .catch(err=>console.log(err));
+        }
+        else{
+            setShowLogin(true);
+        }
     }
 
     const handleProductDislike = ()=>{
-        setIsLiked(0);
-        setLikes(likes-1);
-        axios.post(global.APILink+'/'+type+'/like',{productId:productDetails.id, productType:productDetails.type, userId:user.id, action:'dislike'})
-        .then(res=>{
-            res.data.status !== 'success' && setIsLiked(1);
-            res.data.status !== 'success' && setLikes(likes);
-        })
-        .catch(err=>console.log(err));
+        if(isLogin){
+            setIsLiked(0);
+            setLikes(likes-1);
+            axios.post(global.APILink+'/'+type+'/like',{productId:productDetails.id, productType:productDetails.type, userId:user.id, action:'dislike'})
+            .then(res=>{
+                res.data.status !== 'success' && setIsLiked(1);
+                res.data.status !== 'success' && setLikes(likes);
+            })
+            .catch(err=>console.log(err));
+        }
+        else{
+            setShowLogin(true)
+        }
     }
 
     const handleAddToHoldings=()=>{
-        setHoldingsAddedAlert('Added to holdings');
-        setTimeout(() => {
-            setHoldingsAddedAlert('');
-          }, 2000);
-          axios.post(global.APILink+'/'+type+'_holdings',{userId:user.id, productId:productDetails.id, productType:productDetails.type})
-          .then(res=>{
-              res.data.status !=='success' && setHoldingsAddedAlert('An error occurred');
-              res.data.status !== 'success' && setTimeout(() => {setHoldingsAddedAlert('')}, 2000);
-          })
-          .catch(err=>console.log(err))
+        if(isLogin){
+            setHoldingsAddedAlert('Added to holdings');
+            setTimeout(() => {
+                setHoldingsAddedAlert('');
+              }, 2000);
+              axios.post(global.APILink+'/'+type+'_holdings',{userId:user.id, productId:productDetails.id, productType:productDetails.type})
+              .then(res=>{
+                  res.data.status !=='success' && setHoldingsAddedAlert('An error occurred');
+                  res.data.status !== 'success' && setTimeout(() => {setHoldingsAddedAlert('')}, 2000);
+              })
+              .catch(err=>console.log(err))
+        }
+        else{
+            setShowLogin(true);
+        }
     }
 
     const handleRemoveFromHoldings = (id, holdingType)=>{
-        axios.delete(global.APILink+'/holdings_remove/'+holdingType+'/'+id+'/'+user.id)
-        .then(res=>{
-            //console.log(res.data)
-        })
-        .catch(err=>console.log(err));
-        removeItemFromHoldings(id, holdingType);
+        if(isLogin){
+            axios.delete(global.APILink+'/holdings_remove/'+holdingType+'/'+id+'/'+user.id)
+            .then(res=>{
+                //console.log(res.data)
+            })
+            .catch(err=>console.log(err));
+            removeItemFromHoldings(id, holdingType);
+        }
+        else{
+            setShowLogin(true);
+        }
+       
     }
 
     return (
@@ -77,13 +106,13 @@ function ProductFooter({productDetails, navigation, type='products', isHolding=f
                     </TouchableWithoutFeedback>
                     
                 }
-                <Text style={styles.count}>{likes>0?likes:''}</Text>
+                <Text style={styles.count}>{likes>0?abbreviateNumber(likes):''}</Text>
             </View>
             <View style={styles.items}>
-                <TouchableWithoutFeedback onPress={()=>navigation.navigate('Comments',{productId:productDetails.id,productType: type})}>
+                <TouchableWithoutFeedback onPress={()=>isLogin?navigation.navigate('Comments',{productId:productDetails.id,productType: type}):setShowLogin(true)}>
                     <FontAwesome name="comment-o" size={30} color="#282828" />
                 </TouchableWithoutFeedback>
-                    <Text style={styles.count}>{productDetails.comments>0?productDetails.comments:''}</Text>
+                    <Text style={styles.count}>{productDetails.comments>0?abbreviateNumber(productDetails.comments):''}</Text>
                
             </View>
             <View style={styles.items}>
@@ -107,6 +136,9 @@ function ProductFooter({productDetails, navigation, type='products', isHolding=f
                 <MaterialCommunityIcons name="whatsapp" size={30} color="#282828" />
                 <Ionicons style={styles.share} name="share-social-outline" size={30} color="#282828" />
             </View>
+            {
+            showLogin && <Login navigation={navigation} setShowLogin={setShowLogin} />
+            }
         </View>
     )
 }

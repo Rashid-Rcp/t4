@@ -28,7 +28,7 @@ function OffersContent({navigation}) {
     const renderItem = ({item})=>{
         return (
             <View style={{flex:1}}>
-                <ProductHeader shopDetails={item}/>
+                <ProductHeader shopDetails={item} navigation={navigation}/>
                 <ProductMedia images={item.images} mediaDimension={mediaDimension}  type="offers" />
                 <ProductDetails productDetails={item} itemType={{type:'offers'}}/>
                 <ProductFooter productDetails={item} navigation={navigation} type='offers'/>
