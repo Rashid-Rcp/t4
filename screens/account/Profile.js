@@ -1,14 +1,13 @@
 import React,{useState, useEffect,useContext } from 'react'
-import { View, Text, StyleSheet, Image,TouchableOpacity,Platform, UIManager, LayoutAnimation,Alert } from 'react-native'
+import { View, Text, StyleSheet, Image,TouchableOpacity,Platform, UIManager, LayoutAnimation,Alert,TouchableWithoutFeedback } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 import * as ImagePicker from 'expo-image-picker';
+import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
-
 
 import {UserContext} from '../common/UserContext';
 import ComponentLoader from '../common/ComponentLoader';
 import {ActiveTabContext} from './tabs/ActiveTabContext';
-
 
 if ( Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -27,20 +26,27 @@ function Profile({navigation, refreshing, endRefresh}) {
         "phone": "",
         "type": "",
     });
-    
+
     const [activeTab, setActiveTab] = useContext(ActiveTabContext)
     const [showEditLinks, setShowEditLinks] = useState(false);
     const [showContact, setShowContact] = useState(false);
     const [DPChanged, setDPChanged] = useState(false);
+    const [itemFound, setItemFound] = useState(true);
     //const [imageDP, setImageDP] = useState('https://picsum.photos/200');
 
     useEffect(() => {
-       if(user.id !== '0'){
+       if(user.id !== '0' && refreshing){
         axios.get(global.APILink+'/user/'+user.id)
         .then(res =>{
-            res.data && setUserDetails(res.data);
+            if(res.data.status === 'not_found'){
+               setItemFound(false);
+            }
+            else{
+                res.data && setUserDetails(res.data);
+            }
             res.data && setIsLoading(false);
             endRefresh();
+            
         })
         .catch(err =>console.log(err))
        }
@@ -49,19 +55,22 @@ function Profile({navigation, refreshing, endRefresh}) {
 
     useEffect(() => {
         userDetails.type ==='customer' && setActiveTab('none');
-        userDetails.type === 'retailer' && setActiveTab('Product');
+        (userDetails.type === 'retailer' && activeTab === 'none') && setActiveTab('Product')
+
     }, [userDetails])
 
     useEffect(() => {
-      (async () => {
-        if (Platform.OS !== 'web') {
-          const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-          if (status !== 'granted') {
-            alert('Sorry, we need camera roll permissions to make this work!');
-          }
-        }
-      })();
-    }, []);
+            (async () => {
+                if (Platform.OS !== 'web') {
+                  const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+                  if (status !== 'granted') {
+                    alert('Sorry, we need camera roll permissions to make this work!');
+                  }
+                }
+              })();
+    },[]);
+
+
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -101,14 +110,34 @@ function Profile({navigation, refreshing, endRefresh}) {
                 }
             })
             .catch(err=>console.log(err));
-
           
         }
-      };
+      }
+
+      const deleteUserAccount = ()=>{
+
+      }
+
+      const logoutUserAccount = ()=>{
+          //delete secure store
+          SecureStore.deleteItemAsync('t4_user_id');
+          let userData = {...user};
+          userData.id='0';
+          setUser(userData);
+          //navigation.navigate('Account');
+          
+      }
 
       if(isLoading){
+          return ( <View></View>
+              //<ComponentLoader height={130}/>
+          )
+      }
+      else if (!itemFound){
           return (
-              <ComponentLoader height={130}/>
+            <View style={{flex:1}}>
+                <Text style={styles.notFound}>Not Found</Text>
+            </View>
           )
       }
       else{
@@ -144,20 +173,17 @@ function Profile({navigation, refreshing, endRefresh}) {
                        <Text style={styles.shopName}>{userDetails.name}</Text>
                        <Text style={styles.location}>{userDetails.location}</Text>
                        {
-                       userDetails.type === 'retailer' && userDetails.followers > 0 &&
-                       <Text style={styles.followers}>Followers {userDetails.followers}</Text>
+                       userDetails.type === 'retailer' && userDetails.followers > 0 &&  <Text style={styles.followers}>Followers {userDetails.followers}</Text>
                        }
-                        
                    </View>
                </View>
                <View style={[styles.actionBtn,showEditLinks?styles.actionBtnActive:'']}>
-                   <View>
-                        <TouchableOpacity onPress={()=>{setShowEditLinks(!showEditLinks)}}>
+                    <View>
+                        <TouchableOpacity onPress={()=>{ LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);setShowEditLinks(!showEditLinks)}}>
                             <MaterialCommunityIcons  name="dots-vertical" size={30} color="#282828" />
                         </TouchableOpacity>
-                   </View>
-                   
-                   { showEditLinks && <View style={styles.editLink}>
+                    </View>
+                    { showEditLinks && <View style={styles.editLink}>
                             <TouchableOpacity onPress={()=>{setShowEditLinks(!showEditLinks); navigation.navigate('EditProfile')}}>
                                 <Text style={{fontSize:16}}>Edit Profile</Text>
                             </TouchableOpacity>
@@ -166,6 +192,18 @@ function Profile({navigation, refreshing, endRefresh}) {
                     { showEditLinks && <View style={styles.editLink}>
                             <TouchableOpacity onPress={()=>{setShowEditLinks(!showEditLinks); navigation.navigate('EditContact')}}>
                                 <Text style={{fontSize:16}}>Edit Contact</Text>
+                            </TouchableOpacity>
+                        </View>
+                    }
+                    { showEditLinks && <View style={styles.editLink}>
+                            <TouchableOpacity onPress={()=>{setShowEditLinks(!showEditLinks); logoutUserAccount()}}>
+                                <Text style={{fontSize:16}}>Logout</Text>
+                            </TouchableOpacity>
+                        </View>
+                    }
+                    { showEditLinks && <View style={styles.editLink}>
+                            <TouchableOpacity onPress={()=>{setShowEditLinks(!showEditLinks); deleteUserAccount()}}>
+                                <Text style={{fontSize:16}}>Delete Account</Text>
                             </TouchableOpacity>
                         </View>
                     }
@@ -272,8 +310,13 @@ const styles = StyleSheet.create({
     contactContent:{
         fontSize:15,
         fontWeight:'normal',
+    },
+    notFound:{
+        paddingVertical:50,
+        paddingHorizontal:10,
+        textAlign:'center',
+        fontSize:17,
     }
-   
    
 
 });

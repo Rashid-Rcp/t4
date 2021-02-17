@@ -2,37 +2,23 @@ import React ,{useContext, useEffect} from 'react'
 import { View, Text, StyleSheet,TouchableOpacity } from 'react-native';
 
 import {ActiveTabContext} from './tabs/ActiveTabContext'
-import {UserContext} from '../common/UserContext';
 
-function Tabs(props) {
-
-    const scrollRef = props.scrollRef.current;
-
-  //scrollRef.current.scrollTo({x: 0, y: 140, animated: true})
+function Tabs({scrollRef, setFetchItem}) {
 
     const [activeTab,setActiveTab] = useContext(ActiveTabContext);
     const scrollPosition = 160;
 
-    const [user, setUser] = useContext(UserContext);
-   
-    // useEffect(()=>{
-    //     if(user.type === 'customer'){
-    //         setActiveTab('Chats');
-    //     }
-    // },[user])
     if(activeTab !== 'none'){
-    
         return (
             <View style={styles.holder}>
                 <View style={styles.container}>
-                    
                     <View style={[styles.productButton,activeTab==='Product'?styles.active:'']}>
-                        <TouchableOpacity onPress={()=>{setActiveTab('Product');scrollRef.scrollTo({x: 0, y: scrollPosition, animated: true})}}>
+                        <TouchableOpacity onPress={()=>{scrollRef.current.scrollTo({x: 0, y: scrollPosition, animated: true}),setActiveTab('Product'),setFetchItem(true)}}>
                             <Text>Products</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={[styles.offerButton,activeTab==='Offer'?styles.active:'']}>
-                        <TouchableOpacity onPress={()=>{setActiveTab('Offer');scrollRef.scrollTo({x: 0, y: scrollPosition, animated: true})}}>
+                        <TouchableOpacity onPress={()=>{setActiveTab('Offer'),setFetchItem(true),scrollRef.current.scrollTo({x: 0, y: scrollPosition, animated: true})}}>
                             <Text>Offers</Text>
                         </TouchableOpacity>
                     </View>

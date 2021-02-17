@@ -1,5 +1,5 @@
 import React,{useState,useContext, useEffect} from 'react'
-import { View,TextInput,StyleSheet,Image,Text,FlatList, TouchableOpacity,KeyboardAvoidingView, RefreshControl,StatusBar,ActivityIndicator } from 'react-native'
+import { View,TextInput,StyleSheet,Image,Text,FlatList, TouchableOpacity,KeyboardAvoidingView, RefreshControl,StatusBar,ActivityIndicator,Platform } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 import axios from 'axios';
 
@@ -16,17 +16,45 @@ function Comments({route}) {
     const [productComments, setProductComments] = useState([]);
     const {productId} = route.params;
     const {productType} = route.params;
+    const [userDetails, setUserDetails]=useState([]);
+    const [isGettingUser, setIsGettingUser] = useState(true);
+    const [itemFound, setItemFound] = useState(true);
+
     const postNewComment =()=>{
         if(newComment !== ''){
             setNewComment('');
+            let userComment = {
+                    "comment": newComment,
+                    "id": user.id,
+                    "image": userDetails[0].image,
+                    "name": userDetails[0].name,
+            }
+            let allComments = productComments;
+            allComments.unshift(userComment);
+            setProductComments(allComments);
+
             axios.post(global.APILink+'/'+productType+'_comments',{productId:productId, userId:user.id,comment:newComment})
             .then(res=>{
-                res.data.status === 'success' && setProductComments(res.data.comments);
-                res.data.status === 'success' && setLoadingMoreUrl(null);
+                if(res.data.status === 'not_found'){
+                    setItemFound(false);
+                }
+                // res.data.status === 'success' && setProductComments(res.data.comments);
+                // res.data.status === 'success' && setLoadingMoreUrl(null);
             })
             .catch(err=>console.log(err))
         }
     }
+
+    useEffect(() => {
+        if(user.id !== '0'){
+            axios.get(global.APILink+'/user_for_comment/'+user.id)
+            .then(res=>{
+                res.data && setUserDetails(res.data);
+                res.data && setIsGettingUser(false);
+            })
+            .catch(err=>console.log(err))
+        }
+    }, [])
 
     useEffect(()=>{
         refreshing && getAllComments();
@@ -35,10 +63,15 @@ function Comments({route}) {
     const getAllComments = ()=>{
         axios.get(global.APILink+'/'+productType+'_comments/'+productId)
         .then(res=>{
-            res.data && setProductComments(res.data.data);
-            res.data && setLoadingMoreUrl(res.data.next_page_url);
-            (res.data && isLoading) &&  setIsLoading(false);
-            res.data && setRefreshing(false);
+            if(res.data.status === 'not_found'){
+                setItemFound(false);
+            }
+            else{
+                res.data && setProductComments(res.data.data);
+                 res.data && setLoadingMoreUrl(res.data.next_page_url);
+            }
+            isLoading &&  setIsLoading(false);
+            setRefreshing(false);
         })
         .catch(err=>console.log(err));
     }
@@ -74,20 +107,28 @@ function Comments({route}) {
         )
     };
 
- if(isLoading){
+ if(isLoading || isGettingUser){
      return (
          <ComponentLoader heigh={100}/>
      )
  }
+ else if(!itemFound){
+     return (
+         <View style={{flex:1}}>
+             <Text style={styles.notFound}>Not Found</Text>
+         </View>
+     )
+ }
  else{
     return (
-        <KeyboardAvoidingView style={{flex:1}}>
-       <View style={styles.container}>
+        <KeyboardAvoidingView 
+        style={{flex:1,flexDirection:'column'}}>
        <StatusBar style="auto"/>
-       <FlatList
+       <View style={styles.container}>
+        <FlatList
                 data={productComments}
                 renderItem={renderItem}
-                keyExtractor={item => item.id.toString()}
+                keyExtractor={(item,index )=> index.toString()}
                 showsVerticalScrollIndicator={false}
                 onEndReached={loadMoreData}
                 onEndReachedThreshold={0.5}
@@ -100,7 +141,8 @@ function Comments({route}) {
                 <ActivityIndicator size="small" color="#0a2351"  />
               </View>
             }
-           <View style={styles.formHolder}>
+       
+            <View style={styles.formHolder}>
                 <View style={{flex:1}}>
                     <TextInput   
                     multiline 
@@ -118,7 +160,7 @@ function Comments({route}) {
                 </View>
             </View>
        </View> 
-       </KeyboardAvoidingView>
+    </KeyboardAvoidingView>
     )
     }
 }
@@ -162,12 +204,19 @@ const styles = StyleSheet.create({
         marginTop:20,
         flexDirection:'row',
         marginBottom:10,
+        backgroundColor:'red'
        
     },
     postButton:{
        marginLeft:10,
        marginRight:5,
        marginTop:5
+    },
+    notFound:{
+        paddingVertical:50,
+        paddingHorizontal:10,
+        textAlign:'center',
+        fontSize:17,
     }
     
 })

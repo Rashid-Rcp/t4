@@ -1,5 +1,5 @@
 import React,{useState,useEffect, useContext} from 'react'
-import { View, Text, StyleSheet,Image,FlatList,TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, ActivityIndicator} from 'react-native'
 
 import { AntDesign } from '@expo/vector-icons'; 
 import axios from 'axios';
@@ -8,24 +8,42 @@ import ProductsImages from './ProductsImages';
 import {UserContext} from '../../common/UserContext';
 import ComponentLoader from '../../common/ComponentLoader';
 
-function Products({navigation, refreshing}) {
+function Offers({navigation, fetchItem, setFetchItem, scrollEnd, selfAccount, resetScrollEnd, accountId}) {
     const [user, setUser] = useContext(UserContext);
     const [isLoading, setIsLoading] = useState(true);
     const [offers, setOffers] = useState([]);
     const [nextPage, setNextPage] = useState(null);
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
+   
     useEffect(()=>{
-        if(user.id !== '0'){
+        if(fetchItem){
             setIsLoading(true);
-            axios.get(global.APILink+'/offers/user/'+user.id)
+            axios.get(global.APILink+'/offers/user/'+accountId)
             .then(res=>{
             // console.log(res.data);
                 res.data.data && setOffers(res.data.data);
                 res.data.next_page_url && setNextPage(res.data.next_page_url);
                 res.data && setIsLoading(false);
+                res.data && setFetchItem(false);
+                res.data && resetScrollEnd();
             })
             .catch(err=>console.log(err));
         }
-    },[refreshing])
+    },[fetchItem])
+
+    useEffect(()=>{
+        if(scrollEnd && nextPage !== null){
+            setIsLoadingMore(true);
+            axios.get(nextPage)
+            .then(res=>{
+                res.data && setOffers([...offers,...res.data.data]);
+                res.data && setNextPage(res.data.next_page_url);
+                res.data && setIsLoadingMore(false);
+                res.data && resetScrollEnd();
+            })
+            .catch(err=>console.log(err))
+        }
+    },[scrollEnd])
 
     if(isLoading){
         return (
@@ -34,12 +52,13 @@ function Products({navigation, refreshing}) {
     }
     else {
         return (
+            <>
             <View style={styles.container}>
             {
                 offers.map((item,index)=>{
                   return  (
                     <View key={index} style={styles.productHolder}>
-                        <ProductsImages navigation={navigation} productID={item.id} images ={item.images} type='offers' />
+                        <ProductsImages navigation={navigation} productID={item.id} images ={item.images} type='offers' selfAccount={selfAccount} />
                         <Text style={styles.productName}>{item.title}</Text>
                         <View style={styles.productStatus}>
                             <AntDesign name="checkcircle" size={15} color={item.status==='active'?"#0a2351":'#ccc'}/>
@@ -49,17 +68,22 @@ function Products({navigation, refreshing}) {
                 })
              }
              {
-                 offers.length === 0 && <Text style={styles.noData}>
-                     No data found.
-                 </Text>
+                offers.length === 0 && <Text style={styles.noData}>
+                    No data found.
+                </Text>
              }
             </View>
+            {
+            isLoadingMore && <View style={{height:50}}>
+                  <ActivityIndicator size="small" color="#0a2351"  />
+                </View>
+            }
+            </>
         )
     }
-    
 }
 
-export default Products;
+export default Offers;
 
 const styles=StyleSheet.create({
 
@@ -70,7 +94,6 @@ const styles=StyleSheet.create({
         flexWrap:'wrap',
     },
     productHolder:{
-      
        alignItems:'center',
        marginTop:10,
        marginBottom:20,
@@ -79,8 +102,6 @@ const styles=StyleSheet.create({
         borderWidth:.5,
         paddingBottom:10,
         width:'48%',
-
-      
     },
     productName:{
         textAlign:'center',
@@ -98,6 +119,4 @@ const styles=StyleSheet.create({
         marginTop:30,
         width:'100%',
     }
-
-
 });

@@ -45,7 +45,7 @@ function Register({navigation}) {
         (name !== '' && name.length >30) && errors.push('Name is exceeded 30 characters');
         (location !== '' && location.length >30) && errors.push('City/Town is exceeded 30 characters');
         phone !== '' && (isNaN(phone) || phone.length !== 10)  && errors.push ('Invalid Phone Number');
-        (address !== '' && address.length > 250) && errors.push('Address is exceeded 30 characters');
+        (address !== '' && address.length > 250) && errors.push('Address is exceeded 250 characters');
         if(email !== ''){
             let mailFormat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
             if(! email.match(mailFormat)) {
@@ -103,7 +103,7 @@ function Register({navigation}) {
     }
 
     const storeUserLocally = async(user_id)=>{
-        console.log(user_id);
+        //console.log(user_id);
         try {
            await SecureStore.setItemAsync('t4_user_id',user_id.toString() );
           // setUser({'id':user_id,}); //update userContext

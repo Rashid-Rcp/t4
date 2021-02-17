@@ -8,6 +8,7 @@ export const UserProvider = (props)=>{
     const [user, setUser] = useState({
         'id':'0',
         'location':'no_location',
+        'fetch':false
     });
     
     useEffect(() => {
@@ -22,6 +23,7 @@ export const UserProvider = (props)=>{
                 if(user_location) {
                     userData.location=user_location;
                 }
+                userData.fetch=true;
                 setUser(userData);
               } catch (e) {
                 console.log(e);

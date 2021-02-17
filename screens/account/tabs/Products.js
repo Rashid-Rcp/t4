@@ -1,31 +1,49 @@
-import React,{useState,useEffect, useContext} from 'react'
-import { View, Text, StyleSheet,Image,FlatList,TouchableOpacity } from 'react-native'
+import React,{useState,useEffect} from 'react'
+import { View, Text, StyleSheet,ActivityIndicator } from 'react-native'
 
 import { AntDesign } from '@expo/vector-icons'; 
 import axios from 'axios';
 
 import ProductsImages from './ProductsImages';
-import {UserContext} from '../../common/UserContext';
 import ComponentLoader from '../../common/ComponentLoader';
 
-function Products({navigation, refreshing}) {
-    const [user, setUser] = useContext(UserContext);
+
+function Products({navigation, fetchItem, setFetchItem, scrollEnd, selfAccount, resetScrollEnd, accountId}) {
+   
     const [isLoading, setIsLoading] = useState(true);
     const [products, setProducts] = useState([]);
     const [nextPage, setNextPage] = useState(null);
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
+   
     useEffect(()=>{
-        if(user.id !== '0'){
-            setIsLoading(true);
-            axios.get(global.APILink+'/products/user/'+user.id)
+            if(fetchItem){
+                setIsLoading(true);
+                axios.get(global.APILink+'/products/user/'+accountId)
+                .then(res=>{
+                // console.log(res.data);
+                    res.data && setProducts(res.data.data);
+                    res.data && setNextPage(res.data.next_page_url);
+                    res.data && setIsLoading(false);
+                    res.data && setFetchItem(false);
+                })
+                .catch(err=>console.log(err));
+            }
+    },[fetchItem])
+
+    useEffect(()=>{
+        if(scrollEnd && nextPage !== null){
+            setIsLoadingMore(true);
+            axios.get(nextPage)
             .then(res=>{
-            // console.log(res.data);
-                res.data.data && setProducts(res.data.data);
-                res.data.next_page_url && setNextPage(res.data.next_page_url);
-                res.data && setIsLoading(false);
+                res.data && setProducts([...products,...res.data.data]);
+                res.data && setNextPage(res.data.next_page_url);
+                res.data && setIsLoadingMore(false);
+                res.data && resetScrollEnd();
             })
-            .catch(err=>console.log(err));
+            .catch(err=>console.log(err))
+
         }
-    },[refreshing])
+    },[scrollEnd])
 
     if(isLoading){
         return (
@@ -34,12 +52,13 @@ function Products({navigation, refreshing}) {
     }
     else {
         return (
+            <>
             <View style={styles.container}>
             {
                 products.map((item,index)=>{
                   return  (
                     <View key={index} style={styles.productHolder}>
-                        <ProductsImages navigation={navigation} productID={item.id} images ={item.images} />
+                        <ProductsImages navigation={navigation} productID={item.id} images ={item.images} selfAccount={selfAccount}/>
                         <Text style={styles.productName}>{item.title}</Text>
                         <Text style={styles.productPrice}>₹ {item.price}</Text>
                         <View style={styles.productStatus}>
@@ -48,13 +67,19 @@ function Products({navigation, refreshing}) {
                     </View>
                     )
                 })
-             }
+             } 
              {
                  products.length === 0 && <Text style={styles.noData}>
                      No data found.
                  </Text>
              }
             </View>
+            {
+                isLoadingMore && <View style={{height:50}}>
+                  <ActivityIndicator size="small" color="#0a2351"  />
+                </View>
+              }
+            </>
         )
     }
     
@@ -81,7 +106,6 @@ const styles=StyleSheet.create({
         paddingBottom:10,
         width:'48%',
 
-      
     },
     productName:{
         textAlign:'center',

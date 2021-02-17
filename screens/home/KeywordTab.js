@@ -10,7 +10,7 @@ function KeywordTab({activeKeyHandler}) {
     const [keywords, setKeywords] = useState([]);
 
     useEffect(() => {
-       if(user.id !== '0'){
+       if(user.fetch){
            axios.get(global.APILink+'/recent_product_types/'+user.id)
            .then(res=>{
                let newKeywords = res.data;

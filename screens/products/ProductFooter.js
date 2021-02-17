@@ -23,8 +23,8 @@ function ProductFooter({productDetails, navigation, type='products', isHolding=f
         setLikes(likes+1);
         axios.post(global.APILink+'/'+type+'/like',{productId:productDetails.id, productType:productDetails.type, userId:user.id, action:'like'})
         .then(res=>{
-            res.data.status !== 'success' && setIsLiked(0);;
-            res.data.status !== 'success' &&  setLikes(likes-1);
+            res.data.status !== 'success' && setIsLiked(0);
+            res.data.status !== 'success' &&  setLikes(likes);
         })
         .catch(err=>console.log(err));
     }
@@ -35,7 +35,7 @@ function ProductFooter({productDetails, navigation, type='products', isHolding=f
         axios.post(global.APILink+'/'+type+'/like',{productId:productDetails.id, productType:productDetails.type, userId:user.id, action:'dislike'})
         .then(res=>{
             res.data.status !== 'success' && setIsLiked(1);
-            res.data.status !== 'success' && setLikes(likes+1);
+            res.data.status !== 'success' && setLikes(likes);
         })
         .catch(err=>console.log(err));
     }

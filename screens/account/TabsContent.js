@@ -6,16 +6,15 @@ import Products from './tabs/Products'
 import Offers from './tabs/Offers'
 //import Chats from './tabs/Chats'
 
-
-
-function TabsContent({navigation, refreshing}) {
+function TabsContent({navigation, fetchItem, setFetchItem, scrollEnd, selfAccount, resetScrollEnd, accountId}) {
     const [activeTab,setActiveTab] = useContext(ActiveTabContext);
     if(activeTab !== 'none'){
       return (
         <>
-           {activeTab == 'Product' && <Products navigation={navigation} refreshing={refreshing}/>}
-           {activeTab == 'Offer' && <Offers navigation={navigation} refreshing={refreshing} />}
-           {/* {activeTab == 'Chats' && <Chats/>} */}
+           {activeTab == 'Product' && <Products navigation={navigation} fetchItem={fetchItem} setFetchItem={setFetchItem}
+            scrollEnd={scrollEnd} selfAccount={selfAccount} resetScrollEnd={resetScrollEnd} accountId={accountId} />}
+           {activeTab == 'Offer' && <Offers navigation={navigation} fetchItem={fetchItem} setFetchItem={setFetchItem}
+            scrollEnd={scrollEnd} selfAccount={selfAccount} resetScrollEnd={resetScrollEnd} accountId={accountId} />}
          </>
        )
     }

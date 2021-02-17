@@ -28,7 +28,7 @@ function HoldingsContent({navigation}) {
     const [itemRemoved, setItemRemoved] = useState(0);
     
     useEffect(()=>{
-        if(user.id!=='0' && refreshing){
+        if(user.fetch && refreshing){
             axios.get(global.APILink+'/holdings/'+user.id)
             .then(res=>{
                 res.data && setHoldings(res.data.data);

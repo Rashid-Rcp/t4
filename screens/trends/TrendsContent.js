@@ -81,7 +81,7 @@ function TrendsContent({navigation}) {
                 }
                 {
                   (user.location !== 'no_location' || user.location !== '') && <Text>
-                    There is no items posted by any retailer for {user.location}
+                    There is no items posted by any retailer from {user.location}
                   </Text>
                 }
               </Text>

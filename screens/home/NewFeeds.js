@@ -1,5 +1,5 @@
 import React,{useState, useEffect, useContext} from 'react'
-import { StyleSheet, View,Text, FlatList,Dimensions,ActivityIndicator,Button,RefreshControl } from 'react-native'
+import { StyleSheet, View,Text, FlatList,Dimensions,ActivityIndicator,Button,RefreshControl,ScrollView } from 'react-native'
 import axios from 'axios';
 
 import ProductHeader from '../products/ProductHeader';
@@ -36,10 +36,9 @@ function NewFeeds({itemType, navigation, activeKey}) {
         })
       }
     }
-  
-
+   
     useEffect(()=>{
-      if(user.id !=='0'){
+      if(user.fetch){
         setIsLoading(true);
         axios.get(global.APILink+'/products_by_location/'+user.location+'/'+user.id+'/'+activeKey)
         .then(res=>{
@@ -49,7 +48,6 @@ function NewFeeds({itemType, navigation, activeKey}) {
         })
         .catch(err=>console.log(err))
       }
-      
     },[user, activeKey])
 
     const onRefresh =()=>{
@@ -63,14 +61,13 @@ function NewFeeds({itemType, navigation, activeKey}) {
       .catch(err=>console.log(err))
     }
 
-
     const renderItem = ({ item }) => {
         return(
           <View style={{flex:1}}>
               <ProductHeader shopDetails={item}/>
               <ProductMedia images={item.images} mediaDimension={mediaDimension}/>
               <ProductDetails productDetails={item} itemType={itemType}/>
-              <ProductFooter productDetails={item}/>
+              <ProductFooter productDetails={item} navigation={navigation}/>
           </View>
         )
     };
@@ -84,14 +81,18 @@ function NewFeeds({itemType, navigation, activeKey}) {
       return (
         <View style={styles.newFeeds}>
            {
-              products.length === 0 && <View style={styles.noItemContainer}>
+              products.length === 0 && <ScrollView 
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
+              ><View style={styles.noItemContainer}>
                 {
                   user.location === 'no_location' && <Text style={styles.notItemMessage}>
                     Please provide your location for viewing available products and offers. 
                   </Text>
                 }
                 {
-                  user.location !== 'no_location' && <Text style={styles.notItemMessage}>
+                  user.location !== 'no_location' && activeKey !=='All' && <Text style={styles.notItemMessage}>
                   There is no item posted for {activeKey} by any retailer from  {user.location}
                   </Text>
                 }
@@ -111,6 +112,7 @@ function NewFeeds({itemType, navigation, activeKey}) {
                     <Button title="View offers" onPress={()=>navigation.navigate('Offers')} color="#333333" />
                 </View>
               </View>
+              </ScrollView> 
             }
             <FlatList
                 data={products}

@@ -3,12 +3,14 @@ import { StyleSheet, View,Image, TextInput,TouchableOpacity } from 'react-native
 import { EvilIcons, Ionicons } from '@expo/vector-icons'; 
 import * as SecureStore from 'expo-secure-store';
 
+import Login from './Login';
 import { UserContext } from './UserContext';
 
 function Header({navigation}) {
 
     const[user, setUser] = useContext(UserContext);
     const[location, setLocation] = useState(user.location!=='no_location'?user.location:'');
+    const [showLogin, setShowLogin] = useState(false);
     
     const locationHandler = ()=>{
         if(location !==''){
@@ -28,11 +30,22 @@ function Header({navigation}) {
           }
     }
 
+    const navigateToAccount = ()=>{
+        if(user.id !== '0'){
+            navigation.navigate('Account',{accountId:user.id})
+        }
+        else{
+            setShowLogin(true);
+        }
+       
+    }
+
     useEffect(() => {
         setLocation(user.location!=='no_location'?user.location:'');
     }, [user])
 
     return (
+        <>
         <View style={styles.header}>
             <View style={styles.headerSec1}>
                 <Image
@@ -43,11 +56,16 @@ function Header({navigation}) {
                 <TextInput value={location} placeholder='Enter your city/town' onBlur={locationHandler} onChangeText={text=>setLocation(text)} />
             </View>
             <View>
-                <TouchableOpacity onPress={() => navigation.navigate('Account')}>
+                <TouchableOpacity onPress={() => navigateToAccount()}>
                     <EvilIcons style={styles.userIcon} name="user" size={40} color="black" />
                 </TouchableOpacity>
             </View>
+           
         </View>
+         {
+         showLogin && <Login setShowLogin={setShowLogin} navigation={navigation} />
+        }
+        </>
     )
 }
 
