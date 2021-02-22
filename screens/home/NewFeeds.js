@@ -88,7 +88,7 @@ function NewFeeds({itemType, navigation, activeKey}) {
               ><View style={styles.noItemContainer}>
                 {
                   user.location === 'no_location' && <Text style={styles.notItemMessage}>
-                    Please provide your location for viewing available products and offers. 
+                    Please provide your city/town for viewing available products and offers. 
                   </Text>
                 }
                 {
@@ -101,13 +101,13 @@ function NewFeeds({itemType, navigation, activeKey}) {
                 </Text>
                 <View style={{marginVertical:20}}>
                   <Text style={styles.notItemMessage}>
-                    View all available products from your location.
+                    View all available products from your city/town.
                   </Text>
                     <Button  onPress={()=>navigation.navigate('Trends')} title="View products" color="#333333" />
                 </View>
                 <View style={{marginVertical:20}}>
                   <Text style={styles.notItemMessage}>
-                    View all available offers from your location.
+                    View all available offers from your city/town.
                   </Text>
                     <Button title="View offers" onPress={()=>navigation.navigate('Offers')} color="#333333" />
                 </View>

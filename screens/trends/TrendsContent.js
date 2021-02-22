@@ -79,7 +79,7 @@ function TrendsContent({navigation}) {
               products.length === 0 && <Text style={styles.noItemMessage}>
                 {
                   user.location === 'no_location' && <Text>
-                    Please provide your location.
+                    Please provide your city/town.
                   </Text>
                 }
                 {

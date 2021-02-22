@@ -183,7 +183,7 @@ function Profile({navigation, refreshing, endRefresh}) {
                        <Text style={styles.shopName}>{userDetails.name}</Text>
                        <Text style={styles.location}>{userDetails.location}</Text>
                        {
-                       userDetails.type === 'retailer' && userDetails.followers > 0 &&  <Text style={styles.followers}>Followers {abbreviateNumber(userDetails.followers)}</Text>
+                       userDetails.type === 'retailer' &&  <Text style={styles.followers}>Followers {abbreviateNumber(userDetails.followers)}</Text>
                        }
                    </View>
                </View>

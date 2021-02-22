@@ -12,7 +12,7 @@ import ComponentLoader from '../common/ComponentLoader';
 function OffersContent({navigation}) {
 
     const [user, setUser] =useContext(UserContext);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(true);
     const [isLoadingMore, setIsLoadingMore] = useState(false);
     const [loadingMoreUrl, setLoadingMoreUrl] = useState(null);
@@ -38,12 +38,12 @@ function OffersContent({navigation}) {
 
     useEffect(()=>{
         if(refreshing && user.location !== 'no_location'){
-            setIsLoading(true);
+            //setIsLoading(true);
             axios.get(global.APILink+'/offers_by_location/'+user.location+'/'+user.id)
             .then(res=>{
                 res.data && setOffers(res.data.data);
                 res.data && setLoadingMoreUrl(res.data.next_page_url);
-                (res.data && isLoading ) && setIsLoading(false);
+                res.data && setIsLoading(false);
                 res.data && setRefreshing(false);
             })
             .catch(err=>console.log(err))
@@ -52,8 +52,12 @@ function OffersContent({navigation}) {
 
     useEffect(()=>{
         if(user.location !== 'no_location' && user.location !==''){
-            setIsLoading(true);
             setRefreshing(true);
+            setIsLoading(true);
+        }
+        else{
+            setRefreshing(false);
+            setIsLoading(false);
         }
     },[user])
 
@@ -88,7 +92,7 @@ function OffersContent({navigation}) {
                 }
                 {
                     user.location === 'no_location' && <Text style={styles.noData}>
-                    Please provide your location.
+                    Please provide your city/town.
                 </Text>
                 }
                 {

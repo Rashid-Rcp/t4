@@ -26,7 +26,7 @@ function SearchContent({navigation}) {
             }
             {
             user.location === 'no_location' && <Text style={styles.noLocation}>
-                Please provide your location.
+                Please provide your city/town.
             </Text>
             }
             
