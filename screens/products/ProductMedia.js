@@ -9,7 +9,6 @@ function ProductMedia({images, mediaDimension, type='products'}) {
     const isCarousel = useRef(null)
     const productImages = JSON.parse(images);
     const CarouselCardItem = ({ item, index }) => {
-     
         return (
           <View style={styles.imageHolder} key={index}>
                 <Image

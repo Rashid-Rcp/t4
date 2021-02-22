@@ -56,16 +56,22 @@ function Products({navigation, fetchItem, setFetchItem, scrollEnd, selfAccount, 
             <View style={styles.container}>
             {
                 products.map((item,index)=>{
-                  return  (
-                    <View key={index} style={styles.productHolder}>
-                        <ProductsImages navigation={navigation} productID={item.id} images ={item.images} selfAccount={selfAccount}/>
-                        <Text style={styles.productName}>{item.title}</Text>
-                        <Text style={styles.productPrice}>₹ {item.price}</Text>
-                        <View style={styles.productStatus}>
-                            <AntDesign name="checkcircle" size={15} color={item.status==='active'?"#0a2351":'#ccc'}/>
+                   if(!selfAccount && item.status !== 'active')  {
+                        return <View key={index}></View>
+                   }
+                   else{
+                       return  (
+                        <View key={index} style={styles.productHolder}>
+                            <ProductsImages navigation={navigation} productID={item.id} images ={item.images} selfAccount={selfAccount}/>
+                            <Text style={styles.productName}>{item.title}</Text>
+                            <Text style={styles.productPrice}>₹{item.price}</Text>
+                            <View style={styles.productStatus}>
+                                <AntDesign name="checkcircle" size={15} color={item.status==='active'?"#0a2351":'#ccc'}/>
+                            </View>
                         </View>
-                    </View>
-                    )
+                        )
+                   }
+                  
                 })
              } 
              {

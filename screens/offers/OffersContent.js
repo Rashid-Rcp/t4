@@ -12,7 +12,7 @@ import ComponentLoader from '../common/ComponentLoader';
 function OffersContent({navigation}) {
 
     const [user, setUser] =useContext(UserContext);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [refreshing, setRefreshing] = useState(true);
     const [isLoadingMore, setIsLoadingMore] = useState(false);
     const [loadingMoreUrl, setLoadingMoreUrl] = useState(null);
@@ -28,7 +28,7 @@ function OffersContent({navigation}) {
     const renderItem = ({item})=>{
         return (
             <View style={{flex:1}}>
-                <ProductHeader shopDetails={item} navigation={navigation}/>
+                <ProductHeader shopDetails={item} navigation={navigation} type='offers'/>
                 <ProductMedia images={item.images} mediaDimension={mediaDimension}  type="offers" />
                 <ProductDetails productDetails={item} itemType={{type:'offers'}}/>
                 <ProductFooter productDetails={item} navigation={navigation} type='offers'/>
@@ -38,20 +38,23 @@ function OffersContent({navigation}) {
 
     useEffect(()=>{
         if(refreshing && user.location !== 'no_location'){
+            setIsLoading(true);
             axios.get(global.APILink+'/offers_by_location/'+user.location+'/'+user.id)
             .then(res=>{
                 res.data && setOffers(res.data.data);
                 res.data && setLoadingMoreUrl(res.data.next_page_url);
                 (res.data && isLoading ) && setIsLoading(false);
-                res.data && setRefreshing(false)
+                res.data && setRefreshing(false);
             })
             .catch(err=>console.log(err))
         }
     },[refreshing])
 
     useEffect(()=>{
-        setIsLoading(true);
-        setRefreshing(true);
+        if(user.location !== 'no_location' && user.location !==''){
+            setIsLoading(true);
+            setRefreshing(true);
+        }
     },[user])
 
     const onRefresh =()=>{

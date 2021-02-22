@@ -15,6 +15,7 @@ import AddNewProduct from './screens/account/add-new/AddNewProduct'
 import AddNewOffer from './screens/account/add-new/AddNewOffer'
 import EditProfile from './screens/account/edit/EditProfile'
 import EditContact from './screens/account/edit/EditContact'
+import DeleteAccount from './screens/account/DeleteAccount'
 import SingleProduct from './screens/account/SingleProduct'
 import SingleOffer from './screens/account/SingleOffer'
 import Register from './screens/common/Register'
@@ -31,6 +32,7 @@ const Stack = createStackNavigator();
 
 export default function App() {
   global.APILink = 'http://192.168.43.50:80/t4-laravel/app/public/api';
+  global.shareLink = 'http://192.168.43.50:80/t4-laravel/app/public/t4_show_item';
   global.serverPublic = 'http://192.168.43.50:80/t4-laravel/app/public';
   return (
     <UserProvider>
@@ -48,6 +50,7 @@ export default function App() {
           <Stack.Screen name="Register" component={Register} options={{ title: 'Create new account' }}/>
           <Stack.Screen name="EditProfile" component={EditProfile} options={{ title: 'Edit Profile' }}/>
           <Stack.Screen name="EditContact" component={EditContact} options={{ title: 'Edit Contact' }}/>
+          <Stack.Screen name="DeleteAccount" component={DeleteAccount} options={{ title: 'Delete Account' }}/>
           <Stack.Screen name="AddNewProduct" component={AddNewProduct} options={{ title: 'Add New Product' }} />
           <Stack.Screen name="AddNewOffer" component={AddNewOffer} options={{ title: 'Add New Offer' }} />
           <Stack.Screen name="SingleProduct" component={SingleProduct} options={{ title: 'Product Details' }} />

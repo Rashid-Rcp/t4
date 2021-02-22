@@ -16,7 +16,7 @@ function Register({navigation}) {
 
     const[user,setUser] = useContext(UserContext);
 
-    const [accountType, setAccountType] = useState('customer');
+    const [accountType, setAccountType] = useState('');
     const [name, setName] = useState ('');
     const [email, setEmail] = useState('');
     const [location, setLocation] = useState('');
@@ -86,18 +86,18 @@ function Register({navigation}) {
         formData.append('name',name);
         formData.append('email',email);
         formData.append('location',location);
-        formData.append('phone','91'+phone);
+        formData.append('phone',phone!==''?'91'+phone:'');
         formData.append('address',address);
+        formData.append('password',password);
         axios.post(global.APILink+'/user',formData)
         .then( res => {
             setIsLoading(false);
-          if ( res.data.status === 'success' ) {
-            let user = storeUserLocally(res.data.user_id);
-            user && navigation.navigate('Account');
-          }
-          else {
-            setRegistrationError(res.data.message);
-          }
+            if ( res.data.status === 'success' ) {
+                storeUserLocally(res.data.user_id);
+            }
+            else {
+                setRegistrationError(res.data.message);
+            }
         })
         .catch( err => console.log(err));
     }
@@ -108,8 +108,9 @@ function Register({navigation}) {
            await SecureStore.setItemAsync('t4_user_id',user_id.toString() );
           // setUser({'id':user_id,}); //update userContext
             let userData = {...user};
-            userData.id = user_id;
+            userData.id = user_id.toString();
             setUser(userData);
+            navigation.navigate('Account',{accountId:user_id.toString()})
             return true;
           } catch (e) {
             console.log(e);
@@ -286,8 +287,8 @@ const styles = StyleSheet.create({
         paddingHorizontal:10,
     },
     title :{
-        fontSize:20,
-        fontWeight:'700',
+        fontSize:30,
+        fontWeight:'600',
         marginVertical:30,
         textAlign:'center',
     },
@@ -295,14 +296,14 @@ const styles = StyleSheet.create({
         marginBottom:60,
     },
     accountType:{
-        backgroundColor:'#282828',
+        backgroundColor:'#333333',
         color:'#fff',
         padding:10,
         borderRadius:10,
        
     },
     helperText:{
-        fontSize:12,
+        fontSize:15,
         marginTop:10,
         textAlign:'center',
     },

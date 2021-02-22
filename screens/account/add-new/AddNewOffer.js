@@ -68,7 +68,7 @@ function AddNewOffer({navigation}) {
             formData.append('user_id',user.id);
             axios.post(global.APILink+'/offers',formData)
             .then(res=>{
-                console.log(res.data);
+               
                 setIsSubmitting(false);
                 if(res.data.status === 'success' ){
                     showFlashMessage('success','Offer addded successfully!');
@@ -135,7 +135,7 @@ function AddNewOffer({navigation}) {
                     />
                     <Text style={styles.helperText}> 50 Characters available. </Text>
 
-                    <Text style={styles.heading}>Tags</Text>
+                    <Text style={styles.heading}>Tags <Text style={styles.helperText}>(eg: for men, for ladies, offer for shirt)</Text></Text>
                         <TextInput multiline  numberOfLines={10}
                             style={styles.textArea}
                             onChangeText={text => setOfferTags(text)}

@@ -113,6 +113,7 @@ function AddNewProduct({navigation}) {
           let error = [];
           selectedImages.length === 0 && error.push('Product images required');
           productTitle === '' && error.push('Product title required');
+          productType === '' && error.push('Product type required');
           productTags === '' && error.push('Product tags required');
           productPrice === '' && error.push('Product Price required');
           productDescription === '' && error.push('Product description required');
@@ -202,7 +203,7 @@ function AddNewProduct({navigation}) {
                             <Text style={styles.helperText}> 50 Characters allowed. </Text>
                     </View>
                     <View style={styles.productDetailsGroup}>
-                        <Text>Type</Text>
+                        <Text>Type <Text style={styles.helperText}> (e.g Shirt, Watch, Shoe) </Text></Text>
                         <TextInput
                             style={styles.textBox}
                             onChangeText={text => setProductType(text)}
@@ -211,7 +212,7 @@ function AddNewProduct({navigation}) {
                             <Text style={styles.helperText}> 20 Characters allowed. </Text>
                     </View>
                     <View style={styles.productDetailsGroup}>
-                        <Text>Tags</Text>
+                        <Text>Tags <Text style={styles.helperText}> (e.g for men, new collection, best quality) </Text></Text>
                         <TextInput multiline  numberOfLines={10}
                             style={styles.textArea}
                             onChangeText={text => setProductTags(text)}
@@ -247,7 +248,7 @@ function AddNewProduct({navigation}) {
                             />
                         <View style={styles.variations}>
                            <View style={styles.variationHeading}> 
-                                 <Text style={styles.variationHeadingText}>Title</Text> 
+                                 <Text style={styles.variationHeadingText}>Title <Text style={styles.helperText}> (e.g S, M, L) </Text></Text> 
                                  <Text style={styles.variationHeadingText}>Price</Text>
                             </View> 
                             {

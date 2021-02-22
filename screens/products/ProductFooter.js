@@ -1,5 +1,5 @@
 import React,{useContext, useState, useEffect} from 'react'
-import { View, Text, StyleSheet,TouchableWithoutFeedback, } from 'react-native'
+import { View, Text, StyleSheet,TouchableWithoutFeedback,Share, Linking } from 'react-native'
 import { MaterialCommunityIcons, FontAwesome, Ionicons , MaterialIcons} from '@expo/vector-icons';
 import axios from 'axios';
 
@@ -90,6 +90,29 @@ function ProductFooter({productDetails, navigation, type='products', isHolding=f
         }
        
     }
+ const handleWhatsApp = ()=>{
+    Linking.openURL('https://wa.me/?text='+global.shareLink+'/'+type+'/'+productDetails.id);
+ }
+
+ const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message:global.shareLink+'/'+type+'/'+productDetails.id ,
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+    
 
     return (
         <View style={styles.footer}>
@@ -133,8 +156,12 @@ function ProductFooter({productDetails, navigation, type='products', isHolding=f
                     }
             </View>
             <View style={styles.items}>
-                <MaterialCommunityIcons name="whatsapp" size={30} color="#282828" />
-                <Ionicons style={styles.share} name="share-social-outline" size={30} color="#282828" />
+                <TouchableWithoutFeedback onPress={handleWhatsApp}>
+                    <MaterialCommunityIcons name="whatsapp" size={30} color="#282828" />
+                </TouchableWithoutFeedback>
+                <TouchableWithoutFeedback onPress={onShare}>
+                    <Ionicons style={styles.share} name="share-social-outline" size={30} color="#282828" />
+                </TouchableWithoutFeedback>
             </View>
             {
             showLogin && <Login navigation={navigation} setShowLogin={setShowLogin} />

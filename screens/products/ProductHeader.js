@@ -1,9 +1,13 @@
 import React from 'react'
-import { View, Text,Image,StyleSheet, TouchableWithoutFeedback } from 'react-native'
+import { View, Text,Image,StyleSheet, TouchableWithoutFeedback,Linking } from 'react-native'
 
 import { Ionicons } from '@expo/vector-icons'; 
 
-function ProductHeader({shopDetails, navigation}) {
+function ProductHeader({shopDetails, navigation, type='products'}) {
+
+    const handleChat =()=>{
+        Linking.openURL('https://wa.me/'+shopDetails.shopPhone+'?text='+global.shareLink+'/'+type+'/'+shopDetails.id);
+    }
     return (
         <View style={styles.container}>
             <TouchableWithoutFeedback onPress={()=>{ navigation.navigate('Account',{accountId:shopDetails.shopId})}}>
@@ -18,7 +22,11 @@ function ProductHeader({shopDetails, navigation}) {
                 </View>
             </TouchableWithoutFeedback>
             <View >
-                <Ionicons  name="ios-chatbubble-ellipses-outline" size={30} color="#282828" />
+                {
+                    shopDetails.shopPhone !== '' && shopDetails.shopPhone !== null && <TouchableWithoutFeedback onPress={handleChat}>
+                    <Ionicons  name="ios-chatbubble-ellipses-outline" size={30} color="#282828" />
+                </TouchableWithoutFeedback>
+                }
             </View>
         </View>
     )
@@ -52,6 +60,7 @@ const styles= StyleSheet.create({
  location:{
      paddingLeft:10,
      fontWeight:'400',
+     textTransform:'capitalize'
  },
  left:{
      flexDirection:'row',

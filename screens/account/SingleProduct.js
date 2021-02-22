@@ -5,6 +5,7 @@ import axios from 'axios';
 import { showMessage, hideMessage } from "react-native-flash-message";
 
 import {UserContext} from '../common/UserContext';
+import ProductHeader from '../products/ProductHeader'
 import ProductMedia from '../products/ProductMedia'
 import ProductDetails from '../products/ProductDetails'
 import ProductFooter from '../products/ProductFooter'
@@ -123,8 +124,9 @@ function SingleProduct({route, navigation}) {
                     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                     }>
                     <View style={styles.holder}>
+                        <ProductHeader shopDetails={productDetails} navigation={navigation}/>
                         <ProductMedia images={productDetails.images} mediaDimension={mediaDimension}/>
-                        <ProductDetails productDetails={productDetails} itemType={{type:'product'}}/>
+                        <ProductDetails productDetails={productDetails} itemType={{type:'products'}}/>
                         <ProductFooter productDetails={productDetails} navigation={navigation} />
                         {
                         selfAccount &&  <View style={{flex:1,alignItems:'center'}}>
@@ -173,6 +175,7 @@ const styles = StyleSheet.create({
     },
     holder:{
         flex:1,
+        backgroundColor:'#fff'
     },
     notFound:{
         paddingVertical:50,

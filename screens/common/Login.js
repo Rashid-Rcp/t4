@@ -8,8 +8,8 @@ import {UserContext} from './UserContext';
 
 function Login({navigation, setShowLogin=()=>{} }) {
     const [visible, setVisible] = useState(true);
-    const [email_mob, setEmail_mob] = useState('9895926293');
-    const [password, setPassword] = useState('9567669630');
+    const [email_mob, setEmail_mob] = useState('');
+    const [password, setPassword] = useState('');
     const [user, setUser] = useContext(UserContext)
     const [validation, setValidation] = useState([]);
     const [isLogin, setIsLogin] = useState(false);

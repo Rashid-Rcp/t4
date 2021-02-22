@@ -6,6 +6,7 @@ import { showMessage} from "react-native-flash-message";
 
 
 import {UserContext} from '../common/UserContext';
+import ProductHeader from '../products/ProductHeader'
 import ProductMedia from '../products/ProductMedia'
 import ProductDetails from '../products/ProductDetails'
 import ProductFooter from '../products/ProductFooter'
@@ -122,8 +123,9 @@ function SingleOffer({route, navigation}) {
                     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                     }>
                     <View style={styles.holder}>
+                        <ProductHeader shopDetails={offerDetails} navigation={navigation} type='offers'/>
                         <ProductMedia images={offerDetails.images} mediaDimension={mediaDimension} type="offers"/>
-                        <ProductDetails productDetails={offerDetails} itemType={{type:'offer'}}/>
+                        <ProductDetails productDetails={offerDetails} itemType={{type:'offers'}}/>
                         <ProductFooter productDetails={offerDetails} navigation={navigation} type='offers'/>
                         {
                             selfAccount && <View style={{flex:1,alignItems:'center'}}>
@@ -172,6 +174,7 @@ const styles = StyleSheet.create({
     },
     holder:{
         flex:1,
+        backgroundColor:'#fff'
     },
     notFound:{
         paddingVertical:50,

@@ -42,13 +42,16 @@ function Profile({navigation, refreshing, endRefresh}) {
         axios.get(global.APILink+'/user/'+user.id)
         .then(res =>{
             if(res.data.status === 'not_found'){
-               setItemFound(false);
+
+               //setItemFound(false);
+               logoutUserAccount();
+               
             }
             else{
                 res.data && setUserDetails(res.data);
+                res.data && setIsLoading(false);
+                endRefresh();
             }
-            res.data && setIsLoading(false);
-            endRefresh();
             
         })
         .catch(err =>console.log(err))
@@ -118,7 +121,7 @@ function Profile({navigation, refreshing, endRefresh}) {
       }
 
       const deleteUserAccount = ()=>{
-
+        navigation.navigate('DeleteAccount');
       }
 
       const logoutUserAccount = ()=>{
@@ -221,7 +224,7 @@ function Profile({navigation, refreshing, endRefresh}) {
                <Text style={styles.contactTitle}>
                    Address : <Text style={styles.contactContent}>{userDetails.address}</Text>
                </Text>  
-               <Text style={styles.contactTitle}>Phone : <Text style={styles.contactContent}>{userDetails.phone}</Text></Text>  
+               <Text style={styles.contactTitle}>Phone : <Text style={styles.contactContent}>{userDetails.phone?'+':''}{userDetails.phone}</Text></Text>  
                <Text style={styles.contactTitle}>Email : <Text style={styles.contactContent}>{userDetails.email}</Text></Text>
             </View>
            }
@@ -277,6 +280,10 @@ const styles = StyleSheet.create({
         borderRadius:5,
         borderColor:'#ccc',
         borderWidth:.5,
+        width:140,
+        position:'absolute',
+        right:10,
+        zIndex:99,
     },
     shopName:{
         fontSize:19,

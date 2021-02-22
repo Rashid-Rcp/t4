@@ -64,8 +64,8 @@ function TrendDetails({navigation,route}) {
           <View style={{flex:1}}>
               <ProductHeader shopDetails={item} navigation={navigation}/>
               <ProductMedia images={item.images} mediaDimension={mediaDimension}/>
-              <ProductDetails productDetails={item} itemType={{type:'product'}}/>
-              <ProductFooter productDetails={item}/>
+              <ProductDetails productDetails={item} itemType={{type:'products'}}/>
+              <ProductFooter productDetails={item}  navigation={navigation}/>
           </View>
         )
     };

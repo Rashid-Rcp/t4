@@ -6,7 +6,7 @@ import axios from 'axios';
 import {UserContext} from '../common/UserContext';
 import ComponentLoader from '../common/ComponentLoader';
 
-function Comments({route}) {
+function Comments({route,navigation}) {
     const [isLoading, setIsLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(true);
     const [isLoadingMore, setIsLoadingMore] = useState(false);
@@ -97,10 +97,14 @@ function Comments({route}) {
         return(
             <View style={styles.commentContainer}>
                 <View style={styles.DPHolder}>
-                    <Image style={styles.DP} source={{uri:global.serverPublic+'/images/'+item.image}} />
+                    <TouchableOpacity onPress={()=>navigation.navigate('Account',{accountId:item.userId.toString()})}>
+                        <Image style={styles.DP} source={{uri:global.serverPublic+'/images/'+item.image}} />
+                    </TouchableOpacity>              
                 </View>
                 <View style={styles.commentHolder}>
-                    <Text style={styles.userName}>{item.name}</Text>
+                     <TouchableOpacity onPress={()=>navigation.navigate('Account',{accountId:item.userId.toString()})}>
+                        <Text style={styles.userName}>{item.name}</Text>
+                    </TouchableOpacity>
                     <Text style={styles.comment}> {item.comment} </Text>
                 </View>
             </View>

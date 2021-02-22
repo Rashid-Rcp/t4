@@ -1,5 +1,5 @@
 import React,{useState,useEffect, useContext} from 'react'
-import { View, Text, TextInput,TouchableOpacity, ScrollView, StyleSheet, Button,KeyboardAvoidingView } from 'react-native'
+import { View, Text, TextInput,TouchableOpacity, ScrollView, StyleSheet, Button,KeyboardAvoidingView,Keyboard } from 'react-native'
 import axios from 'axios';
 import { showMessage } from "react-native-flash-message";
 import Footer from '../../common/Footer' 
@@ -25,7 +25,7 @@ function EditContact({navigation}) {
                 res.data && setAddress(res.data[0].address);
                 res.data && setEmail(res.data[0].email);
                 res.data && setAccountType(res.data[0].type);
-                if(res.data[0].phone !== '' && res.data[0].phone.length === 12){
+                if((res.data[0].phone !== '' && res.data[0].phone !== null) && res.data[0].phone.length === 12){
                     let phoneNumber = res.data[0].phone
                    if(phoneNumber[0]+phoneNumber[1] === '91'){
                        setPhone(phoneNumber.substring(2));
@@ -40,18 +40,18 @@ function EditContact({navigation}) {
     },[user])
 
     const updateContact = ()=>{
-        if(user.id !== 0){
+        Keyboard.dismiss();
+        if(user.id !== '0'){
             let valid = doValidation();
             if(valid){
                 setIsUpdating(true);
                 axios.post(global.APILink+'/user/account/edit_contact',{
                     address:address,
-                    phone:'91'+phone,
+                    phone:phone!==''?'91'+phone:'',
                     email:email,
                     userId:user.id
                 })
                 .then(res=>{
-                    console.log(res.data);
                     if(res.data.status === 'is_exists'){
                         setValidation([res.data.message])
                     }

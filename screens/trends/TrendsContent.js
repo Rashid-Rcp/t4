@@ -15,7 +15,7 @@ function TrendsContent({navigation}) {
     const widthPercentage =((1080-width)/1080) *100;
     const height = (1350/100) * (100-widthPercentage);
     const [products, setProducts] =useState([]);
-    const [loadMoreUrl, setLoadMoreUrl] = useState(null)
+    const [loadMoreUrl, setLoadMoreUrl] = useState(null);
 
     useEffect(()=>{
       if(user.location !== 'no_location'){
@@ -27,6 +27,9 @@ function TrendsContent({navigation}) {
           res.data && setIsLoading(false);
         })
         .catch(err=>console.log(err))
+      }
+      else{
+        setIsLoading(false)
       }
     },[user])
 
@@ -80,7 +83,7 @@ function TrendsContent({navigation}) {
                   </Text>
                 }
                 {
-                  (user.location !== 'no_location' || user.location !== '') && <Text>
+                  (user.location !== 'no_location' && user.location !== '') && <Text>
                     There is no items posted by any retailer from {user.location}
                   </Text>
                 }

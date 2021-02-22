@@ -4,7 +4,7 @@ import axios from 'axios';
 
 import ComponentLoader from '../common/ComponentLoader';
 
-function ShopResult({search,location}) {
+function ShopResult({search,location, navigation}) {
     const [isLoading, setIsLoading] = useState(false);
     const [isLoadingMore, setIsLoadingMore] = useState(false);
     const [shops, setShops] = useState([]);
@@ -43,7 +43,7 @@ function ShopResult({search,location}) {
                 {
                 shops.map((item)=>{
                     return(
-                        <TouchableOpacity key={item.id}>
+                        <TouchableOpacity key={item.id} onPress={()=> navigation.navigate('Account',{accountId:item.id.toString()})}>
                             <View   style={styles.shopHolder}>
                                 <Image source={{uri:global.serverPublic+'/images/'+item.image}}
                                     style={styles.shopDP}

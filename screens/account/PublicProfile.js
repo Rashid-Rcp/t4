@@ -143,7 +143,7 @@ function PublicProfile({navigation, refreshing, endRefresh, accountId}) {
                        <Text style={styles.shopName}>{userDetails.name}</Text>
                        <Text style={styles.location}>{userDetails.location}</Text>
                        {
-                       userDetails.type === 'retailer' && userDetails.followers > 0 && <View style={styles.follow}> 
+                       userDetails.type === 'retailer' && <View style={styles.follow}> 
                            <Text style={styles.followers}>Followers {abbreviateNumber(followers)}</Text>
                             {
                              isFollowing &&  <TouchableWithoutFeedback onPress={handleUnFollow}>
@@ -167,7 +167,7 @@ function PublicProfile({navigation, refreshing, endRefresh, accountId}) {
                <Text style={styles.contactTitle}>
                    Address : <Text style={styles.contactContent}>{userDetails.address}</Text>
                </Text>  
-               <Text style={styles.contactTitle}>Phone : <Text style={styles.contactContent}>{userDetails.phone}</Text></Text>  
+               <Text style={styles.contactTitle}>Phone : <Text style={styles.contactContent}>{userDetails.phone?'+':''}{userDetails.phone}</Text></Text>  
                <Text style={styles.contactTitle}>Email : <Text style={styles.contactContent}>{userDetails.email}</Text></Text>
             </View>
            }

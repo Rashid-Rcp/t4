@@ -30,6 +30,19 @@ export const UserProvider = (props)=>{
               }
         }
         get_user();
+
+
+        const logoutUserAccount = ()=>{
+            //delete secure store
+            SecureStore.deleteItemAsync('t4_user_id');
+            let userData = {...user};
+            userData.id='0';
+            setUser(userData);
+           
+            
+        }
+
+        //logoutUserAccount();
     
         
     }, [])

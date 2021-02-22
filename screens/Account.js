@@ -21,12 +21,16 @@ function Account({navigation,route}) {
     const [selfAccount, setSelfAccount] = useState(false);
     const [scrollEnd, setScrollEnd] = useState(false);
     const [fetchItem, setFetchItem] = useState(true);
-    
+   
     useEffect(()=>{
         if(route.params.forceRefresh){
             setFetchItem(true);
         }
     },[route])
+
+    useEffect(() => {
+        setRefreshing(true);
+    }, [accountId])
 
     useEffect(()=>{
         if(user.id !== '0' && accountId.toString() === user.id ){
@@ -72,13 +76,18 @@ function Account({navigation,route}) {
                     {
                         !selfAccount && <PublicProfile navigation={navigation} refreshing={refreshing} endRefresh={endRefresh} accountId={accountId}/>
                     }
-                    
-                    <Tabs scrollRef={scrollRef} setFetchItem={setFetchItem}/>
-                    <TabsContent navigation={navigation} fetchItem={fetchItem} setFetchItem={setFetchItem} scrollEnd={scrollEnd} 
+                    {
+                        !refreshing && <Tabs scrollRef={scrollRef} setFetchItem={setFetchItem}/>
+                    }
+                    {
+                        !refreshing && <TabsContent navigation={navigation} fetchItem={fetchItem} setFetchItem={setFetchItem} scrollEnd={scrollEnd} 
                         selfAccount={selfAccount} resetScrollEnd={resetScrollEnd} accountId={accountId}/>
+                    }
+                    
+                    
                 </ScrollView>
                 {
-                    selfAccount && <AddNewPost navigation={navigation}/>
+                    (selfAccount &&  !refreshing) && <AddNewPost navigation={navigation}/>
                 }
                 <Footer navigation={navigation}/>
             </View>

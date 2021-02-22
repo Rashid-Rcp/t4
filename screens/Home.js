@@ -20,7 +20,7 @@ export default function Home({ navigation }) {
         <StatusBar style="auto"/>
         <Header navigation={navigation}/>
         <KeywordTab activeKeyHandler={activeKeyHandler} />
-        <NewFeeds itemType={{type:'product'}} activeKey={activeKey} navigation={navigation}/>
+        <NewFeeds itemType={{type:'products'}} activeKey={activeKey} navigation={navigation}/>
         <Footer navigation = {navigation}/>
         {/* <Login navigation={navigation}/> */}
       </View>
