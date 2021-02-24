@@ -49,7 +49,7 @@ function Header({navigation}) {
             <View style={styles.headerSec1}>
                 <Image
                     style={styles.logo}
-                    source={require('../../assets/t4-logo3-1.png')}
+                    source={require('../../assets/t4-logo-2.png')}
                 />
                 <EvilIcons style={styles.locationIcon} name="location" size={35} color="black" />
                 <TextInput value={location} placeholder='Enter your city/town' onBlur={locationHandler} onChangeText={text=>setLocation(text)} />
