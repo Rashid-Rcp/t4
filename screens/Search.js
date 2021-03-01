@@ -7,7 +7,7 @@ import SearchContent from './search/SearchContent';
 
 export default function Search({ navigation }) {
   return (
-    <TouchableWithoutFeedback onPress={()=>{Keyboard.dismiss()}}>
+    // <TouchableWithoutFeedback onPress={()=>{Keyboard.dismiss()}}>
       <View style={styles.container}>
         <StatusBar style="auto"/>
         <Header navigation={navigation}/>
@@ -15,7 +15,7 @@ export default function Search({ navigation }) {
         <SearchContent navigation={navigation}/>
         <Footer navigation={navigation}/>
       </View>
-    </TouchableWithoutFeedback>
+    // </TouchableWithoutFeedback>
   );
 }
 

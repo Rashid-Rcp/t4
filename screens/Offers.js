@@ -8,7 +8,7 @@ import OffersContent from './offers/OffersContent';
 
 export default function Offers({ navigation }) {
   return (
-    <TouchableWithoutFeedback onPress={()=>{Keyboard.dismiss()}}>
+    // <TouchableWithoutFeedback onPress={()=>{Keyboard.dismiss()}}>
       <View style={styles.container}>
         <StatusBar style="auto"/>
         <Header navigation={navigation}/>
@@ -16,7 +16,7 @@ export default function Offers({ navigation }) {
         <OffersContent navigation={navigation}/>
         <Footer navigation={navigation}/>
       </View>
-    </TouchableWithoutFeedback>
+    // </TouchableWithoutFeedback>
   );
 }
 

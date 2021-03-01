@@ -7,7 +7,7 @@ import Footer from './common/Footer';
 import HoldingsContent from './holdings/HoldingsContent';
 export default function Holdings({ navigation }) {
   return (
-    <TouchableWithoutFeedback onPress={()=>{Keyboard.dismiss()}}>
+    // <TouchableWithoutFeedback onPress={()=>{Keyboard.dismiss()}}>
       <View style={styles.container}>
         <StatusBar style="auto"/>
         <Header navigation={navigation}/>
@@ -15,7 +15,7 @@ export default function Holdings({ navigation }) {
          <HoldingsContent navigation={navigation}/>
         <Footer navigation={navigation}/>
       </View>
-    </TouchableWithoutFeedback>
+    // </TouchableWithoutFeedback>
   );
 }
 

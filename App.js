@@ -31,9 +31,15 @@ import { createStackNavigator } from '@react-navigation/stack';
 const Stack = createStackNavigator();
 
 export default function App() {
-  global.APILink = 'http://192.168.43.50:80/t4-laravel/app/public/api';
-  global.shareLink = 'http://192.168.43.50:80/t4-laravel/app/public/t4_show_item';
-  global.serverPublic = 'http://192.168.43.50:80/t4-laravel/app/public';
+
+  //global.APILink = 'http://192.168.43.50:80/t4-laravel/app/public/api';
+  //global.shareLink = 'http://192.168.43.50:80/t4-laravel/app/public/t4_show_item';
+  //global.serverPublic = 'http://192.168.43.50:80/t4-laravel/app/public';
+
+  global.APILink = 'https://dhub.in/t4/public/api';
+  global.shareLink = 'https://dhub.in/t4/public/t4_show_item';
+  global.serverPublic = 'https://dhub.in/t4/public';
+
   return (
     <UserProvider>
       <NavigationContainer>
