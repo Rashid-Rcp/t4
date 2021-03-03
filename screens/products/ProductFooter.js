@@ -78,7 +78,6 @@ function ProductFooter({productDetails, navigation, type='products', isHolding=f
 
     const handleRemoveFromHoldings = (id, holdingType)=>{
         if(isLogin){
-            //axios.delete(global.APILink+'/holdings_remove/'+holdingType+'/'+id+'/'+user.id)
             axios.post(global.APILink+'/holdings_remove',{holdingType:holdingType,id:id,userId:user.id})
             .then(res=>{
                 //console.log(res.data)

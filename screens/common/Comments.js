@@ -32,7 +32,7 @@ function Comments({route,navigation}) {
             let allComments = productComments;
             allComments.unshift(userComment);
             setProductComments(allComments);
-            console.log(productId);
+           
             axios.post(global.APILink+'/'+productType+'_comments',{productId:productId, userId:user.id,comment:newComment})
             .then(res=>{
                 if(res.data.status === 'not_found'){

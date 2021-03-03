@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
     DP:{
         width:120,
         height:120,
-        borderRadius:100,
+        borderRadius:100000,
         resizeMode: 'contain',
     },
     camera:{

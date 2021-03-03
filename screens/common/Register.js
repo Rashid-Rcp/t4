@@ -103,7 +103,7 @@ function Register({navigation}) {
     }
 
     const storeUserLocally = async(user_id)=>{
-        //console.log(user_id);
+       
         try {
            await SecureStore.setItemAsync('t4_user_id',user_id.toString() );
           // setUser({'id':user_id,}); //update userContext
