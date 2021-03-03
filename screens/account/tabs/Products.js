@@ -1,12 +1,11 @@
 import React,{useState,useEffect} from 'react'
-import { View, Text, StyleSheet,ActivityIndicator } from 'react-native'
+import { View, Text, StyleSheet,ActivityIndicator, TouchableWithoutFeedback } from 'react-native'
 
 import { AntDesign } from '@expo/vector-icons'; 
 import axios from 'axios';
 
 import ProductsImages from './ProductsImages';
 import ComponentLoader from '../../common/ComponentLoader';
-
 
 function Products({navigation, fetchItem, setFetchItem, scrollEnd, selfAccount, resetScrollEnd, accountId}) {
    
@@ -63,7 +62,9 @@ function Products({navigation, fetchItem, setFetchItem, scrollEnd, selfAccount, 
                        return  (
                         <View key={index} style={styles.productHolder}>
                             <ProductsImages navigation={navigation} productID={item.id} images ={item.images} selfAccount={selfAccount}/>
-                            <Text style={styles.productName}>{item.title}</Text>
+                            <TouchableWithoutFeedback onPress={()=>navigation.navigate('SingleProduct',{productId:item.id, selfAccount:selfAccount})}>
+                                <Text style={styles.productName}>{item.title}</Text>
+                            </TouchableWithoutFeedback>
                             <Text style={styles.productPrice}>₹{item.price}</Text>
                             <View style={styles.productStatus}>
                                 <AntDesign name="checkcircle" size={15} color={item.status==='active'?"#0a2351":'#ccc'}/>

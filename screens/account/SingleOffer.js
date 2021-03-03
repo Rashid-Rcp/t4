@@ -74,7 +74,9 @@ function SingleOffer({route, navigation}) {
     const deleteOffer = ()=>{
         if(user.id !== '0'){
             setIsDeleting(true);
-            axios.delete(global.APILink+'/offer_delete/'+offerId+'/'+user.id)
+            //console.log(global.APILink+'/offer_delete/'+offerId+'/'+user.id);
+           // axios.delete(global.APILink+'/offer_delete/'+offerId+'/'+user.id)
+            axios.post(global.APILink+'/offer_delete',{offerId:offerId, userId:user.id})
             .then(res=>{
               res.data.status === 'success' && navigation.navigate('Account',{accountId:user.id, forceRefresh:true});
               res.data.status !== 'success' && showFlashMessage('danger','An error occurred please try again later');

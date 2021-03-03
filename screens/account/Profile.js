@@ -83,7 +83,7 @@ function Profile({navigation, refreshing, endRefresh}) {
           mediaTypes: ImagePicker.MediaTypeOptions.Images,
           allowsEditing: true,
           aspect: [1,1],
-          quality: .5,
+          quality: .4,
         });
       
         if (!result.cancelled) {

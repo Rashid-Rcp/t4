@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView,TextInput,Button,KeyboardAvoidingView  } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView,TextInput,Button,KeyboardAvoidingView, ActivityIndicator  } from 'react-native';
 import { Ionicons, Entypo } from '@expo/vector-icons'; 
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
@@ -40,7 +40,7 @@ function AddNewProduct({navigation}) {
           mediaTypes: ImagePicker.MediaTypeOptions.Images,
           allowsEditing: true,
           aspect: [4,5],
-          quality: .5,
+          quality: .4,
         });
 
         if (!result.cancelled) {
@@ -310,6 +310,14 @@ function AddNewProduct({navigation}) {
                     </View>
                 </View>
            </ScrollView>
+           {
+               isProductSubmitting && <><View style={styles.loadingScreen}>
+               </View>
+               <View style={styles.loadingIndicator}>
+               <ActivityIndicator size="small" color="#0a2351"  />
+               </View>
+               </>
+           }
            </KeyboardAvoidingView>
            <Footer navigation={navigation}/>
        </View>
@@ -421,7 +429,23 @@ const styles =StyleSheet.create({
     validation:{
         color:'red',
         paddingBottom:5,
+    },
+    loadingScreen:{
+        flex:1,
+        position:'absolute',
+        width:'100%',
+        height:'100%',
+        justifyContent:'center',
+        alignItems:'center',
+        backgroundColor:'#333333',
+        opacity:.3,
+    },
+    loadingIndicator:{
+        position:'absolute',
+        flex:1,
+        justifyContent:'center',
+        alignItems:'center',
+        width:'100%',
     }
-    
 
 });

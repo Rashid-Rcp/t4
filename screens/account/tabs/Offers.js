@@ -1,5 +1,5 @@
 import React,{useState,useEffect, useContext} from 'react'
-import { View, Text, StyleSheet, ActivityIndicator} from 'react-native'
+import { View, Text, StyleSheet, ActivityIndicator, TouchableWithoutFeedback} from 'react-native'
 
 import { AntDesign } from '@expo/vector-icons'; 
 import axios from 'axios';
@@ -59,7 +59,9 @@ function Offers({navigation, fetchItem, setFetchItem, scrollEnd, selfAccount, re
                   return  (
                     <View key={index} style={styles.productHolder}>
                         <ProductsImages navigation={navigation} productID={item.id} images ={item.images} type='offers' selfAccount={selfAccount} />
-                        <Text style={styles.productName}>{item.title}</Text>
+                        <TouchableWithoutFeedback onPress={()=>navigation.navigate('SingleOffer',{offerId:item.id, selfAccount:selfAccount})}>
+                            <Text style={styles.productName}>{item.title}</Text>
+                        </TouchableWithoutFeedback>
                         <View style={styles.productStatus}>
                             <AntDesign name="checkcircle" size={15} color={item.status==='active'?"#0a2351":'#ccc'}/>
                         </View>

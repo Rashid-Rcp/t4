@@ -72,7 +72,8 @@ function SingleProduct({route, navigation}) {
       const deleteProduct = ()=>{
           if(user.id !== '0'){
               setIsDeleting(true);
-              axios.delete(global.APILink+'/product_delete/'+productId+'/'+user.id)
+              //axios.delete(global.APILink+'/product_delete/'+productId+'/'+user.id)
+              axios.post(global.APILink+'/product_delete',{productId:productId,userId:user.id})
               .then(res=>{
                 res.data.status === 'success' && navigation.navigate('Account',{accountId:user.id, forceRefresh:true});
                 res.data.status !== 'success' && showFlashMessage('danger','An error occurred please try again later');
