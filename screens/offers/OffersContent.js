@@ -1,5 +1,5 @@
 import React,{useState, useEffect, useContext} from 'react';
-import { View,Text, StyleSheet, FlatList,Dimensions,RefreshControl,ActivityIndicator } from 'react-native';
+import { View,Text, StyleSheet, FlatList,Dimensions,RefreshControl,ActivityIndicator, Keyboard,TouchableWithoutFeedback } from 'react-native';
 import axios from 'axios';
 
 import ProductHeader from '../products/ProductHeader';
@@ -86,14 +86,23 @@ function OffersContent({navigation}) {
         return (
             <View style={styles.container}>
                 {
-                    (offers.length === 0 && user.location !== 'no_location') && <Text style={styles.noData}>
+                    (offers.length === 0 && user.location !== 'no_location') &&  <TouchableWithoutFeedback onPress={()=>Keyboard.dismiss()}>
+                    <View style={{flex:1}}>
+                        <Text style={styles.noData}>
                         There is no offers posted by any retailer from {user.location}
-                    </Text>
+                        </Text>
+                    </View>
+                    </TouchableWithoutFeedback>
                 }
                 {
-                    user.location === 'no_location' && <Text style={styles.noData}>
-                    Please provide your city/town.
-                </Text>
+                    user.location === 'no_location' && <TouchableWithoutFeedback onPress={()=>Keyboard.dismiss()}>
+                        <View style={{flex:1}}>
+                                <Text style={styles.noData}>
+                                    Please provide your city/town.
+                            </Text>
+                        </View>
+                    </TouchableWithoutFeedback>
+                     
                 }
                 {
                     user.location !== 'no_location' && <FlatList

@@ -1,5 +1,5 @@
 import React,{useState, useEffect, useContext} from 'react';
-import { View,Text,TouchableOpacity,StyleSheet,ScrollView,FlatList,Image,Dimensions, RefreshControl,ActivityIndicator } from 'react-native';
+import { View,Text,TouchableOpacity,StyleSheet,ScrollView,FlatList,Image,Dimensions, RefreshControl,ActivityIndicator, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import axios from 'axios';
 
 import {UserContext} from '../common/UserContext';
@@ -76,18 +76,22 @@ function TrendsContent({navigation}) {
     return (
         <View style={styles.container}>
             {
-              products.length === 0 && <Text style={styles.noItemMessage}>
-                {
-                  user.location === 'no_location' && <Text>
-                    Please provide your city/town.
-                  </Text>
-                }
-                {
-                  (user.location !== 'no_location' && user.location !== '') && <Text>
-                    There is no items posted by any retailer from {user.location}
-                  </Text>
-                }
-              </Text>
+              products.length === 0 && <TouchableWithoutFeedback onPress={()=>Keyboard.dismiss()}>
+              <View style={{flex:1}}> 
+                <Text style={styles.noItemMessage}>
+                  {
+                    user.location === 'no_location' && <Text>
+                      Please provide your city/town.
+                    </Text>
+                  }
+                  {
+                    (user.location !== 'no_location' && user.location !== '') && <Text>
+                      There is no items posted by any retailer from {user.location}
+                    </Text>
+                  }
+                </Text>
+              </View>
+              </TouchableWithoutFeedback>
             }
            
             <FlatList
