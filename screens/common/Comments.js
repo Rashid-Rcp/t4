@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
         width:50,
         height:50,
         resizeMode:'contain',
-        borderRadius:100,
+        borderRadius:100000,
     },
     commentContainer:{
         flexDirection:'row',

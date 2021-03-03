@@ -49,7 +49,7 @@ const styles= StyleSheet.create({
     resizeMode: 'contain',
     width:50,
     height:50,
-    borderRadius:100,
+    borderRadius:100000,
     marginVertical:3,
  },
  name:{
