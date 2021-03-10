@@ -12,7 +12,7 @@ import ComponentLoader from '../common/ComponentLoader';
 
 function TrendDetails({navigation,route}) {
 
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [isLoadMore, setIsLoadMore] = useState(false);
     const [refreshing, setRefreshing] = useState(true);
     const [user, setUser] = useContext(UserContext);
@@ -31,8 +31,8 @@ function TrendDetails({navigation,route}) {
         if(refreshing){
             axios.get(global.APILink+'/products_by_shop/'+shopId+'/'+productId+'/'+user.id)
             .then(res=>{
-                isLoading && setIsLoading(false);
-                refreshing && setRefreshing(false);
+              // setIsLoading(false);
+               setRefreshing(false);
                 res.data && setProducts(res.data.data);
                 res.data && setLoadMoreUrl(res.data.next_page_url);
             })
@@ -48,6 +48,7 @@ function TrendDetails({navigation,route}) {
         setRefreshing(true);
     }
     const loadMoreData = ()=>{
+       
         if(loadMoreUrl !== null){
             setIsLoadMore(true);
             axios.get(loadMoreUrl)

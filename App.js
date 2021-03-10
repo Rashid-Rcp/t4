@@ -20,6 +20,8 @@ import SingleProduct from './screens/account/SingleProduct'
 import SingleOffer from './screens/account/SingleOffer'
 import Register from './screens/common/Register'
 import Comments from './screens/common/Comments'
+import PrivacyPolicy from "./screens/privacyTerms/PrivacyPolicy";
+import TermsConditions from "./screens/privacyTerms/TermsConditions";
 //import Test from './screens/Test'
 
 import {UserProvider} from './screens/common/UserContext'
@@ -60,7 +62,8 @@ export default function App() {
           <Stack.Screen name="AddNewProduct" component={AddNewProduct} options={{ title: 'Add New Product' }} />
           <Stack.Screen name="AddNewOffer" component={AddNewOffer} options={{ title: 'Add New Offer' }} />
           <Stack.Screen name="SingleProduct" component={SingleProduct} options={{ title: 'Product Details' }} />
-          <Stack.Screen name="SingleOffer" component={SingleOffer} options={{ title: 'Offer Details' }} />
+          <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} options={{ title: 'Privacy Policy' }} />
+          <Stack.Screen name="TermsConditions" component={TermsConditions} options={{ title: 'Terms & Conditions' }} />
         </Stack.Navigator>
         <FlashMessage position="top" />
       </NavigationContainer> 

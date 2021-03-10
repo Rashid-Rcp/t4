@@ -4,7 +4,7 @@ import { EvilIcons, Ionicons, Fontisto } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
-
+import CheckBox from '@react-native-community/checkbox';
 import Loader from './Loader';
 import {UserContext} from './UserContext';
 
@@ -28,7 +28,7 @@ function Register({navigation}) {
     const [validation, setValidation] = useState([]);
     const[isLoading, setIsLoading] = useState(false);
     const[registrationError, setRegistrationError] = useState('');
-
+    const [agree, setAgree] = useState(false);
     const [img, setImg] = useState();
 
     const createNewAccount = ()=> {
@@ -134,7 +134,7 @@ function Register({navigation}) {
           mediaTypes: ImagePicker.MediaTypeOptions.Images,
           allowsEditing: true,
           aspect: [1,1],
-          quality: .4,
+          quality: .1,
         });
       
         if (!result.cancelled) {
@@ -259,8 +259,18 @@ function Register({navigation}) {
                         <Text style={styles.registrationError}>{registrationError}</Text>
                         </View>
                     }
+                    <View style={{flex:1,flexDirection:'row',marginBottom:20,}}>
+                    <CheckBox
+                        disabled={false}
+                        value={agree}
+                        onValueChange={(newValue) => setAgree(newValue)}
+                    />
+                    <Text>I understand and agree to <TouchableOpacity onPress={()=>navigation.navigate('PrivacyPolicy')}><Text style={{color:'blue'}}>privacy policy</Text></TouchableOpacity>  and<TouchableOpacity onPress={()=>navigation.navigate('TermsConditions')}><Text style={{color:'blue'}}>terms & condition</Text></TouchableOpacity> </Text>
+                    </View>
+                    
                     <View style={{flex:1,marginBottom:60,}}>
                         <Button
+                        disabled={!agree}
                         title="REGISTER"
                         color="#282828"
                         onPress={createNewAccount}

@@ -1,16 +1,22 @@
 import React,{useState,useContext,useEffect} from 'react'
-import { StyleSheet, View,Image, TextInput,TouchableOpacity } from 'react-native';
+import { StyleSheet, View,Image, TextInput,TouchableOpacity, Text, TouchableWithoutFeedback,Platform, UIManager,LayoutAnimation, Linking } from 'react-native';
 import { EvilIcons, Ionicons } from '@expo/vector-icons'; 
 import * as SecureStore from 'expo-secure-store';
 
 import Login from './Login';
 import { UserContext } from './UserContext';
 
+
+if ( Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+  }
+
 function Header({navigation}) {
 
     const[user, setUser] = useContext(UserContext);
     const[location, setLocation] = useState(user.location!=='no_location'?user.location:'');
     const [showLogin, setShowLogin] = useState(false);
+    const [showSideMenu, setSowSideMenu] = useState(false);
     
     const locationHandler = ()=>{
         if(location !==''){
@@ -54,15 +60,40 @@ function Header({navigation}) {
                 <EvilIcons style={styles.locationIcon} name="location" size={35} color="black" />
                 <TextInput value={location} placeholder='Enter your city/town' onBlur={locationHandler} onChangeText={text=>setLocation(text)} />
             </View>
-            <View>
+            <View style={{flexDirection:'row'}}>
                 <TouchableOpacity onPress={() => navigateToAccount()}>
                     <EvilIcons style={styles.userIcon} name="user" size={40} color="black" />
                 </TouchableOpacity>
+                <TouchableOpacity onPress={()=>{LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);setSowSideMenu(!showSideMenu)}} >
+                    <Ionicons name="menu-outline" size={30} color="black" />
+                </TouchableOpacity>
             </View>
-           
         </View>
          {
          showLogin && <Login setShowLogin={setShowLogin} navigation={navigation} />
+        }
+        {
+        showSideMenu && <View style={styles.sideMenu}>
+            <View style={styles.sideMenuContent}>
+                <TouchableOpacity onPress={()=>  Linking.openURL(global.serverPublic+'/about')}>
+                    <Text style={styles.sideMenuItem}>About Us</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={()=> Linking.openURL(global.serverPublic+'/contact')}>
+                    <Text style={styles.sideMenuItem}>Contact Us</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={()=>navigation.navigate('PrivacyPolicy')}>
+                    <Text style={styles.sideMenuItem}>Privacy Policy</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={()=>navigation.navigate('TermsConditions')}>
+                <Text style={styles.sideMenuItem}>Terms & Conditions</Text>
+                </TouchableOpacity>
+                
+                
+            </View>
+            <TouchableWithoutFeedback onPress={()=> {LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut); setSowSideMenu(false)}}>
+                <View style={styles.menuOverLay}></View>
+            </TouchableWithoutFeedback>
+        </View>
         }
         </>
     )
@@ -90,5 +121,34 @@ const styles = StyleSheet.create({
         transform: [{ rotateY: "180deg" }],
         backgroundColor:'#fca9a9',
         borderRadius:100,
+    },
+    sideMenu:{
+        position:'absolute',
+        width:'100%',
+        right:0,
+        top:50,
+        height:'100%',
+        zIndex:99,
+       
+    },
+    sideMenuContent:{
+        zIndex:999,
+        width:'50%',
+        right:0,
+        position:'absolute',
+        height:'100%',
+        backgroundColor:'#f7f7f7',
+        paddingTop:20,
+        paddingLeft:10,
+    },
+    menuOverLay:{
+        width:'100%',
+        height:'100%',
+        position:'absolute',
+        backgroundColor:'#333333',
+        opacity:.5,
+    },
+    sideMenuItem:{
+        marginBottom:10,
     }
   });

@@ -34,7 +34,7 @@ function AddNewOffer({navigation}) {
           mediaTypes: ImagePicker.MediaTypeOptions.Images,
           allowsEditing: true,
           aspect: [4,5],
-          quality: .4,
+          quality: .2,
         });
         if (!result.cancelled) {
             setOfferImage(result.uri);
