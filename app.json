@@ -2,11 +2,11 @@
   "expo": {
     "name": "T4",
     "slug": "T4",
-    "version": "1.7.0",
+    "version": "1.10.0",
     "orientation": "portrait",
-    "icon": "./assets/t4-icon2.png",
+    "icon": "./assets/icon-showi.png",
     "splash": {
-      "image": "./assets/splash-t4.png",
+      "image": "./assets/splash-showi.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -21,11 +21,11 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/t4-adaptive-icon2-1.png"
+        "foregroundImage": "./assets/adaptive-icon-showi.png"
       },
       "softwareKeyboardLayoutMode":"pan",
       "package": "com.rcp.t4",
-      "versionCode": 7
+      "versionCode": 10
     },
     "web": {
       "favicon": "./assets/favicon.png"

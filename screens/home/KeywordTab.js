@@ -61,8 +61,8 @@ const styles = StyleSheet.create({
        color:'#383838'
    },
    active:{
-    backgroundColor:'#0a2351',
-    color:'#fff',
+    backgroundColor:'#f5c70f',
+    color:'#333333',
    }
    
   });

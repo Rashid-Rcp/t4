@@ -139,6 +139,12 @@ function ProductFooter({productDetails, navigation, type='products', isHolding=f
                
             </View>
             <View style={styles.items}>
+                <TouchableWithoutFeedback onPress={handleWhatsApp}>
+                    <MaterialCommunityIcons name="whatsapp" size={30} color="#282828" />
+                </TouchableWithoutFeedback>
+               
+            </View>
+            <View style={styles.items}>
                 {!onHold && <TouchableWithoutFeedback onPress={handleAddToHoldings}> 
                     <FontAwesome name="hand-grab-o" size={30} color="#282828" />
                     </TouchableWithoutFeedback>
@@ -155,10 +161,9 @@ function ProductFooter({productDetails, navigation, type='products', isHolding=f
                     
                     }
             </View>
+            
             <View style={styles.items}>
-                <TouchableWithoutFeedback onPress={handleWhatsApp}>
-                    <MaterialCommunityIcons name="whatsapp" size={30} color="#282828" />
-                </TouchableWithoutFeedback>
+                
                 <TouchableWithoutFeedback onPress={onShare}>
                     <Ionicons style={styles.share} name="share-social-outline" size={30} color="#282828" />
                 </TouchableWithoutFeedback>
