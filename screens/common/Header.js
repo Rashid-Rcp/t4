@@ -71,7 +71,7 @@ function Header({navigation}) {
             <View style={styles.headerSec1}>
                 <Image
                     style={styles.logo}
-                    source={require('../../assets/showi-logo-2.png')}
+                    source={require('../../assets/showi-logo-4.png')}
                 />
                 <EvilIcons style={styles.locationIcon} name="location" size={35} color="black" />
                 <TextInput style={{textTransform:'capitalize'}} value={location} placeholder='Enter your city/town' onBlur={locationHandler} onChangeText={text=>locationSuggestion(text)} />
