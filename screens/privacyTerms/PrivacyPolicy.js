@@ -43,9 +43,9 @@ function PrivacyPolicy() {
                 <View style={{height:10}}></View>
                 <Text><Text style={styles.heading3}>Affiliate</Text> means an entity that controls, is controlled by or is under common control with a party, where "control" means ownership of 50% or more of the shares, equity interest or other securities entitled to vote for election of directors or other managing authority.</Text>
                 <View style={{height:10}}></View>
-                <Text><Text style={styles.heading3}>Application</Text> means the software program provided by the Company downloaded by You on any electronic device, named T4</Text>
+                <Text><Text style={styles.heading3}>Application</Text> means the software program provided by the Company downloaded by You on any electronic device, named Showi</Text>
                 <View style={{height:10}}></View>
-                <Text><Text style={styles.heading3}>Company</Text> (referred to as either "the Company", "We", "Us" or "Our" in this Agreement) refers to T4.</Text>
+                <Text><Text style={styles.heading3}>Company</Text> (referred to as either "the Company", "We", "Us" or "Our" in this Agreement) refers to Showi.</Text>
                 <View style={{height:10}}></View>
                 <Text><Text style={styles.heading3}>Country</Text> refers to: Kerala, India</Text>
                 <View style={{height:10}}></View>
