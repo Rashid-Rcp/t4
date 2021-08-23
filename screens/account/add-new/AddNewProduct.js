@@ -2,6 +2,8 @@ import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView,TextInput,Button,KeyboardAvoidingView, ActivityIndicator  } from 'react-native';
 import { Ionicons, Entypo } from '@expo/vector-icons'; 
 import * as ImagePicker from 'expo-image-picker';
+import * as FileSystem from 'expo-file-system';
+import * as ImageManipulator from 'expo-image-manipulator';
 import axios from 'axios';
 import { showMessage, hideMessage } from "react-native-flash-message";
 
@@ -40,8 +42,51 @@ function AddNewProduct({navigation}) {
           mediaTypes: ImagePicker.MediaTypeOptions.Images,
           allowsEditing: true,
           aspect: [4,5],
-          quality: .2,
+          quality: 1,
         });
+        let imgInfo = await FileSystem.getInfoAsync(result.uri);
+        let imgSize = imgInfo.size;
+        if(imgSize > 4000*1000){ //4MB
+            const manipResult = await ImageManipulator.manipulateAsync(
+                result.uri,
+                [],
+                { compress: .1, format: ImageManipulator.SaveFormat.JPEG }
+              );
+              imgInfo = await FileSystem.getInfoAsync(manipResult.uri);
+              imgSize = imgInfo.size;
+              result = manipResult;
+        }
+        if(imgSize > 2000*1000){ //2MB
+            const manipResult = await ImageManipulator.manipulateAsync(
+                result.uri,
+                [],
+                { compress: .2, format: ImageManipulator.SaveFormat.JPEG }
+              );
+              imgInfo = await FileSystem.getInfoAsync(manipResult.uri);
+              imgSize = imgInfo.size;
+              result = manipResult;
+        }
+      
+        if(imgSize > 1000*1000){ //1MB
+            const manipResult = await ImageManipulator.manipulateAsync(
+                result.uri,
+                [],
+                { compress: .3, format: ImageManipulator.SaveFormat.JPEG }
+              );
+              imgInfo = await FileSystem.getInfoAsync(manipResult.uri);
+              imgSize = imgInfo.size;
+              result = manipResult;
+        }
+        if(imgSize > 200*1000){ //200KB
+            const manipResult = await ImageManipulator.manipulateAsync(
+                result.uri,
+                [],
+                { compress: .4, format: ImageManipulator.SaveFormat.JPEG }
+              );
+              imgInfo = await FileSystem.getInfoAsync(manipResult.uri);
+              imgSize = imgInfo.size;
+              result = manipResult;
+        }
 
         if (!result.cancelled) {
             setSelectedImages(selectedImages => [...selectedImages, result.uri]);
