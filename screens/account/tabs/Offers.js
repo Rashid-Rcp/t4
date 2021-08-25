@@ -27,12 +27,13 @@ function Offers({navigation, fetchItem, setFetchItem, scrollEnd, selfAccount, re
                 res.data && resetScrollEnd();
             })
             .catch(err=>console.log(err));
-
-            axios.get(global.APILink+'/offers/refresh/'+accountId)
-            .then(res=>{
-                setRefreshCount(res.data.count);
-            })
-            .catch(err=>console.log(err));
+            if(selfAccount){
+                axios.get(global.APILink+'/offers/refresh/'+accountId)
+                .then(res=>{
+                    setRefreshCount(res.data.count);
+                })
+                .catch(err=>console.log(err));
+            }
         }
     },[fetchItem])
 
@@ -94,25 +95,28 @@ function Offers({navigation, fetchItem, setFetchItem, scrollEnd, selfAccount, re
                     <View key={index} style={styles.productHolder}>
                         <ProductsImages navigation={navigation} productID={item.id} images ={item.images} type='offers' selfAccount={selfAccount} />
                         {
-                            enableRefresh && refreshCount < 5 ? <TouchableOpacity onPress={()=>refreshOffer(item.id)} style={styles.offerRefresh}>
+                          selfAccount && enableRefresh && refreshCount < 5 ? <TouchableOpacity onPress={()=>refreshOffer(item.id)} style={styles.offerRefresh}>
                                 <Ionicons name="refresh-circle-sharp" size={40} color="#ffb818"/>
                             </TouchableOpacity>
                             :
-                            <View style={styles.offerRefresh}>
+                            selfAccount && <View style={styles.offerRefresh}>
                                 <Ionicons name="refresh-circle-sharp" size={40} color='#ccc'/>
                             </View>
                         }
                         {
-                        !enableRefresh && <View style={styles.offerRefresh}>
+                        selfAccount && !enableRefresh && <View style={styles.offerRefresh}>
                                 <Ionicons name="refresh-circle-sharp" size={40} color='#33b864'/>
                             </View>
                         }
                         <TouchableWithoutFeedback onPress={()=>navigation.navigate('SingleOffer',{offerId:item.id, selfAccount:selfAccount})}>
                             <Text style={styles.productName}>{item.title}</Text>
                         </TouchableWithoutFeedback>
-                        <View style={styles.productStatus}>
+                        {
+                            selfAccount && <View style={styles.productStatus}>
                             <AntDesign name="checkcircle" size={15} color={item.status==='active'?"#33b864":'#ccc'}/>
                         </View>
+                        }
+                        
                     </View>
                     )
                 })

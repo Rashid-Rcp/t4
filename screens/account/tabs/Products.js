@@ -13,7 +13,7 @@ function Products({navigation, fetchItem, setFetchItem, scrollEnd, selfAccount, 
     const [isLoadingMore, setIsLoadingMore] = useState(false);
     const [refreshCount,setRefreshCount] = useState(0);
     const toDay = new Date();
-   
+  
     useEffect(()=>{
             if(fetchItem){
                 setIsLoading(true);
@@ -25,11 +25,13 @@ function Products({navigation, fetchItem, setFetchItem, scrollEnd, selfAccount, 
                     res.data && setFetchItem(false);
                 })
                 .catch(err=>console.log(err));
-                axios.get(global.APILink+'/products/refresh/'+accountId)
-                .then(res=>{
-                    setRefreshCount(res.data.count);
-                })
-                .catch(err=>console.log(err));
+                if(selfAccount){
+                    axios.get(global.APILink+'/products/refresh/'+accountId)
+                    .then(res=>{
+                        setRefreshCount(res.data.count);
+                    })
+                    .catch(err=>console.log(err));
+                }
             }
     },[fetchItem])
 
@@ -98,16 +100,16 @@ function Products({navigation, fetchItem, setFetchItem, scrollEnd, selfAccount, 
                         <View key={index} style={styles.productHolder}>
                             <ProductsImages navigation={navigation} productID={item.id} images ={item.images} selfAccount={selfAccount}/>
                             { 
-                             enableRefresh && refreshCount < 5 ? <TouchableOpacity onPress={()=>refreshProduct(item.id)} style={styles.productRefresh}>
+                             selfAccount && enableRefresh && refreshCount < 5 ? <TouchableOpacity onPress={()=>refreshProduct(item.id)} style={styles.productRefresh}>
                                 <Ionicons name="refresh-circle-sharp" size={40} color="#ffb818"/>
                             </TouchableOpacity>
                             :
-                            <View style={styles.productRefresh}>
+                             selfAccount && <View style={styles.productRefresh}>
                                 <Ionicons name="refresh-circle-sharp" size={40} color='#ccc'/>
                             </View>
                             }
                             {
-                             !enableRefresh &&  <View style={styles.productRefresh}>
+                            selfAccount && !enableRefresh &&  <View style={styles.productRefresh}>
                                 <Ionicons name="refresh-circle-sharp" size={40} color='#33b864'/>
                              </View>
                             }
@@ -115,9 +117,11 @@ function Products({navigation, fetchItem, setFetchItem, scrollEnd, selfAccount, 
                                 <Text style={styles.productName}>{item.title}</Text>
                             </TouchableWithoutFeedback>
                             <Text style={styles.productPrice}>₹{item.price}</Text>
-                            <View style={styles.productStatus}>
+                            {
+                             selfAccount && <View style={styles.productStatus}>
                                 <AntDesign name="checkcircle" size={15} color={item.status==='active'?"#33b864":'#ccc'}/>
                             </View>
+                            }
                         </View>
                         )
                    }
