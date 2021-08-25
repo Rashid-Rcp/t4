@@ -2,7 +2,7 @@
   "expo": {
     "name": "Showi",
     "slug": "Showi",
-    "version": "1.13.0",
+    "version": "1.14.0",
     "orientation": "portrait",
     "icon": "./assets/icon-showi.png",
     "splash": {
@@ -25,7 +25,7 @@
       },
       "softwareKeyboardLayoutMode":"pan",
       "package": "com.rcp.t4",
-      "versionCode": 13
+      "versionCode": 14
     },
     "web": {
       "favicon": "./assets/favicon.png"
