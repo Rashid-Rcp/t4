@@ -62,6 +62,7 @@ export default function App() {
           <Stack.Screen name="AddNewProduct" component={AddNewProduct} options={{ title: 'Add New Product' }} />
           <Stack.Screen name="AddNewOffer" component={AddNewOffer} options={{ title: 'Add New Offer' }} />
           <Stack.Screen name="SingleProduct" component={SingleProduct} options={{ title: 'Product Details' }} />
+          <Stack.Screen name="SingleOffer" component={SingleOffer} options={{ title: 'Offer Details' }} />
           <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} options={{ title: 'Privacy Policy' }} />
           <Stack.Screen name="TermsConditions" component={TermsConditions} options={{ title: 'Terms & Conditions' }} />
         </Stack.Navigator>
