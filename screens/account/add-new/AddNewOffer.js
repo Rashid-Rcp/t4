@@ -71,7 +71,7 @@ function AddNewOffer({navigation}) {
                
                 setIsSubmitting(false);
                 if(res.data.status === 'success' ){
-                    showFlashMessage('success','Offer addded successfully!');
+                    showFlashMessage('success','Offer added successfully!');
                     setOfferImage('');
                     setOfferTitle('');
                     setOfferTags('');

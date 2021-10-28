@@ -25,6 +25,25 @@ function AddNewProduct({navigation}) {
     const [validation, setValidation] = useState([]);
     const [addVariationValidation, setAddVariationValidation] = useState([]);
     const [isProductSubmitting, setIsProductSubmitting] = useState(false);
+    const [goBack, setGoBack] = useState(false);
+   
+    useEffect(()=>{
+        navigation.addListener('beforeRemove', (e) => {
+            if(goBack){
+                return true
+            }
+            e.preventDefault();
+            setGoBack(true);
+            return false;
+        })
+    },[navigation]);
+
+    useEffect(()=>{
+        if(goBack){
+            navigation.removeListener('beforeRemove');
+            navigation.navigate('Account',{accountId:user.id, forceRefresh:true});
+        }
+    },[goBack])
 
     useEffect(() => {
         (async () => {
