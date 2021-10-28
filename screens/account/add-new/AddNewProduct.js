@@ -43,7 +43,7 @@ function AddNewProduct({navigation}) {
             navigation.removeListener('beforeRemove');
             navigation.navigate('Account',{accountId:user.id, forceRefresh:true});
         }
-    },[goBack])
+    },[goBack]);
 
     useEffect(() => {
         (async () => {
